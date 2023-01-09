@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useAuthStore } from "@/stores/auth.store";
 
 // TODO: Error handle on response?
 class Api {
@@ -35,7 +36,14 @@ class Api {
     return response;
   }
 
-  async getUserProjects() { 
+  async getUserProjects(user) { 
+
+    const config = {
+      headers: {
+        Authorization : `Bearer ${user.getItem("access_token")}`
+      }
+    }
+    
     const response =  await this.post("http://localhost:3000/login", {username, password});
 
     console.log("user: ", user);
