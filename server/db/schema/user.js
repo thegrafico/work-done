@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const auth = require("../../utils/auth");
+
 
 const Schema = mongoose.Schema;
 // const ObjectId = Schema.ObjectId;
@@ -10,8 +12,13 @@ const User = new Schema({
   creationDate: { type: Date, default: Date.now },
 });
 
-User.statics.login = async function (user, password) {
-  return this.findOne({ username: user, password: password });
+User.statics.findUserByCredentials = async function (username, password) {
+  const user = await this.findOne({ username: username, password: password }).lean();
+  
+  if (user) { 
+    user['accessToken'] = auth.generateAccessToken(user.username);
+  }
+  return user;
 };
 
 // a setter

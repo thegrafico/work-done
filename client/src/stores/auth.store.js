@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import router from '@/router/index';
+import Api from "../api/api";
 
 export const useAuthStore = defineStore('auth', {
     state: () => ({
@@ -8,7 +9,7 @@ export const useAuthStore = defineStore('auth', {
     }),
     actions: {
         async login(username, password) {
-            const user = {name: "raul", username: username, password: password};
+            const user = await Api.login(username, password);
 
             this.user = user;
             

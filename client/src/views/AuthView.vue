@@ -14,12 +14,10 @@
 <script setup>
   import LoginTab from "../components/auth/LoginTab.vue";
   import SignInTab from "../components/auth/SignInTab.vue";
-  // import { useAuthStore } from '@/stores/auth.store';
   import {useAuthStore} from '@/stores/auth.store';
 
   // Method called by emit
   const loginUser = async (username, password) => {
-
     
     const authStore = useAuthStore();
     

@@ -4,15 +4,17 @@
 
 <script setup>
 import { onMounted} from 'vue';
-// import Api from '@/api/api';
+import Api from "@/api/api";
 
 // const api = new Api();
 
 onMounted(() => {
 
-  console.log("onMounted");
-})
+  const projects = Api.getUserProjects();
 
+  console.log("Projects: " + projects);
+
+});
 // const getUserProjects = async () => {
 //   api.
 // }

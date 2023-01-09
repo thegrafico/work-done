@@ -11,9 +11,10 @@ var authRouter = require('./routes/auth');
 
 var app = express();
 
+// making connection to db
 database.connect().then( () => { 
-  console.log("Connected...");
-})
+  console.log("Connected to the database...");
+});
 
 app.use(cors())
 app.use(logger('dev'));

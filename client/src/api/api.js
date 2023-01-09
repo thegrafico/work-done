@@ -1,9 +1,7 @@
 import axios from "axios";
 
 // TODO: Error handle on response?
-export default class Api {
-  // `message` will not be reactive value
-  message = undefined;
+class Api {
 
   async get (url) { 
     const response = await axios.get(url);
@@ -37,10 +35,11 @@ export default class Api {
     return response;
   }
 
-  // async getUserProjects(user) { 
-  //   const response =  await this.post("http://localhost:3000/login", {username, password});
+  async getUserProjects() { 
+    const response =  await this.post("http://localhost:3000/login", {username, password});
 
-  //   console.log("user: ", user);
-  // }
+    console.log("user: ", user);
+  }
 }
 
+export default new Api();
