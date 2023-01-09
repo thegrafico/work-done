@@ -12,31 +12,26 @@
 </template>
 
 <script setup>
-  import LoginTab from "./LoginTab.vue";
-  import SignInTab from "./SignInTab.vue";
-  import { useRouter } from 'vue-router';
-  import Api from "../../api/api";
+  import LoginTab from "../components/auth/LoginTab.vue";
+  import SignInTab from "../components/auth/SignInTab.vue";
+  // import { useAuthStore } from '@/stores/auth.store';
+  import {useAuthStore} from '@/stores/auth.store';
 
-  const router = useRouter()
-  const api = new Api();
-  
   // Method called by emit
   const loginUser = async (username, password) => {
+
     
-    const userData = await api.login(username, password);
-    // TODO: Store user data into pinea. Including the Token
+    const authStore = useAuthStore();
     
-    if (userData.token) { 
-      router.push('/dashboard')
-    }else{
-      router.push('/');
-    }
+    return authStore.login(username, password).catch( err => {
+      console.error(err);
+    });
   }
 
 </script>
 
 <style scoped>
-@import "../../../public/style/login.css";
+@import "../../public/style/login.css";
 </style>
 
 
