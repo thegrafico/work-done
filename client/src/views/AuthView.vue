@@ -28,12 +28,6 @@
 
 </script>
 
-<style scoped>
-@import "../../public/style/login.css";
-</style>
-
-
-
 <!-- $(document).ready(function() {
   var panelOne = $('.form-panel.two').height(),
     panelTwo = $('.form-panel.two')[0].scrollHeight;

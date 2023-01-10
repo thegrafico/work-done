@@ -22,6 +22,12 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to) => {
+  checkIfUserIsLoggedIn(to);
+});
+
+
+// check if user is logged in and if not redirect to login page
+const checkIfUserIsLoggedIn = (to) => { 
   const publicPages = ["/login"];
 
   // All routes but login
@@ -31,11 +37,8 @@ router.beforeEach(async (to) => {
   // check page user is visiting and if the user is logged in
   if (authRequired && !auth.user){
     auth.returnUrl = to.fullPath;
-    auth.user = null;
-    return '/login';
+    auth.logout();
   }
-
-  // setTimeout( () => {auth.logout()}, 5000);
-})
+}
 
 export default router;
