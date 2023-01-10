@@ -6,7 +6,7 @@ const _ = require("lodash");
 
 router.get(
   "/projects",
-  auth.authenticateToken,
+  // auth.authenticateToken,
   async function (req, res, next) {
     const projects = [
       {
@@ -14,6 +14,13 @@ router.get(
         title: "Project One",
         ownerId: "rauleldomi",
         description: "House",
+        creationDate: new Date(),
+      },
+      {
+        _id: "somerandomId2",
+        title: "Project Two",
+        ownerId: "rauleldomi",
+        description: "Apartment",
         creationDate: new Date(),
       },
       {
