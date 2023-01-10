@@ -31,6 +31,7 @@ router.beforeEach(async (to) => {
   // check page user is visiting and if the user is logged in
   if (authRequired && !auth.user){
     auth.returnUrl = to.fullPath;
+    auth.user = null;
     return '/login';
   }
 
