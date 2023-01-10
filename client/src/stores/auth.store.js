@@ -4,7 +4,7 @@ import Api from "../api/api";
 
 export const useAuthStore = defineStore('auth', {
     state: () => ({
-        user: localStorage.getItem('user'),
+        user: (localStorage.getItem('user') != null) ? JSON.parse(localStorage.getItem('user')) : null,
         returnUrl: null
     }),
     actions: {
@@ -15,7 +15,7 @@ export const useAuthStore = defineStore('auth', {
             
             localStorage.setItem('user', JSON.stringify(user));
 
-            router.push(this.returnUrl || '/');
+            router.push(this.returnUrl || '/dashboard');
         },
 
         logout() { 

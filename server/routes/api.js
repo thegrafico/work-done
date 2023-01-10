@@ -4,24 +4,28 @@ const auth = require("../utils/auth");
 const UserCollection = require("../db/schema/user");
 const _ = require("lodash");
 
+router.get(
+  "/projects",
+  auth.authenticateToken,
+  async function (req, res, next) {
+    const projects = [
+      {
+        _id: "somerandomId1",
+        title: "Project One",
+        ownerId: "rauleldomi",
+        description: "House",
+        creationDate: new Date(),
+      },
+      {
+        _id: "somerandomId2",
+        title: "Project Two",
+        ownerId: "rauleldomi",
+        description: "Apartment",
+        creationDate: new Date(),
+      },
+    ];
+    res.status(200).send({projects: projects});
+  }
+);
 
-router.get("/projects", async function (req, res, next) {
-    const {username, password} = req.body;
-  
-    if (!_.isString(username) || _.isEmpty(username) || !_.isString(password) || _.isEmpty(password)){
-      res.status(400).send({error:"Invalid usernamer or password"});
-      return;
-    }
-  
-    const user = await UserCollection.findUserByCredentials(username, password);
-  
-    if (!user) {
-      res.status(401).send({error: "invalid credentials. User not found."});
-      return;
-    }
-  
-    const token = auth.generateAccessToken(user.username);
-    console.log("Token for user: ", token);
-  
-    res.status(200).send({user, token});
-});
+module.exports = router;

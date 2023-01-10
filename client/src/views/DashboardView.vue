@@ -4,20 +4,28 @@
 
 <script setup>
 import { onMounted} from 'vue';
+import { useAuthStore } from '@/stores/auth.store';
 import Api from "@/api/api";
 
-// const api = new Api();
 
-onMounted(() => {
+onMounted( async () => {
+  const projects = await getProjects();
 
-  const projects = Api.getUserProjects();
-
-  console.log("Projects: " + projects);
-
+  console.log("Projects: ", projects);
 });
-// const getUserProjects = async () => {
-//   api.
-// }
+
+const getProjects = async () => {
+  const user = getUser();
+  return await Api.getUserProjects(user);
+}
+
+const getUser = () => { 
+  const useAuth = useAuthStore();
+  // useAuth.logout()
+  return useAuth.user;
+}
+
+
 </script>
 
 <style scoped>

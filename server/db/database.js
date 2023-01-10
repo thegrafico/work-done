@@ -3,7 +3,6 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 async function connect() {
-  // process.env.TOKEN_SECRET
 
   const options = {
     // serverSelectionTimeoutMS: 5000, // Keep trying to send operations for 5 seconds

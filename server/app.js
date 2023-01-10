@@ -6,8 +6,9 @@ const logger = require('morgan');
 const cors = require('cors');
 const database = require('./db/database');
 
-var indexRouter = require('./routes/index');
-var authRouter = require('./routes/auth');
+const indexRouter = require('./routes/index');
+const authRouter = require('./routes/auth');
+const apiRouter = require('./routes/api');
 
 var app = express();
 
@@ -16,7 +17,12 @@ database.connect().then( () => {
   console.log("Connected to the database...");
 });
 
-app.use(cors())
+const corsOptions = {
+  methods: "POST, PUT, OPTIONS, DELETE, GET",
+  allowedHeaders: ['Content-Type', 'Authorization']
+}
+
+app.use(cors(corsOptions))
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -25,6 +31,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/', authRouter);
+app.use('/api', apiRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
