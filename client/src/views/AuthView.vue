@@ -15,6 +15,12 @@
   import LoginTab from "../components/auth/LoginTab.vue";
   import SignInTab from "../components/auth/SignInTab.vue";
   import {useAuthStore} from '@/stores/auth.store';
+  import { onMounted } from "vue";
+  
+
+  onMounted( () => {
+    checkIfUserIsLoggedIn();
+  });
 
   // Method called by emit
   const loginUser = async (username, password) => {
@@ -24,6 +30,17 @@
     return authStore.login(username, password).catch( err => {
       console.error(err);
     });
+  }
+
+  const checkIfUserIsLoggedIn = () => {
+    
+    const useStore = useAuthStore();
+    if (useStore.getUser()) { 
+      return useStore.redirectToHome();
+    }
+
+    // clean store just in case
+    useStore.clearUser();
   }
 
 </script>
