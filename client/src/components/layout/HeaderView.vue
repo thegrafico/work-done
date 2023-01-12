@@ -19,7 +19,7 @@
 </template>
 
 <script setup>
-import { onMounted, defineProps, toRefs, ref } from "vue";
+import { defineProps, toRefs, ref } from "vue";
 import { useAuthStore } from "@/stores/auth.store";
 
 const props = defineProps({
@@ -36,7 +36,4 @@ const items = ref([
 
 const { title } = toRefs(props);
 
-onMounted(async () => {
-  console.log("Mounted Header");
-});
 </script>

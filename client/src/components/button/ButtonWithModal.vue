@@ -3,8 +3,8 @@
     <v-btn
       :color="color ? color : null"
       :prepend-icon="icon"
-      :variant="(variant) ? variant : defaultVariant"
-      @click.stop="performAction"
+      :variant="variant ? variant : defaultVariant"
+      @click.stop="dialog = true"
     >
       {{ title }}
     </v-btn>
@@ -13,12 +13,14 @@
       :is="modals[template]"
       :dialog="dialog"
       :reset-dialog="resetDialog"
+      :project="project && project._id ? project : null"
+      @on-submit="performAction"
     ></component>
   </div>
 </template>
 
 <script setup>
-import { defineProps, onMounted, toRefs, ref } from "vue";
+import { defineProps, toRefs, ref } from "vue";
 import RemoveProject from "../modals/RemoveProject.vue";
 import CreateProject from "../modals/CreateProject.vue";
 import EditProject from "../modals/EditProject.vue";
@@ -40,22 +42,22 @@ const props = defineProps({
   action: Function,
   color: String,
   variant: String,
+  project: Object,
 });
 
-const { icon, title, template, action, color, variant } = toRefs(props);
+const { icon, title, template, action, color, variant, project } =
+  toRefs(props);
 const dialog = ref(false);
 
-onMounted(() => {
-  console.log("Mounted");
-});
+const performAction = (values) => {
+  if (values) {
+    action.value(values);
+  }
 
-const performAction = () => {
-  dialog.value = true;
-  action.value();
+  resetDialog();
 };
 
 const resetDialog = () => {
-  console.log("Resetting dialog");
   dialog.value = false;
 };
 </script>

@@ -3,9 +3,6 @@
     <v-col cols="4" v-for="project in filteredProjects" :key="project._id">
       <v-card variant="tonal">
         <v-toolbar color="rgba(0, 0, 0, 0)" theme="dark">
-          <!-- <template v-slot:prepend>
-            <v-btn icon="$menu"></v-btn>
-          </template> -->
 
           <v-toolbar-title class="text-h6">
             {{ project.title }}
@@ -13,20 +10,23 @@
           
           <!-- Three Dots options -->
           <template v-slot:append>
+            
             <v-menu>
               <template v-slot:activator="{ props }">
                 <v-btn icon="mdi-dots-vertical" v-bind="props"></v-btn>
               </template>
 
               <v-list>
-                <v-list-item v-for="(item, i) in items" :key="i">
+                <v-list-item v-for="(options, i) in projectOptions" :key="i">
                   <v-list-item-title>
-                    <ButtonWithModalVue v-bind="item"/>
+                    <ButtonWithModalVue v-bind="options" :project="project"/>
                   </v-list-item-title>
                 </v-list-item>
               </v-list>
             </v-menu>
+
           </template>
+
         </v-toolbar>
         <v-card-text>
           {{ project.description }}
@@ -36,21 +36,32 @@
   </v-row>
 </template>
 
+// TODO: Create notify system for errors and messages
 <script setup>
-import { onBeforeUpdate, defineProps, ref } from "vue";
+import { onBeforeUpdate, defineProps, ref, defineEmits} from "vue";
+import { useAuthStore } from "@/stores/auth.store";
+
 import _ from "lodash";
+import api from "@/api/api";
+
 import ButtonWithModalVue from "../button/ButtonWithModal.vue";
 
+const emit = defineEmits(['updateProjects']);
 const props = defineProps({
   projects: Array,
   filterTearm: String,
 });
 
+const useAuth = useAuthStore();
+
 // const { projects, filterTearm } = toRefs(props);
 const filteredProjects = ref([]);
+const edit = async (update) => {
+  const {title, description, projectId} = update;
+  const projectWasUpdated = await api.updateProject(title, description, projectId, useAuth.user);
+  console.log("projectWasUpdated: ", projectWasUpdated);
+  emit("updateProjects");
 
-const edit = (projectId) => {
-  console.log("Editing Project...", projectId);
 };
 
 const remove = (projectId) => {
@@ -62,7 +73,7 @@ const share = (projectId) => {
 };
 
 // I dont fucking like this but I need to do this fast
-const items = ref([
+const projectOptions = ref([
   { title: "Edit", icon: "mdi-pencil", action: edit, template: 'EditProject' },
   { title: "Share", icon: "mdi-share", action: share, template: 'ShareProject'},
   { title: "Remove", icon: "mdi-delete", action: remove, template: 'RemoveProject'},
@@ -88,7 +99,6 @@ const filterArray = (projects, filterTearm) => {
   if (_.isEmpty(projects)) {
     return [];
   }
-  console.log("Filtering projects: ", projects.length);
 
   const filteredProjects = projects.filter((project) => {
     return project.title.toLowerCase().includes(filterTearm);

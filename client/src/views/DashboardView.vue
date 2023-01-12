@@ -22,12 +22,12 @@
 
           <v-col cols="8" class="mt-3">
             <!-- Create project btn with modal -->
-            <ButtonWithModal v-bind="createProjectButtonConfig" />
+            <ButtonWithModal v-bind="createProjectButtonConfig"/>
           </v-col>
         </v-row>
 
         <!-- Project List -->
-        <ProjectList :filter-tearm="userSearchInput" :projects="projects" />
+        <ProjectList :filter-tearm="userSearchInput" :projects="projects" @update-projects="updateProjects"/>
       </v-container>
     </v-main>
   </v-app>
@@ -46,18 +46,20 @@ import ButtonWithModal from "@/components/button/ButtonWithModal.vue";
 
 const projects = ref([]);
 const user = ref({});
-const userSearchInput = ref("");
-
+const userSearchInput = ref('');
 
 const createProject = async (project) => { 
-  console.log("Project to create: ", project);
+  const newProject = await Api.createProject(project, user.value)
+  projects.value.push(newProject);
+  console.log("Project to create: ", newProject);
+  await updateProjects();
 }
 
 const createProjectButtonConfig = ref({
   title: "PROJECT",
   icon: "mdi-plus",
   action: createProject,
-  template: "EditProject",
+  template: "CreateProject",
   color: 'success',
   variant: 'tonal'
 });
@@ -66,16 +68,20 @@ const createProjectButtonConfig = ref({
 
 onMounted(async () => {
   user.value = getUser();
+  // Api.deleteAll(user.value);
   // getting the projects
   projects.value = await getProjects();
-
-  console.log("Projects: ", projects.value);
 });
 
 const getProjects = async () => {
   const response = await Api.getUserProjects(user.value);
   return response.projects;
 };
+
+
+const updateProjects = async () => { 
+  projects.value = await getProjects();
+}
 
 const getUser = () => {
   const useAuth = useAuthStore();

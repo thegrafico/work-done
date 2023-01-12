@@ -13,7 +13,8 @@ const apiRouter = require('./routes/api');
 var app = express();
 
 // making connection to db
-database.connect().then( () => { 
+database.connect().then(async (conn) => { 
+  // console.log(await conn.collections.projects.dropIndexes());
   console.log("Connected to the database...");
 });
 
