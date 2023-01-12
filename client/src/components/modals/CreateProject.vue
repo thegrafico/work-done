@@ -54,6 +54,7 @@ const title = ref('');
 const description = ref('');
 
 const performAction = () => {
+  
   if (nothingChanged()) {
     resetDialog.value();
     return;

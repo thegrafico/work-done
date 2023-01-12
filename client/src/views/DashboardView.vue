@@ -36,7 +36,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useAuthStore } from "@/stores/auth.store";
-import Api from "@/api/api";
+import secureApi from "@/api/authApi";
 
 // Components
 import Header from "@/components/layout/HeaderView.vue";
@@ -49,10 +49,15 @@ const user = ref({});
 const userSearchInput = ref('');
 
 const createProject = async (project) => { 
-  const newProject = await Api.createProject(project, user.value)
-  projects.value.push(newProject);
-  console.log("Project to create: ", newProject);
-  await updateProjects();
+  console.log("Creating project");
+  const newProject = await secureApi.post("/createProject", project).catch( err => { 
+    console.error("Error creating project: ", err);
+  });
+
+  if (newProject) { 
+    console.log(newProject);
+    projects.value.push(newProject.data.project);
+  }
 }
 
 const createProjectButtonConfig = ref({
@@ -74,8 +79,8 @@ onMounted(async () => {
 });
 
 const getProjects = async () => {
-  const response = await Api.getUserProjects(user.value);
-  return response.projects;
+  const response = await secureApi.get('/projects');
+  return response.data;
 };
 
 

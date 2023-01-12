@@ -2,15 +2,15 @@
   <v-row>
     <v-col cols="4" v-for="project in filteredProjects" :key="project._id">
       <v-card variant="tonal">
-        <v-toolbar color="rgba(0, 0, 0, 0)" theme="dark">
+        <v-toolbar color="rgba(0, 0, 0, 0)">
 
           <v-toolbar-title class="text-h6">
             {{ project.title }}
           </v-toolbar-title>
-          
+
           <!-- Three Dots options -->
           <template v-slot:append>
-            
+
             <v-menu>
               <template v-slot:activator="{ props }">
                 <v-btn icon="mdi-dots-vertical" v-bind="props"></v-btn>
@@ -19,7 +19,7 @@
               <v-list>
                 <v-list-item v-for="(options, i) in projectOptions" :key="i">
                   <v-list-item-title>
-                    <ButtonWithModalVue v-bind="options" :project="project"/>
+                    <ButtonWithModalVue v-bind="options" :project="project" />
                   </v-list-item-title>
                 </v-list-item>
               </v-list>
@@ -38,11 +38,12 @@
 
 // TODO: Create notify system for errors and messages
 <script setup>
-import { onBeforeUpdate, defineProps, ref, defineEmits} from "vue";
-import { useAuthStore } from "@/stores/auth.store";
+import { onBeforeUpdate, defineProps, ref, defineEmits } from "vue";
+// import { useAuthStore } from "@/stores/auth.store";
 
 import _ from "lodash";
-import api from "@/api/api";
+// import api from "@/api/api";
+import secureApi from "@/api/authApi";
 
 import ButtonWithModalVue from "../button/ButtonWithModal.vue";
 
@@ -52,16 +53,16 @@ const props = defineProps({
   filterTearm: String,
 });
 
-const useAuth = useAuthStore();
+// const useAuth = useAuthStore();
 
 // const { projects, filterTearm } = toRefs(props);
 const filteredProjects = ref([]);
 const edit = async (update) => {
-  const {title, description, projectId} = update;
-  const projectWasUpdated = await api.updateProject(title, description, projectId, useAuth.user);
+  const projectWasUpdated = await secureApi.post("updateProject", update).catch(err => { 
+    console.log("Error updating project: ", err);
+  });
   console.log("projectWasUpdated: ", projectWasUpdated);
-  emit("updateProjects");
-
+  emit('updateProjects');
 };
 
 const remove = (projectId) => {
@@ -74,8 +75,8 @@ const share = (projectId) => {
 
 // I dont fucking like this but I need to do this fast
 const projectOptions = ref([
-  { title: "Edit", icon: "mdi-pencil", action: edit, template: 'EditProject' },
-  { title: "Share", icon: "mdi-share", action: share, template: 'ShareProject'},
+  { title: "Edit", icon: "mdi-pencil", action: edit, template: 'EditProject'},
+  { title: "Share", icon: "mdi-share", action: share, template: 'ShareProject', disabled: true},
   { title: "Remove", icon: "mdi-delete", action: remove, template: 'RemoveProject'},
 ]);
 

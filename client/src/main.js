@@ -26,6 +26,7 @@ const app = createApp(App);
 
 app.use(router).use(vuetify).use(createPinia()).mount('#app');
 
+// Global errors
 app.config.errorHandler = function (error, vm, info) {
   console.error("Error: ", error);
   console.warn("info: ", info);
