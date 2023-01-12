@@ -14,14 +14,24 @@ import '@mdi/font/css/materialdesignicons.css' // Ensure you are using css-loade
 const vuetify = createVuetify({
   components,
   directives,
-  "theme": {
-    defaultTheme: 'dark'
-  },
-  
+  // "theme": {
+  //   defaultTheme: 'dark'
+  // },
+
 });
 
-createApp(App)
-  .use(router)
-  .use(vuetify)
-  .use(createPinia())
-  .mount('#app');
+
+
+const app = createApp(App);
+
+app.use(router).use(vuetify).use(createPinia()).mount('#app');
+
+app.config.errorHandler = function (error, vm, info) {
+  console.error("Error: ", error);
+  console.warn("info: ", info);
+
+  if (error.response.status === 401 || error.response.status === 403){
+    vm.$router.push('/logout');
+  }
+  
+}

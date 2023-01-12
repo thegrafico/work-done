@@ -2,6 +2,7 @@ import { useAuthStore } from '@/stores/auth.store';
 import { createRouter, createWebHashHistory } from 'vue-router'
 
 import AuthView from '../views/AuthView.vue';
+import NotFound from '../components/notFound/NotFound';
 
 const routes = [
   {
@@ -18,7 +19,8 @@ const routes = [
     path: '/logout',
     name: 'logout',
     component: () => import('../views/LogoutView.vue') // lazy load
-  }
+  },
+  { path: '/:pathMatch(.*)*', name: 'not-found', component: NotFound },
 ]
 
 const router = createRouter({
@@ -32,7 +34,7 @@ router.beforeEach(async (to) => {
 
 
 // check if user is logged in and if not redirect to login page
-const checkIfUserIsLoggedIn = (to) => { 
+const checkIfUserIsLoggedIn = (to) => {
   const publicPages = ["/login"];
 
   // All routes but login
@@ -40,7 +42,7 @@ const checkIfUserIsLoggedIn = (to) => {
   const auth = useAuthStore();
 
   // check page user is visiting and if the user is logged in
-  if (authRequired && !auth.user){
+  if (authRequired && !auth.user) {
     auth.returnUrl = to.fullPath;
     auth.logout();
   }

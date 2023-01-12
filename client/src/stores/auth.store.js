@@ -12,18 +12,18 @@ export const useAuthStore = defineStore('auth', {
             const user = await Api.login(username, password);
 
             this.user = user;
-            
+
             localStorage.setItem('user', JSON.stringify(user));
 
             router.push(this.returnUrl || '/dashboard');
         },
 
-        logout() { 
+        logout() {
             this.clearUser();
             router.push('/login');
         },
-        
-        clearUser() { 
+
+        clearUser() {
             this.user = null;
             localStorage.removeItem("user");
         },
@@ -31,12 +31,21 @@ export const useAuthStore = defineStore('auth', {
         redirectToHome() {
             router.push("/dashboard");
         },
-        getUser() { 
-            if (this.user && this.user.accessToken){
-               return this.user 
-            }    
+
+        getUser() {
+            if (this.user && this.user.accessToken) {
+                return this.user
+            }
 
             return null;
+        },
+
+        getToken() {
+            if (!this.user || !this.user.accessToken) {
+                return null
+            }
+            return this.user.accessToken;
         }
+
     },
 });
