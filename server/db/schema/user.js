@@ -14,9 +14,8 @@ const User = new Schema({
 
 User.statics.findUserByCredentials = async function (username, password) {
   const user = await this.findOne({ username: username, password: password }).lean();
-  
   if (user) { 
-    user['accessToken'] = auth.generateAccessToken(user.username);
+    user['accessToken'] = auth.generateAccessToken(user._id);
   }
   return user;
 };

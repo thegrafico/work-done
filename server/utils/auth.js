@@ -4,8 +4,8 @@ dotenv.config();
 
 const jwt = require("jsonwebtoken");
 
-function generateAccessToken(username) {
-  return jwt.sign({name: username}, process.env.TOKEN_SECRET, { expiresIn: 60 * 60 });
+function generateAccessToken(userId) {
+  return jwt.sign({id: userId}, process.env.TOKEN_SECRET, { expiresIn: 60 * 60 });
 }
 
 function authenticateToken(req, res, next) {
@@ -16,8 +16,8 @@ function authenticateToken(req, res, next) {
   
     jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
   
-      if (err) return res.sendStatus(403)
-  
+      if (err) return res.sendStatus(403);
+      // console.log("User found token:", user);
       req.user = user
   
       next()

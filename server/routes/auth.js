@@ -9,26 +9,42 @@ router.post("/login", async function (req, res, next) {
   const {username, password} = req.body;
 
   if (!_.isString(username) || _.isEmpty(username) || !_.isString(password) || _.isEmpty(password)){
-    res.status(400).send({error:"Invalid usernamer or password"});
+    res.status(400).send({message:"Invalid usernamer or password"});
     return;
   }
+  console.log(username, password);
+  let error = null;
+  const user = await UserCollection.findUserByCredentials(username, password).catch(err => {
+    console.error("Error getting user: ", err);
+    error = err;
+  });
 
-  const user = await UserCollection.findUserByCredentials(username, password);
+  if (error) { 
+    res.status(500).send({message: "Oops, there was an error getting the user. Please try again"});
+    return;
+  }
 
   if (!user) {
-    res.status(401).send({error: "invalid credentials. User not found."});
+    res.status(403).send({message: "invalid credentials. User not found."});
     return;
   }
-
   res.status(200).send(user);
 });
 
 // TODO: Finish this
-router.post("/signin", function (req, res, next) {
+router.get("/signin", async function (req, res, next) {
 
-  res.status(200).send("Sign in is deactivate for the moment");
-  // const nUser = await UserCollection.create({name: "raul", username: "rauleldomi", password: "admin"});
-  // console.log("New User was created: ", nUser);
+  const nUser = await UserCollection.create({name: "raul", username: "rauleldomi", password: "admin"});
+  console.log("User created: ", nUser);
+
+  res.status(200).send("Created dummy user");
+});
+
+router.get("/users", async function (req, res, next) {
+
+  const users = await UserCollection.find({});
+
+  res.status(200).send(users);
 });
 
 

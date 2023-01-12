@@ -11,17 +11,17 @@ router.get(
   "/projects",
   auth.authenticateToken,
   async function (req, res, next) {
-    const projects = await ProjectCollection.find({owner: req.user._id});
-
-    res.status(200).send({ projects: projects });
+    const projects = await ProjectCollection.find({owner: req.user.id});
+    console.log("Projects: ", projects.length);
+    res.status(200).send(projects);
   }
 );
 
-router.post(
+router.get(
   "/deleteAll",
-  auth.authenticateToken,
+  // auth.authenticateToken,
   async function (req, res, next) {
-    await ProjectCollection.deleteMany();
+    await ProjectCollection.deleteMany({});
     res.status(200).send("deleted");
   }
 );
@@ -44,7 +44,7 @@ router.post(
       description = "";
     }
 
-    const project = { title, description, owner: req.user._id };
+    const project = { title, description, owner: req.user.id };
 
     let error = null;
     const newProject = await ProjectCollection.create(project).catch((err) => {
@@ -61,13 +61,32 @@ router.post(
   }
 );
 
-router.post(
-  "/updateProject",
-  // auth.authenticateToken,
-  async function (req, res, next) {
-    const wasUpdated = true;
-    res.status(200).send(wasUpdated);
+router.post("/updateProject", auth.authenticateToken, async function (req, res, next) {
+  const { title, description, projectId } = req.body;
+
+  // check project title
+  if (_.isEmpty(title)) {
+    res.status(400).send({ message: "Invalid title for project" });
+    return;
   }
-);
+
+  // create project schema
+  const filter = {_id: projectId, owner: req.user.id}
+  const update = { title, description };
+
+
+  let error = null;
+  const updatedProject = await ProjectCollection.findOneAndUpdate(filter, update).catch(err => {
+    error = err;
+  });
+
+  if (error){
+    console.error("Error updating project: ", error);
+    res.status(500).send({ message: "Oops, There was a problem updating the project. Please try later."});
+    return;
+  }
+
+  res.status(200).send(updatedProject);
+});
 
 module.exports = router;
