@@ -39,34 +39,30 @@
 // TODO: Create notify system for errors and messages
 <script setup>
 import { onBeforeUpdate, defineProps, ref, defineEmits } from "vue";
-// import { useAuthStore } from "@/stores/auth.store";
-
 import _ from "lodash";
-// import api from "@/api/api";
 import secureApi from "@/api/authApi";
-
 import ButtonWithModalVue from "../button/ButtonWithModal.vue";
 
 const emit = defineEmits(['updateProjects']);
+
 const props = defineProps({
   projects: Array,
   filterTearm: String,
 });
-
-// const useAuth = useAuthStore();
-
-// const { projects, filterTearm } = toRefs(props);
 const filteredProjects = ref([]);
+
+
+
 const edit = async (update) => {
-  const projectWasUpdated = await secureApi.post("updateProject", update).catch(err => { 
+  await secureApi.post("updateProject", update).catch(err => {
     console.log("Error updating project: ", err);
   });
-  console.log("projectWasUpdated: ", projectWasUpdated);
   emit('updateProjects');
 };
 
-const remove = (projectId) => {
-  console.log("Removing Project...", projectId);
+const remove = async (projectId) => {
+  await secureApi.delete(`/deleteProject/${projectId}`);
+  emit('updateProjects');
 };
 
 const share = (projectId) => {
@@ -75,9 +71,9 @@ const share = (projectId) => {
 
 // I dont fucking like this but I need to do this fast
 const projectOptions = ref([
-  { title: "Edit", icon: "mdi-pencil", action: edit, template: 'EditProject'},
-  { title: "Share", icon: "mdi-share", action: share, template: 'ShareProject', disabled: true},
-  { title: "Remove", icon: "mdi-delete", action: remove, template: 'RemoveProject'},
+  { title: "Edit", icon: "mdi-pencil", action: edit, template: 'EditProject' },
+  { title: "Share", icon: "mdi-share", action: share, template: 'ShareProject', disabled: true },
+  { title: "Remove", icon: "mdi-delete", action: remove, template: 'RemoveProject' },
 ]);
 
 onBeforeUpdate(async () => {

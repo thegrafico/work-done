@@ -49,13 +49,12 @@ const user = ref({});
 const userSearchInput = ref('');
 
 const createProject = async (project) => { 
-  console.log("Creating project");
+  
   const newProject = await secureApi.post("/createProject", project).catch( err => { 
     console.error("Error creating project: ", err);
   });
 
   if (newProject) { 
-    console.log(newProject);
     projects.value.push(newProject.data.project);
   }
 }
@@ -73,7 +72,7 @@ const createProjectButtonConfig = ref({
 
 onMounted(async () => {
   user.value = getUser();
-  // Api.deleteAll(user.value);
+  
   // getting the projects
   projects.value = await getProjects();
 });

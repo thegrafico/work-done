@@ -55,6 +55,6 @@ onMounted(() => {
 
 const removeProject = () => { 
   resetDialog.value();
-  emit("onSubmit");
+  emit("onSubmit", props.project._id);
 }
 </script>
