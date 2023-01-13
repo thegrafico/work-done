@@ -76,7 +76,6 @@ const getProjects = async () => {
 const updateProjects = async () => {
   projects.value = await getProjects();
 };
-
 </script>
 
 <style scoped></style>

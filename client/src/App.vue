@@ -9,3 +9,12 @@
     name: "app"
   }
 </script>
+
+<style>
+.linkColor { 
+  color:#37474F; 
+}
+.linkColor:hover {
+  color: #546E7A;
+}
+</style>

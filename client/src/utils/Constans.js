@@ -14,13 +14,21 @@ const projectSideBarOptions = [
   ["mdi-cellphone-cog", "Config", '/config'],
 ];
 
+const headerBarOptions = [
+    ["mdi-account-box-outline", "Profile", '/profile'],
+    ["mdi-cog-outline", "Config", '/config'],
+    ["mdi-logout", "Logout", '/logout'],
+  ];
+
 const sideOptions = {
     "dashboard": dashboardSideBarOptions,
     "project": projectSideBarOptions,
+    "header": headerBarOptions
 }
 
 module.exports = {
   dashboardSideBarOptions,
   projectSideBarOptions,
+  headerBarOptions,
   sideOptions
 };

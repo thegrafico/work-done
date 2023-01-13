@@ -1,12 +1,16 @@
 <template>
   <v-row>
     <v-col cols="4" v-for="project in filteredProjects" :key="project._id">
-      <v-card variant="tonal">
-        <v-toolbar color="rgba(0, 0, 0, 0)">
+      <v-card variant="tonal" height="100%">
+        <v-toolbar>
           <v-toolbar-title>
-            <v-btn variant="plain" color="#90CAF9" class="font-weight-black text-h5" @click="$router.push(`/project/${project._id}/task`)">
+            <router-link
+              class="font-weight-black linkColor"
+              style="text-decoration: none"
+              :to="`/project/${project._id}/task`"
+            >
               {{ project.title }}
-            </v-btn>
+            </router-link>
           </v-toolbar-title>
 
           <!-- Three Dots options -->
@@ -111,3 +115,5 @@ const filterArray = (projects, filterTearm) => {
   return filteredProjects;
 };
 </script>
+
+

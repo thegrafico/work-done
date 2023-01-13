@@ -1,6 +1,14 @@
 <template>
   <v-app-bar :elevation="2" rounded>
-    <v-app-bar-title> {{ title }} </v-app-bar-title>
+    <v-app-bar-title>
+      <router-link
+        to="/"
+        class="font-weight-black linkColor"
+        style="text-decoration: none"
+      >
+        {{ title }}
+      </router-link>
+    </v-app-bar-title>
 
     <template v-slot:append>
       <v-menu>
@@ -9,8 +17,22 @@
         </template>
 
         <v-list>
-          <v-list-item v-for="(item, i) in items" :key="i">
-            <v-list-item-title> <v-icon :icon="item.icon"></v-icon> {<router-link to="/logout">About</router-link> {{ item.title }}</v-list-item-title>
+          <v-list-item
+            v-for="[icon, urlTitle, url] in headerOptions"
+            :key="icon"
+            class="ma-0 pa-0"
+          >
+            <v-list-item-title width="100">
+              <router-link
+                :to="url"
+                width="100"
+                class="font-weight-black linkColor pa-4"
+                style="text-decoration: none"
+              >
+                <v-icon :icon="icon"></v-icon>
+                {{ urlTitle }}
+              </router-link>
+            </v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
@@ -19,21 +41,18 @@
 </template>
 
 <script setup>
-import { defineProps, toRefs, ref } from "vue";
-import { useAuthStore } from "@/stores/auth.store";
+import { defineProps, toRefs, ref, onMounted } from "vue";
+import { headerBarOptions } from "@/utils/Constans";
 
 const props = defineProps({
   title: String,
 });
 
-const useAuth = useAuthStore();
+const headerOptions = ref([]);
 
-const items = ref([
-  { title: "Profile", icon: 'mdi-account-box-outline'},
-  { title: "Config", icon:  'mdi-cog-outline'},
-  { title: "Logout", icon: 'mdi-logout', action: useAuth.logout},
-]);
+onMounted(() => {
+  headerOptions.value = headerBarOptions;
+});
 
 const { title } = toRefs(props);
-
 </script>
