@@ -1,6 +1,6 @@
 <template>
   <v-navigation-drawer v-model="drawer">
-    <v-container fluid>
+    <v-container fluid v-if="username">
       <v-row>
         <v-col cols="12">
           <div class="d-flex justify-center">
@@ -20,7 +20,7 @@
       </v-row>
     </v-container>
 
-    <v-divider></v-divider>
+    <v-divider v-if="username"></v-divider>
 
     <v-list>
       <v-list-item v-for="[icon, text] in links" :key="icon" link>
@@ -35,21 +35,26 @@
 </template>
 
 <script setup>
-import { capitalize } from "vue";
+import { capitalize, onMounted } from "vue";
 import { ref, defineProps, toRefs } from "vue";
+import {sideOptions} from '@/utils/Constans'
 
 const props = defineProps( { 
-    username: String
+    username: String,
+    options: String
 })
 
 const {username} = toRefs(props);
 
 const drawer = ref(null);
-const links = ref([
-  ['mdi-inbox-arrow-down', 'Projects'],
-  ['mdi-send', 'Messages'],
-  ['mdi-delete', 'Trash'],
-  ['mdi-cog-outline', 'Config'],
-]);
+const links = ref([]);
+
+onMounted(() => { 
+  links.value = getSideOption(props.options || 'dashboard');
+})
+
+const getSideOption = (option) => { 
+  return sideOptions[option];
+}
 
 </script>

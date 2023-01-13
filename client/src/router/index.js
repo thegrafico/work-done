@@ -13,7 +13,14 @@ const routes = [
   {
     path: '/dashboard',
     name: 'dashboard',
-    component: () => import('../views/DashboardView.vue') // lazy load
+    alias: '/',
+    component: () => import('../views/LayoutView.vue') // lazy load
+  },
+  {
+    path: '/project/:id/:tab',
+    name: 'project',
+    props: route => ({id: route.params.id, tab: route.params.tab}),
+    component: () => import('../views/ProjectView.vue') // lazy load
   },
   {
     path: '/logout',

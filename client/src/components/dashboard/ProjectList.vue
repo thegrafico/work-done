@@ -3,14 +3,14 @@
     <v-col cols="4" v-for="project in filteredProjects" :key="project._id">
       <v-card variant="tonal">
         <v-toolbar color="rgba(0, 0, 0, 0)">
-
-          <v-toolbar-title class="text-h6">
-            {{ project.title }}
+          <v-toolbar-title>
+            <v-btn variant="plain" color="#90CAF9" class="font-weight-black text-h5" @click="$router.push(`/project/${project._id}/task`)">
+              {{ project.title }}
+            </v-btn>
           </v-toolbar-title>
 
           <!-- Three Dots options -->
           <template v-slot:append>
-
             <v-menu>
               <template v-slot:activator="{ props }">
                 <v-btn icon="mdi-dots-vertical" v-bind="props"></v-btn>
@@ -24,9 +24,7 @@
                 </v-list-item>
               </v-list>
             </v-menu>
-
           </template>
-
         </v-toolbar>
         <v-card-text>
           {{ project.description }}
@@ -43,7 +41,7 @@ import _ from "lodash";
 import secureApi from "@/api/authApi";
 import ButtonWithModalVue from "../button/ButtonWithModal.vue";
 
-const emit = defineEmits(['updateProjects']);
+const emit = defineEmits(["updateProjects"]);
 
 const props = defineProps({
   projects: Array,
@@ -51,18 +49,16 @@ const props = defineProps({
 });
 const filteredProjects = ref([]);
 
-
-
 const edit = async (update) => {
-  await secureApi.post("updateProject", update).catch(err => {
+  await secureApi.post("updateProject", update).catch((err) => {
     console.log("Error updating project: ", err);
   });
-  emit('updateProjects');
+  emit("updateProjects");
 };
 
 const remove = async (projectId) => {
   await secureApi.delete(`/deleteProject/${projectId}`);
-  emit('updateProjects');
+  emit("updateProjects");
 };
 
 const share = (projectId) => {
@@ -71,9 +67,20 @@ const share = (projectId) => {
 
 // I dont fucking like this but I need to do this fast
 const projectOptions = ref([
-  { title: "Edit", icon: "mdi-pencil", action: edit, template: 'EditProject' },
-  { title: "Share", icon: "mdi-share", action: share, template: 'ShareProject', disabled: true },
-  { title: "Remove", icon: "mdi-delete", action: remove, template: 'RemoveProject' },
+  { title: "Edit", icon: "mdi-pencil", action: edit, template: "EditProject" },
+  {
+    title: "Share",
+    icon: "mdi-share",
+    action: share,
+    template: "ShareProject",
+    disabled: true,
+  },
+  {
+    title: "Remove",
+    icon: "mdi-delete",
+    action: remove,
+    template: "RemoveProject",
+  },
 ]);
 
 onBeforeUpdate(async () => {
