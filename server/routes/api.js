@@ -17,14 +17,14 @@ router.get(
   }
 );
 
-router.get(
-  "/deleteAll",
-  // auth.authenticateToken,
-  async function (req, res, next) {
-    await ProjectCollection.deleteMany({});
-    res.status(200).send("deleted");
-  }
-);
+// router.get(
+//   "/deleteAll",
+//   // auth.authenticateToken,
+//   async function (req, res, next) {
+//     await ProjectCollection.deleteMany({});
+//     res.status(200).send("deleted");
+//   }
+// );
 
 router.post(
   "/createProject",
@@ -87,6 +87,33 @@ router.post("/updateProject", auth.authenticateToken, async function (req, res, 
   }
 
   res.status(200).send(updatedProject);
+});
+
+router.delete("/deleteProject/:projectId", auth.authenticateToken, async function (req, res, next) {
+  const projectId = req.params.projectId;
+
+  // check project title
+  if (_.isEmpty(projectId) || !_.isString(projectId)) {
+    res.status(400).send({ message: "Invalid project Information. Please try later." });
+    return;
+  }
+
+  // create project schema
+  const filter = {_id: projectId, owner: req.user.id}
+  console.log("Delete filters: ", filter);
+  let error = null;
+  const projectWasDeleted = await ProjectCollection.findOneAndDelete(filter).catch(err => {
+    error = err;
+  });
+  console.log("projectWasDeleted: ", projectWasDeleted);
+
+  if (error){
+    console.error("Error removing the project: ", error);
+    res.status(500).send({ message: "Oops, There was a problem when removing the project. Please try later."});
+    return;
+  }
+
+  res.status(200).send(projectWasDeleted);
 });
 
 module.exports = router;
