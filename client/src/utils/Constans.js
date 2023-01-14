@@ -8,10 +8,10 @@ const dashboardSideBarOptions = [
 ];
 
 const projectSideBarOptions = [
-  ["mdi-calendar-check-outline", "Task", '/task'],
-  ["mdi-chart-bell-curve", "Analytics", '/analytics'],
-  ["mdi-account-group", "Collabs", '/collab'],
-  ["mdi-cellphone-cog", "Config", '/config'],
+  ["mdi-calendar-check-outline", "Task", 'task'],
+  ["mdi-chart-bell-curve", "Analytics", 'analytics'],
+  ["mdi-account-group", "Collabs", 'collabs'],
+  ["mdi-cellphone-cog", "Config", 'config'],
 ];
 
 const headerBarOptions = [

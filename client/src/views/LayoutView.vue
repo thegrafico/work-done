@@ -2,10 +2,7 @@
   <v-app id="inspire">
     <!-- Header -->
     <Header title="Work Done" />
-
-    <!-- SIDEBAR -->
-    <NavSideBar :username="user.username || ''" />
-
+    
     <!-- Main Container -->
     <component :is="DashboardView"></component>
   </v-app>
@@ -18,7 +15,6 @@ import { useAuthStore } from "@/stores/auth.store";
 
 // Components
 import Header from "@/components/layout/HeaderView.vue";
-import NavSideBar from "@/components/layout/NavSideBar.vue";
 
 // Dynamic load views - Main section
 import DashboardView from "@/views/DashboardView.vue";

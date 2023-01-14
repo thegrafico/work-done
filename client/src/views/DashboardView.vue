@@ -1,7 +1,8 @@
 <template>
-  <v-main>
-    <v-container class="py-8 px-6" fluid>
+  <v-main class="border">
+    <v-container width="80" class="myBG mt-10" >
       <v-row>
+        <v-col cols="3"></v-col>
         <v-col cols="4">
           <v-text-field
             v-model.trim="userSearchInput"
@@ -12,10 +13,11 @@
           ></v-text-field>
         </v-col>
 
-        <v-col cols="8" class="mt-3">
+        <v-col cols="2" class="mt-3">
           <!-- Create project btn with modal -->
           <ButtonWithModal v-bind="createProjectButtonConfig" />
         </v-col>
+        <v-col cols="3"></v-col>
       </v-row>
 
       <!-- Project List -->
@@ -78,4 +80,9 @@ const updateProjects = async () => {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.myBG{
+  background-color: #14171907;
+  max-height: 80vh;
+}
+</style>
