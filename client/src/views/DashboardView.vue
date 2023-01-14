@@ -1,5 +1,5 @@
 <template>
-  <v-main class="border">
+  <v-main>
     <v-container width="80" class="myBG mt-10" >
       <v-row>
         <v-col cols="3"></v-col>

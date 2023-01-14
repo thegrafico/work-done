@@ -4,7 +4,7 @@
     <Header title="Work Done" />
 
     <!-- SIDEBAR -->
-    <NavSideBar options="project" :username="user.username"/>
+    <NavSideBar options="project" :username="user.username" />
 
     <!-- Main Container -->
     <component :is="tabs[props.tab]"></component>\
@@ -26,13 +26,16 @@ const props = defineProps({
   tab: String,
 });
 
-
 // Navigation tabs inside project ( Componets for project - AKA routes)
 const tabs = {
-  task: defineAsyncComponent(() => import("../views/project/TaskView.vue")),
-  analytics: defineAsyncComponent(() => import("../views/project/AnalyticsView.vue")),
-  collabs: defineAsyncComponent(() => import("../views/project/CollabView.vue")),
-  config: defineAsyncComponent(() => import("../views/project/ProjectConfigView.vue")),
+  task: defineAsyncComponent(() => 
+    import("../views/project/TaskView.vue")),
+  analytics: defineAsyncComponent(() =>
+    import("../views/project/AnalyticsView.vue")),
+  collabs: defineAsyncComponent(() =>
+    import("../views/project/CollabView.vue")),
+  config: defineAsyncComponent(() =>
+    import("../views/project/ProjectConfigView.vue")),
 };
 // const tab = ref(props.tab);
 const user = ref({});
@@ -45,5 +48,4 @@ const getUser = () => {
   const useAuth = useAuthStore();
   return useAuth.user;
 };
-
 </script>
