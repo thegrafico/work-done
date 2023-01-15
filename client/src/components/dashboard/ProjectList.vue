@@ -1,6 +1,6 @@
 <template>
   <v-row>
-    <v-col cols="4" v-for="project in filteredProjects" :key="project._id">
+    <v-col cols="3" v-for="project in filteredProjects" :key="project._id">
       <v-card variant="tonal" height="100%">
         <v-toolbar>
           <v-toolbar-title>
