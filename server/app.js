@@ -8,7 +8,8 @@ const database = require('./db/database');
 
 const indexRouter = require('./routes/index');
 const authRouter = require('./routes/auth');
-const apiRouter = require('./routes/api');
+const apiRouter = require('./routes/api/api');
+const apiTaskRouter = require('./routes/api/taks');
 
 var app = express();
 
@@ -32,7 +33,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/', authRouter);
-app.use('/api', apiRouter);
+app.use('/api', apiRouter); // Dashboard
+app.use('/api', apiTaskRouter); // project/Task
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

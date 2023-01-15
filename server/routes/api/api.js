@@ -1,12 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const auth = require("../utils/auth");
-const UserCollection = require("../db/schema/user");
-const ProjectCollection = require("../db/schema/projects");
+const auth = require("../../utils/auth");
+const UserCollection = require("../../db/schema/user");
+const ProjectCollection = require("../../db/schema/projects");
 const ObjectId = require("mongoose").Types.ObjectId;
 
 const _ = require("lodash");
 
+// GET - projects
 router.get(
   "/projects",
   auth.authenticateToken,
