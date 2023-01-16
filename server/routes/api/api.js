@@ -12,7 +12,7 @@ router.get(
   "/projects",
   auth.authenticateToken,
   async function (req, res, next) {
-    const projects = await ProjectCollection.find({owner: req.user.id});
+    const projects = await ProjectCollection.find({ owner: req.user.id });
     console.log("Projects: ", projects.length);
     res.status(200).send(projects);
   }
@@ -27,39 +27,36 @@ router.get(
 //   }
 // );
 
-router.post(
-  "/createProject",
-  auth.authenticateToken,
-  async function (req, res, next) {
-    const { title, description } = req.body;
+router.post("/createProject", auth.authenticateToken, async function (req, res, next) {
+  const { title, description } = req.body;
 
-    console.log("body: ", req.body);
+  console.log("body: ", req.body);
 
-    if (!_.isString(title) || _.isEmpty(title)) {
-      console.log("Title is empty: ", title);
-      res.status(400).send({ message: "project title cannot be empty." });
-      return;
-    }
-
-    if (!_.isString(description)) {
-      description = "";
-    }
-
-    const project = { title, description, owner: req.user.id };
-
-    let error = null;
-    const newProject = await ProjectCollection.create(project).catch((err) => {
-      error = err;
-    });
-
-    if (error) {
-      console.log("Error: ", error);
-      res.status(400).send({ message: error });
-      return;
-    }
-
-    res.status(200).send({ project: newProject });
+  if (!_.isString(title) || _.isEmpty(title)) {
+    console.log("Title is empty: ", title);
+    res.status(400).send({ message: "project title cannot be empty." });
+    return;
   }
+
+  if (!_.isString(description)) {
+    description = "";
+  }
+
+  const project = { title, description, owner: req.user.id };
+
+  let error = null;
+  const newProject = await ProjectCollection.create(project).catch((err) => {
+    error = err;
+  });
+
+  if (error) {
+    console.log("Error: ", error);
+    res.status(400).send({ message: error });
+    return;
+  }
+
+  res.status(200).send({ project: newProject });
+}
 );
 
 router.post("/updateProject", auth.authenticateToken, async function (req, res, next) {
@@ -72,7 +69,7 @@ router.post("/updateProject", auth.authenticateToken, async function (req, res, 
   }
 
   // create project schema
-  const filter = {_id: projectId, owner: req.user.id}
+  const filter = { _id: projectId, owner: req.user.id }
   const update = { title, description };
 
 
@@ -81,9 +78,9 @@ router.post("/updateProject", auth.authenticateToken, async function (req, res, 
     error = err;
   });
 
-  if (error){
+  if (error) {
     console.error("Error updating project: ", error);
-    res.status(500).send({ message: "Oops, There was a problem updating the project. Please try later."});
+    res.status(500).send({ message: "Oops, There was a problem updating the project. Please try later." });
     return;
   }
 
@@ -100,7 +97,7 @@ router.delete("/deleteProject/:projectId", auth.authenticateToken, async functio
   }
 
   // create project schema
-  const filter = {_id: projectId, owner: req.user.id}
+  const filter = { _id: projectId, owner: req.user.id }
   console.log("Delete filters: ", filter);
   let error = null;
   const projectWasDeleted = await ProjectCollection.findOneAndDelete(filter).catch(err => {
@@ -108,9 +105,9 @@ router.delete("/deleteProject/:projectId", auth.authenticateToken, async functio
   });
   console.log("projectWasDeleted: ", projectWasDeleted);
 
-  if (error){
+  if (error) {
     console.error("Error removing the project: ", error);
-    res.status(500).send({ message: "Oops, There was a problem when removing the project. Please try later."});
+    res.status(500).send({ message: "Oops, There was a problem when removing the project. Please try later." });
     return;
   }
 

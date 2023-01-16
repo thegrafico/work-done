@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const {TASK_TITLE_MAX_LENGHT, TASK_TITLE_MIN_LENGHT, TASK_MAX_POINTS, TASK_MIN_POINTS} = require("../../utils/constants");
+const {TASK_TITLE_MAX_LENGHT, TASK_TITLE_MIN_LENGHT, TASK_MIN_POINTS, TASK_MAX_POINTS} = require("../../utils/constants");
 
 const Schema = mongoose.Schema;
 const ObjectId = Schema.ObjectId;
@@ -24,7 +24,7 @@ const Task = new Schema(
     icon: { type: String, default: null },
     value: {
       type: Number,
-      default: TASK_MIN_POINTS,
+      required: [true, 'Task Points Value are required'],
       min: [TASK_MIN_POINTS, `Points cannot be less than ${TASK_MIN_POINTS}`],
       max: [TASK_MAX_POINTS, `Points cannot be greater than ${TASK_MAX_POINTS}`],
     },
@@ -34,7 +34,7 @@ const Task = new Schema(
           userId: ObjectId,
           value: {
             type: Number,
-            min: [TASK_MIN_POINTS, `Points cannot be less than ${TASK_MIN_POINTS}`],
+            min: [0, `Points cannot be less than 0`],
             max: [TASK_MAX_POINTS, `Points cannot be greater than ${TASK_MAX_POINTS}`],
           },
         },

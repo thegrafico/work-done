@@ -22,7 +22,7 @@ const Projects = new Schema(
 Projects.methods.userIsAllow = function(userId) { 
   const isOwner = this.owner.toString() === userId;
   const isCollab = this.users.find(uId => uId == userId);
-  return !isOwner || isCollab;
+  return isOwner || isCollab;
 }
 
 module.exports = mongoose.model("Projects", Projects);

@@ -6,30 +6,35 @@
     </v-btn>
 
     <!-- TODO: lazy load with this?  -->
-    <component :is="modals[template]" :dialog="dialog" :reset-dialog="resetDialog"
-      :project="project && project._id ? project : null" @on-submit="performAction"></component>
+    <component v-if="dialog" :is="modals[template]" :dialog="dialog" :reset-dialog="resetDialog"
+      :data="(data && data._id) ? data : null" :project="project && project._id ? project : null"
+      @on-submit="performAction">
+    </component>
   </div>
 </template>
 
 <script setup>
-import { defineProps, toRefs, ref } from "vue";
-import RemoveProject from "../modals/RemoveProject.vue";
-import CreateProject from "../modals/CreateProject.vue";
-import EditProject from "../modals/EditProject.vue";
-import ShareProject from "../modals/ShareProject.vue";
-import createTask from "../modals/task/createTask.vue";
-
+import { defineProps, toRefs, ref, defineAsyncComponent } from "vue";
 
 /**
  * These components are loaded using the :is paramenter.
  */
+
 const modals = {
-  RemoveProject,
-  CreateProject,
-  EditProject,
-  ShareProject,
-  createTask
+  RemoveProject: defineAsyncComponent(() =>
+    import("../modals/RemoveProject.vue")),
+  CreateProject: defineAsyncComponent(() =>
+    import("../modals/CreateProject.vue")),
+  EditProject: defineAsyncComponent(() =>
+    import("../modals/EditProject.vue")),
+  ShareProject: defineAsyncComponent(() =>
+    import("../modals/ShareProject.vue")),
+  createTask: defineAsyncComponent(() =>
+    import("../modals/task/createTask.vue")),
+  removeTask: defineAsyncComponent(() =>
+    import("../modals/task/RemoveTask.vue")),
 };
+
 
 const defaultVariant = "text";
 
@@ -42,6 +47,7 @@ const props = defineProps({
   variant: String,
   project: Object,
   disabled: Boolean,
+  data: Object
 });
 
 const {
@@ -52,7 +58,8 @@ const {
   color,
   variant,
   disabled,
-  project
+  project,
+  data
 } = toRefs(props);
 const dialog = ref(false);
 

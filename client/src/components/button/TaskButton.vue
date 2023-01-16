@@ -1,11 +1,11 @@
 <template>
   <v-container class="py-8 px-6" fluid>
     <v-row>
-      <v-col cols="6">
-        <button class="button-54 red" style="width:100%" @click="$emit('onSubmit', props.taskId, 'decrement')">-{{props.points}}</button>
+      <v-col v-if="userCanDecrement" :cols="(userCanIncrement) ? 6 : 12">
+        <button class="button-54 red" style="width:100%" @click="$emit('on-decrement', props.taskId)">-{{ props.taskValue }}</button>
       </v-col>
-      <v-col cols="6">
-        <button class="button-54 green" style="width:100%" @click="$emit('onSubmit', props.taskId, 'increment')">+{{props.points}}</button>
+      <v-col v-if="userCanIncrement" :cols="(userCanDecrement) ? 6 : 12">
+        <button class="button-54 green" style="width:100%" @click="$emit('on-increment', props.taskId)">+{{ props.taskValue }}</button>
       </v-col>
     </v-row>
 
@@ -14,11 +14,26 @@
 
 <script setup>
 
-import { defineProps } from 'vue';
+import { defineProps, onMounted, ref, onUpdated } from 'vue';
 
 const props = defineProps({
   taskId: String,
-  points: Number
+  taskValue: Number,
+  userPoints: Number,
+});
+
+const userCanDecrement = ref(false);
+const userCanIncrement = ref(false);
+
+// TODO: add constants instead of harcoded values for limits.
+onMounted(() => { 
+  userCanDecrement.value = (props.userPoints - props.taskValue) >= 0;
+  userCanIncrement.value = (props.userPoints + props.taskValue) <= 100;
+});
+
+onUpdated(() => {
+  userCanDecrement.value = (props.userPoints - props.taskValue) >= 0;
+  userCanIncrement.value = (props.userPoints + props.taskValue) <= 100;
 });
 
 </script>
@@ -62,6 +77,3 @@ const props = defineProps({
 }
 </style>
 
-<!-- HTML !-->
-
-/* CSS */
