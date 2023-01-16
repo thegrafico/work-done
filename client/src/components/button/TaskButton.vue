@@ -2,10 +2,10 @@
   <v-container class="py-8 px-6" fluid>
     <v-row>
       <v-col cols="6">
-        <button class="button-54 red" style="width:100%" @click="$emit('onSubmit', props.taskId, 'decrement')">-1</button>
+        <button class="button-54 red" style="width:100%" @click="$emit('onSubmit', props.taskId, 'decrement')">-{{props.points}}</button>
       </v-col>
       <v-col cols="6">
-        <button class="button-54 green" style="width:100%" @click="$emit('onSubmit', props.taskId, 'increment')">+1</button>
+        <button class="button-54 green" style="width:100%" @click="$emit('onSubmit', props.taskId, 'increment')">+{{props.points}}</button>
       </v-col>
     </v-row>
 
@@ -17,9 +17,9 @@
 import { defineProps } from 'vue';
 
 const props = defineProps({
-  taskId: String
+  taskId: String,
+  points: Number
 });
-
 
 </script>
 

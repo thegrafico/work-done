@@ -56,7 +56,7 @@
           <v-divider></v-divider>
 
           <!-- Action Buttons for adding or subtracting -->
-          <TaskButton @on-submit="updateTaskUserPoints" :task-id="task._id"/>
+          <TaskButton @on-submit="updateTaskUserPoints" :task-id="task._id" :points="task.value"/>
         </v-card>
       </v-sheet>
     </v-col>
