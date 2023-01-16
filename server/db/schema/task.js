@@ -35,7 +35,7 @@ const Task = new Schema(
           value: {
             type: Number,
             min: [0, `Points cannot be less than 0`],
-            max: [100, `Points cannot be greater than ${TASK_MAX_POINTS}`],
+            max: [TASK_MAX_POINTS, `Points cannot be greater than ${TASK_MAX_POINTS}`],
           },
         },
       ],

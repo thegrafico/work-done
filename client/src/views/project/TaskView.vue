@@ -25,8 +25,7 @@
       <v-divider></v-divider>
 
       <!-- list of task -->
-      <TaskList v-if="dataIsLoaded" :filter-tearm="searchTaskInput" :tasks="tasks"
-        @on-task-updated="refreshTaskList" />
+      <TaskList v-if="dataIsLoaded" :filter-tearm="searchTaskInput" :tasks="tasks" @on-task-updated="refreshTaskList" />
 
     </v-container>
   </v-main>
@@ -90,13 +89,20 @@ onMounted(async () => {
 });
 
 
-const refreshTaskList = async (updatedTask) => {
-  
+const refreshTaskList = async (updatedTask, updateType) => {
+
   const index = tasks.value.findIndex(taks => {
     return taks._id === updatedTask._id;
   });
 
   // Update task list
+
+  if (updateType === 'remove') { 
+    tasks.value.splice(index, 1);
+    return;
+  }
+  
+  // replace existing
   tasks.value.splice(index, 1, updatedTask);
 }
 

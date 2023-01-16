@@ -169,7 +169,7 @@ router.post(
 
     // if there is not points recorded yet: add the user. 
     if (_.isEmpty(task.points)) {
-      task.points.push({ userId: userId, value: task.value});
+      task.points.push({ userId: userId, value: task.value });
     } else {
       const myPoints = task.points.find(userPoints => userPoints.userId.toString() === userId.toString());
 
@@ -180,9 +180,9 @@ router.post(
       } else {
 
         // reset value if the substraction is less than 0
-        if (myPoints.value + task.value > TASK_MAX_POINTS){
+        if (myPoints.value + task.value > TASK_MAX_POINTS) {
           myPoints.value = TASK_MAX_POINTS;
-        }else { 
+        } else {
           // substrab points
           myPoints.value += task.value;
         }
@@ -239,7 +239,7 @@ router.post(
 
     // if there is not points recorded yet: add the user. 
     if (_.isEmpty(task.points)) {
-      task.points.push({ userId: userId, value: 0});
+      task.points.push({ userId: userId, value: 0 });
     } else {
       const myPoints = task.points.find(userPoints => userPoints.userId.toString() === userId.toString());
 
@@ -250,9 +250,9 @@ router.post(
       } else {
 
         // reset value if the substraction is less than 0
-        if (myPoints.value - task.value < TASK_MIN_POINTS){
+        if (myPoints.value - task.value < TASK_MIN_POINTS) {
           myPoints.value = 0;
-        }else { 
+        } else {
           // substrab points
           myPoints.value -= task.value;
         }
@@ -260,6 +260,26 @@ router.post(
     }
 
     await task.save();
+
+    res.status(200).send(task);
+  }
+);
+
+router.delete(
+  "/projects/tasks/:taskId",
+  auth.authenticateToken,
+  async function (req, res, next) {
+    // const projectId = req.params.projectId;
+    const taskId  = req.params.taskId;
+    const userId = req.user.id;
+
+    const filter = { _id: taskId, owner: userId };
+    // getting the task
+    const task = await TaskCollection.deleteOne(filter).catch((err) => {
+      console.error("error getting Task: ", err);
+    });
+
+    console.log("REMOVED TASK: ", task)
 
     res.status(200).send(task);
   }

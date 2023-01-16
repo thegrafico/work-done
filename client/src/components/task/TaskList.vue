@@ -19,7 +19,11 @@
                 </template>
 
                 <v-list>
-
+                  <v-list-item v-for="(options, i) in taskOptions" :key="i">
+                    <v-list-item-title>
+                      <ButtonWithModal v-bind="options" :data="task" />
+                    </v-list-item-title>
+                  </v-list-item>
                 </v-list>
               </v-menu>
             </template>
@@ -46,9 +50,9 @@
           </v-card-text>
 
           <!-- Amound of people that worked in this task -->
-          <div class="d-flex py-3 justify-space-between">
+          <div class="d-flex py-2 justify-space-between">
             <v-list-item density="compact" prepend-icon="mdi-account-group-outline">
-              <v-list-item-subtitle> {{ task.points.length }} People had done this task.</v-list-item-subtitle>
+              <v-list-item-subtitle> {{ task.points.length }} People have done this task.</v-list-item-subtitle>
             </v-list-item>
           </div>
 
@@ -56,7 +60,8 @@
           <v-divider></v-divider>
 
           <!-- Action Buttons for adding or subtracting -->
-          <TaskButton @on-increment="incrementUserPoints" @on-decrement="decrementUserPoints" :task-id="task._id" :task-value="task.value" :user-points="getMyPoints(task.points)"/>
+          <TaskButton @on-increment="incrementUserPoints" @on-decrement="decrementUserPoints" :task-id="task._id"
+            :task-value="task.value" :user-points="getMyPoints(task.points)" />
         </v-card>
       </v-sheet>
     </v-col>
@@ -67,6 +72,7 @@
 import { onBeforeUpdate, defineProps, ref, onMounted, defineEmits } from "vue";
 import { useAuthStore } from "@/stores/auth.store";
 import TaskButton from "@/components/button/TaskButton.vue";
+import ButtonWithModal from "../button/ButtonWithModal.vue";
 import secureApi from "@/api/authApi";
 import _ from "lodash";
 
@@ -102,6 +108,34 @@ const decrementUserPoints = async (taskId) => {
   emit('on-task-updated', updatedTask.data);
 }
 
+const updateTask = async (updatedTask) => {
+  console.log("updated: ", updatedTask);
+}
+const removeTask = async (taskId) => {
+  const taskWasRemoved = await secureApi.delete(`/projects/tasks/${taskId}`);
+
+  if (taskWasRemoved.status === 200) { 
+    // in order to work need to pass the _id parameter
+    emit('on-task-updated', {_id: taskId}, 'remove');
+  }
+}
+
+// I dont fucking like this but I need to do this fast
+const taskOptions = ref([
+  {
+    title: "Edit",
+    icon: "mdi-pencil",
+    action: updateTask,
+    template: "createTask"
+  },
+  {
+    title: "Remove",
+    icon: "mdi-delete",
+    action: removeTask,
+    template: "removeTask",
+  },
+]);
+
 /**
  * get current user points
  * @param {Array} taskPoints 
@@ -124,7 +158,7 @@ const getMyPoints = (taskPoints) => {
   if (_.isEmpty(taskPoints)) { return 0 }
 
   const myPoints = taskPoints.find(userPoints => userPoints.userId.toString() === user.value._id.toString());
-  
+
   if (myPoints && myPoints.value) {
     return myPoints.value;
   }
