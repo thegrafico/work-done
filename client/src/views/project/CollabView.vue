@@ -12,7 +12,7 @@
   
   const title = "Collabs"
   onMounted(async () => {
-    console.log("Taks view loaded");
+    console.log("Collab view loaded");
   });
   </script>
   

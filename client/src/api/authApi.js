@@ -19,7 +19,7 @@ const secureApi = axios.create(config);
 
 // Interceptoor for authorization
 secureApi.interceptors.request.use((config) => {
-  console.log("Seding Auth Request");
+  // console.log("Seding Auth Request");
   const authStore = useAuthStore();
   const token = authStore.getToken();
   config.headers.Authorization = `Bearer ${token}`;

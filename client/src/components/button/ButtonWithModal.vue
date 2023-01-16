@@ -17,6 +17,8 @@ import RemoveProject from "../modals/RemoveProject.vue";
 import CreateProject from "../modals/CreateProject.vue";
 import EditProject from "../modals/EditProject.vue";
 import ShareProject from "../modals/ShareProject.vue";
+import createTask from "../modals/task/createTask.vue";
+
 
 /**
  * These components are loaded using the :is paramenter.
@@ -26,6 +28,7 @@ const modals = {
   CreateProject,
   EditProject,
   ShareProject,
+  createTask
 };
 
 const defaultVariant = "text";
@@ -53,8 +56,8 @@ const {
 } = toRefs(props);
 const dialog = ref(false);
 
-const performAction = (values) => {
-  action.value(values);
+const performAction = async (values) => {
+  await action.value(values);
   resetDialog();
 };
 

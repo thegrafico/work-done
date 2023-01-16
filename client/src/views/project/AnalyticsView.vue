@@ -12,7 +12,7 @@
   
   const title = "Analytics"
   onMounted(async () => {
-    console.log("Taks view loaded");
+    console.log("Analytics view loaded");
   });
   </script>
   

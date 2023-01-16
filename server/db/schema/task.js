@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const {TASK_TITLE_MAX_LENGHT, TASK_TITLE_MIN_LENGHT} = require("../../utils/constants");
 
 const Schema = mongoose.Schema;
 const ObjectId = Schema.ObjectId;
@@ -14,7 +15,7 @@ const Task = new Schema(
         
         // Check title is greater than 3 and less than 25
         validator: function (v) {
-          return v.length > 2 && v.length <= 25;
+          return v.length >= TASK_TITLE_MIN_LENGHT && v.length <= TASK_TITLE_MAX_LENGHT;
         },
         message: props => `${props.value} is not a valid title. Title should be less grater than 2 or less than 25`
       },

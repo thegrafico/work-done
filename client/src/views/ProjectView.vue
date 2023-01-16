@@ -7,7 +7,7 @@
     <NavSideBar options="project" :username="user.username" />
 
     <!-- Main Container -->
-    <component :is="tabs[props.tab]"></component>\
+    <component :is="tabs[props.tab]" :project-id="props.id"></component>
   </v-app>
 </template>
 
@@ -19,8 +19,8 @@ import { useAuthStore } from "@/stores/auth.store";
 import Header from "@/components/layout/HeaderView.vue";
 import NavSideBar from "@/components/layout/NavSideBar.vue";
 
-// Dynamic load views - Main section
 
+// id = ProjectId, tab = ['task', 'analytics'...];
 const props = defineProps({
   id: String,
   tab: String,

@@ -12,7 +12,7 @@
   
   const title = "Config"
   onMounted(async () => {
-    console.log("Taks view loaded");
+    console.log("Project Config loaded");
   });
   </script>
   

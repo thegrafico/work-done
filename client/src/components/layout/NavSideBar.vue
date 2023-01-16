@@ -54,7 +54,6 @@ const links = ref([]);
 
 onMounted(() => {
   links.value = getSideOption(props.options || "dashboard");
-  console.log("Mounting")
 });
 
 const getSideOption = (option) => {
