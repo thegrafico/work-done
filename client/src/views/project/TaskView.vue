@@ -25,7 +25,8 @@
       <v-divider></v-divider>
 
       <!-- list of task -->
-      <TaskList v-if="dataIsLoaded" :filter-tearm="searchTaskInput" :tasks="tasks" />
+      <TaskList v-if="dataIsLoaded" :filter-tearm="searchTaskInput" :tasks="tasks"
+        @on-task-updated="refreshTaskList" />
 
     </v-container>
   </v-main>
@@ -36,6 +37,7 @@ import { onMounted, ref, defineProps } from "vue";
 import ButtonWithModal from "@/components/button/ButtonWithModal.vue";
 import TaskList from "@/components/task/TaskList.vue"
 import secureApi from "@/api/authApi";
+import { useAuthStore } from "@/stores/auth.store";
 const title = "Task";
 
 const props = defineProps({
@@ -46,12 +48,14 @@ const props = defineProps({
 const searchTaskInput = ref("");
 const tasks = ref([]);
 const dataIsLoaded = ref(false);
+const user = ref(null);
 
 // Get project task
 const getTask = async () => {
+  dataIsLoaded.value = false;
   const projectTask = await secureApi.get(`/projects/${props.projectId}/tasks`);
-
-  if (!projectTask.data || !projectTask.data.tasks) return [];
+  dataIsLoaded.value = true;
+  if (!projectTask || !projectTask.data || !projectTask.data.tasks) return [];
 
   return projectTask.data.tasks;
 };
@@ -65,7 +69,6 @@ const createTask = async (task) => {
   if (newTask && newTask._id) {
 
     tasks.value.push(newTask);
-    updateTaskUI();
     return;
   }
 
@@ -75,14 +78,26 @@ const createTask = async (task) => {
 
 // Mounted hook
 onMounted(async () => {
-  const projectTask = await getTask();
-  tasks.value = projectTask;
+
+  const useStore = useAuthStore();
+  user.value = useStore.user;
+
+  // Load tasks
+  tasks.value = await getTask();
+
+  // reset loaded state
   dataIsLoaded.value = true;
-  console.log("Task: ", tasks.value);
 });
 
-const updateTaskUI = async () => {
-  tasks.value = await getTask();
+
+const refreshTaskList = async (updatedTask) => {
+  
+  const index = tasks.value.findIndex(taks => {
+    return taks._id === updatedTask._id;
+  });
+
+  // Update task list
+  tasks.value.splice(index, 1, updatedTask);
 }
 
 // Create Task button

@@ -1,6 +1,6 @@
 <template>
   <v-row class="pt-4">
-    <v-col cols="3" v-for="task in filteredList" :key="task._id">
+    <v-col cols="4" v-for="task in filteredList" :key="task._id">
       <v-sheet elevation="21">
         <v-card class="mx-auto">
 
@@ -31,10 +31,10 @@
               {{ task.description }}
             </v-row>
             <v-row align="center" no-gutters>
-              <v-col :cols="task.icon ? 6: 12"  :align="!task.icon ? 'center' : null">
+              <v-col :cols="task.icon ? 6 : 12" :align="!task.icon ? 'center' : null">
                 <v-avatar :color="(task.color) ? task.color : 'info'" size="x-large">
                   <h2>
-                    {{  getMyPoints(task.points) }}
+                    {{ getMyPoints(task.points) }}
                   </h2>
                 </v-avatar>
               </v-col>
@@ -56,7 +56,7 @@
           <v-divider></v-divider>
 
           <!-- Action Buttons for adding or subtracting -->
-          <TaskButton @on-submit="updateTaskUserPoints" :task-id="task._id"/>
+          <TaskButton @on-increment="incrementUserPoints" @on-decrement="decrementUserPoints" :task-id="task._id" :task-value="task.value" :user-points="getMyPoints(task.points)"/>
         </v-card>
       </v-sheet>
     </v-col>
@@ -64,13 +64,13 @@
 </template>
 
 <script setup>
-import { onBeforeUpdate, defineProps, ref, onMounted } from "vue";
+import { onBeforeUpdate, defineProps, ref, onMounted, defineEmits } from "vue";
 import { useAuthStore } from "@/stores/auth.store";
 import TaskButton from "@/components/button/TaskButton.vue";
 import secureApi from "@/api/authApi";
 import _ from "lodash";
 
-// const emit = defineEmits(["updateProjects"]);
+const emit = defineEmits(["on-task-updated"]);
 
 const props = defineProps({
   tasks: Array,
@@ -93,26 +93,29 @@ onBeforeUpdate(async () => {
 });
 
 
-
-const updateTaskUserPoints = async (taskId, updateType) => { 
-  const taskWasUpdated = await secureApi.post(`/projects/task/${taskId}/updatePoints`, updateType)
-  return  taskWasUpdated.data;
+const incrementUserPoints = async (taskId) => {
+  const updatedTask = await secureApi.post(`/projects/task/${taskId}/increment`);
+  emit('on-task-updated', updatedTask.data);
+}
+const decrementUserPoints = async (taskId) => {
+  const updatedTask = await secureApi.post(`/projects/task/${taskId}/decrement`);
+  emit('on-task-updated', updatedTask.data);
 }
 
 /**
  * get current user points
  * @param {Array} taskPoints 
  */
-const getMyPoints = (taskPoints) => { 
+const getMyPoints = (taskPoints) => {
 
   // check if there is an user
-  if (!user.value || !user.value._id) { 
+  if (!user.value || !user.value._id) {
     console.error("Sorry, cannot get yours points now");
     return 0;
   }
 
   // check if there is points
-  if (!_.isArray(taskPoints) ) { 
+  if (!_.isArray(taskPoints)) {
     console.error("Error: Points seems to be damaged");
     return 0;
   }
@@ -120,10 +123,10 @@ const getMyPoints = (taskPoints) => {
   // check if points are empty
   if (_.isEmpty(taskPoints)) { return 0 }
 
-  const myPoints = taskPoints.filter(userPoints => userPoints.userId.toString() === user.value._id.toString());
-
-  if (myPoints &&  myPoints.length > 0) { 
-    return myPoints[0].points;
+  const myPoints = taskPoints.find(userPoints => userPoints.userId.toString() === user.value._id.toString());
+  
+  if (myPoints && myPoints.value) {
+    return myPoints.value;
   }
 
   return 0;
@@ -139,7 +142,7 @@ const filterArray = (arr, filterTearm) => {
 
   // console.log("Filtering: ", arr);
   // console.log("Tearm: ", filterTearm);
-  
+
   if (!_.isString(filterTearm) || _.isEmpty(filterTearm)) {
     return arr;
   }
@@ -152,6 +155,7 @@ const filterArray = (arr, filterTearm) => {
   const tempFilteredArr = arr.filter((item) => {
     return item.title.toLowerCase().includes(filterTearm);
   });
+
 
   return tempFilteredArr;
 };
