@@ -37,6 +37,8 @@ import ButtonWithModal from "@/components/button/ButtonWithModal.vue";
 import TaskList from "@/components/task/TaskList.vue"
 import secureApi from "@/api/authApi";
 import { useAuthStore } from "@/stores/auth.store";
+import Task from "@/controllers/Task";
+
 const title = "Task";
 
 const props = defineProps({
@@ -48,16 +50,6 @@ const searchTaskInput = ref("");
 const tasks = ref([]);
 const dataIsLoaded = ref(false);
 const user = ref(null);
-
-// Get project task
-const getTask = async () => {
-  dataIsLoaded.value = false;
-  const projectTask = await secureApi.get(`/projects/${props.projectId}/tasks`);
-  dataIsLoaded.value = true;
-  if (!projectTask || !projectTask.data || !projectTask.data.tasks) return [];
-
-  return projectTask.data.tasks;
-};
 
 // Create Task
 const createTask = async (task) => {
@@ -82,7 +74,7 @@ onMounted(async () => {
   user.value = useStore.user;
 
   // Load tasks
-  tasks.value = await getTask();
+  tasks.value = await Task.getTask(props.projectId);
 
   // reset loaded state
   dataIsLoaded.value = true;

@@ -10,8 +10,6 @@ module.exports = {
   parserOptions: {
     parser: '@babel/eslint-parser',
     requireConfigFile: false,
-    legacyDecorators: true,
-    decorators: true
   },
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',

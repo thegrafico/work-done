@@ -40,7 +40,7 @@
 <script setup>
 import { capitalize, onMounted } from "vue";
 import { ref, defineProps, toRefs } from "vue";
-import { sideOptions } from "@/utils/Constans";
+import { sideOptions } from "@/utils/Constants";
 
 const props = defineProps({
   username: String,

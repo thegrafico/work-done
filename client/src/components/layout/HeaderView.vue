@@ -42,7 +42,7 @@
 
 <script setup>
 import { defineProps, toRefs, ref, onMounted } from "vue";
-import { headerBarOptions } from "@/utils/Constans";
+import { headerBarOptions } from "@/utils/Constants";
 
 const props = defineProps({
   title: String,
