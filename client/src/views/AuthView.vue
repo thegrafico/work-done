@@ -35,7 +35,7 @@
   const checkIfUserIsLoggedIn = () => {
     
     const useStore = useAuthStore();
-    if (useStore.getUser()) { 
+    if (useStore.getUser) { 
       return useStore.redirectToHome();
     }
 

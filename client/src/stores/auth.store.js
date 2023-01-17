@@ -30,22 +30,22 @@ export const useAuthStore = defineStore('auth', {
 
         redirectToHome() {
             router.push("/dashboard");
-        },
-
-        getUser() {
-            if (this.user && this.user.accessToken) {
-                return this.user
+        }
+    },
+    getters: {
+        getUser(state) {
+            if (state.user && state.user.accessToken) {
+                return state.user
             }
 
             return null;
         },
 
-        getToken() {
-            if (!this.user || !this.user.accessToken) {
-                return null
+        userToken(state) {
+            if (!this.getUser) {
+                return null;
             }
-            return this.user.accessToken;
+            return state.user.accessToken;
         }
-
-    },
+    }
 });

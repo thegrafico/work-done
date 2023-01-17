@@ -1,5 +1,4 @@
 
-
 const dashboardSideBarOptions = [
   ["mdi-inbox-arrow-down", "Projects"],
   ["mdi-send", "Messages"],
@@ -26,9 +25,18 @@ const sideOptions = {
     "header": headerBarOptions
 }
 
+const updateType = {
+  "create": "create",
+  "remove": "remove",
+  "update": "update",
+}
+
+
+
 module.exports = {
   dashboardSideBarOptions,
   projectSideBarOptions,
   headerBarOptions,
-  sideOptions
+  sideOptions,
+  updateType
 };

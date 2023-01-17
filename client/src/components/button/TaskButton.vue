@@ -2,10 +2,10 @@
   <v-container class="py-8 px-6" fluid>
     <v-row>
       <v-col v-if="userCanDecrement" :cols="(userCanIncrement) ? 6 : 12">
-        <button class="button-54 red" style="width:100%" @click="$emit('on-decrement', props.taskId)">-{{ props.taskValue }}</button>
+        <button class="button-54 red" style="width:100%" @click="$emit('on-update-points', props.taskId, 'decrement')">-{{ props.taskValue }}</button>
       </v-col>
       <v-col v-if="userCanIncrement" :cols="(userCanDecrement) ? 6 : 12">
-        <button class="button-54 green" style="width:100%" @click="$emit('on-increment', props.taskId)">+{{ props.taskValue }}</button>
+        <button class="button-54 green" style="width:100%" @click="$emit('on-update-points', props.taskId, 'increment')">+{{ props.taskValue }}</button>
       </v-col>
     </v-row>
 

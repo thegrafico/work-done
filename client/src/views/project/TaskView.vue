@@ -3,7 +3,7 @@
     <v-container class="py-8 px-6" fluid>
       <v-row>
         <v-col cols="12">
-          <h1>{{ title }}</h1>
+          <h1>Task</h1>
         </v-col>
       </v-row>
 
@@ -25,7 +25,12 @@
       <v-divider></v-divider>
 
       <!-- list of task -->
-      <TaskList v-if="dataIsLoaded" :filter-tearm="searchTaskInput" :tasks="tasks" @on-task-updated="refreshTaskList" />
+      <TaskList v-if="dataIsLoaded" 
+        :filter-tearm="searchTaskInput" 
+        :tasks="tasks" 
+        @on-task-updated="refreshTaskList" 
+        @on-update-points="updateTaskPoints"
+        />
 
     </v-container>
   </v-main>
@@ -35,30 +40,56 @@
 import { onMounted, ref, defineProps } from "vue";
 import ButtonWithModal from "@/components/button/ButtonWithModal.vue";
 import TaskList from "@/components/task/TaskList.vue"
-import secureApi from "@/api/authApi";
-import { useAuthStore } from "@/stores/auth.store";
 import Task from "@/controllers/Task";
+import { updateType } from "@/utils/Constants";
 
-const title = "Task";
-
-const props = defineProps({
-  projectId: String
-});
+const props = defineProps({projectId: String});
 
 // Refs
-const searchTaskInput = ref("");
 const tasks = ref([]);
+const searchTaskInput = ref("");
 const dataIsLoaded = ref(false);
-const user = ref(null);
+
+
+// Mounted hook
+onMounted(async () => {
+
+  // Load tasks
+  tasks.value = await Task.getTask(props.projectId);
+
+  // wait for the task to be loaded and then reset the loading state
+  dataIsLoaded.value = true;
+});
+
+
+/**
+ * Refresh the task list for the USER
+ * @param {Task} updatedTask - Task to update
+ * @param {updateType} udpate - look for constant file
+ */
+const refreshTaskList = async (updatedTask, udpate) => {
+
+  const index = tasks.value.findIndex(taks => {
+    return taks._id === updatedTask._id;
+  });
+
+  // Update task list
+  if (udpate === updateType.remove) { 
+    tasks.value.splice(index, 1);
+    return;
+  }
+  
+  // replace existing
+  tasks.value.splice(index, 1, updatedTask);
+}
+
 
 // Create Task
 const createTask = async (task) => {
-  const response = await secureApi.post(`/projects/${props.projectId}/task/create`, task);
-  const newTask = response.data;
-
+  const newTask = Task.create(props.projectId, task);
+  
   // check is task was created
-  if (newTask && newTask._id) {
-
+  if (newTask) {
     tasks.value.push(newTask);
     return;
   }
@@ -67,36 +98,12 @@ const createTask = async (task) => {
 };
 
 
-// Mounted hook
-onMounted(async () => {
-
-  const useStore = useAuthStore();
-  user.value = useStore.user;
-
-  // Load tasks
-  tasks.value = await Task.getTask(props.projectId);
-
-  // reset loaded state
-  dataIsLoaded.value = true;
-});
-
-
-const refreshTaskList = async (updatedTask, updateType) => {
-
-  const index = tasks.value.findIndex(taks => {
-    return taks._id === updatedTask._id;
-  });
-
-  // Update task list
-
-  if (updateType === 'remove') { 
-    tasks.value.splice(index, 1);
-    return;
-  }
-  
-  // replace existing
-  tasks.value.splice(index, 1, updatedTask);
+const updateTaskPoints = async (taskId, updateType) => {
+  console.log("Updating task points: ", taskId, updateType);
+  // const updatedTask = await secureApi.post(`/projects/task/${taskId}/increment`);
+  // emit('on-task-updated', updatedTask.data, updateType.update);
 }
+
 
 // Create Task button
 const createTaskButton = ref({

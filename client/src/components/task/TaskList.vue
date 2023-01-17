@@ -8,9 +8,9 @@
 
             <v-toolbar color="rgb(0,0,0,0)">
               <v-toolbar-title>
-                <h4>
+                <h5>
                   {{ task.title }}
-                </h4>
+                </h5>
               </v-toolbar-title>
 
               <!-- Three Dots options -->
@@ -62,18 +62,23 @@
             <v-divider></v-divider>
 
             <!-- Action Buttons for adding or subtracting -->
-            <TaskButton @on-increment="incrementUserPoints" @on-decrement="decrementUserPoints" :task-id="task._id"
-              :task-value="task.value" :user-points="getMyPoints(task.points)" />
+            <TaskButton 
+              @on-increment="incrementUserPoints" 
+              @on-decrement="decrementUserPoints" 
+              @on-update-points="$emit('on-update-points')"
+              :task-id="task._id"
+              :task-value="task.value" 
+              :user-points="getMyPoints(task.points)" />
           </v-card>
         </v-sheet>
       </v-col>
     </v-row>
 
     <!-- In case there is not project created yet -->
-    <v-row v-if="!filteredList.length" class="pt-4">
+    <v-row v-if="!props.tasks.length" class="pt-4">
       <v-col cols="3"></v-col>
       <v-col cols="6">
-         <v-sheet elevation="21">
+        <v-sheet elevation="21">
           <v-card class="pa-10">
             <h3>
               It seems you don't have any task for this proyect yet.
@@ -91,10 +96,11 @@
 <script setup>
 import { onBeforeUpdate, defineProps, ref, onMounted, defineEmits } from "vue";
 import { useAuthStore } from "@/stores/auth.store";
+import { updateType } from "@/utils/Constants";
+import { filterArray } from "@/utils/Helpers";
 import TaskButton from "@/components/button/TaskButton.vue";
 import ButtonWithModal from "../button/ButtonWithModal.vue";
 import secureApi from "@/api/authApi";
-import _ from "lodash";
 
 const emit = defineEmits(["on-task-updated"]);
 
@@ -121,22 +127,24 @@ onBeforeUpdate(async () => {
 
 const incrementUserPoints = async (taskId) => {
   const updatedTask = await secureApi.post(`/projects/task/${taskId}/increment`);
-  emit('on-task-updated', updatedTask.data);
+  emit('on-task-updated', updatedTask.data, updateType.update);
 }
 const decrementUserPoints = async (taskId) => {
   const updatedTask = await secureApi.post(`/projects/task/${taskId}/decrement`);
-  emit('on-task-updated', updatedTask.data);
+  emit('on-task-updated', updatedTask.data, updateType.update);
 }
 
 const updateTask = async (updatedTask) => {
-  console.log("updated: ", updatedTask);
+  console.log("updated: ", updatedTask, updateType.update);
 }
+
+
 const removeTask = async (taskId) => {
   const taskWasRemoved = await secureApi.delete(`/projects/tasks/${taskId}`);
 
   if (taskWasRemoved.status === 200) {
     // in order to work need to pass the _id parameter
-    emit('on-task-updated', { _id: taskId }, 'remove');
+    emit('on-task-updated', { _id: taskId }, updateType.remove);
   }
 }
 
@@ -160,7 +168,8 @@ const taskOptions = ref([
  * get current user points
  * @param {Array} taskPoints 
  */
-const getMyPoints = (taskPoints) => {
+
+ const getMyPoints = (taskPoints) => {
 
   // check if there is an user
   if (!user.value || !user.value._id) {
@@ -169,13 +178,13 @@ const getMyPoints = (taskPoints) => {
   }
 
   // check if there is points
-  if (!_.isArray(taskPoints)) {
+  if (!Array.isArray(taskPoints)) {
     console.error("Error: Points seems to be damaged");
     return 0;
   }
 
   // check if points are empty
-  if (_.isEmpty(taskPoints)) { return 0 }
+  if (!taskPoints.length) { return 0 }
 
   const myPoints = taskPoints.find(userPoints => userPoints.userId.toString() === user.value._id.toString());
 
@@ -186,31 +195,4 @@ const getMyPoints = (taskPoints) => {
   return 0;
 }
 
-// /**
-//  * Filter array with
-//  * @param {Array} projects
-//  * @param {String} filterTearm
-//  * @returns {Array}
-//  */
-const filterArray = (arr, filterTearm) => {
-
-  // console.log("Filtering: ", arr);
-  // console.log("Tearm: ", filterTearm);
-
-  if (!_.isString(filterTearm) || _.isEmpty(filterTearm)) {
-    return arr;
-  }
-
-  if (!arr || _.isEmpty(arr)) {
-    return [];
-  }
-
-  // check if the current item title math what the user entered
-  const tempFilteredArr = arr.filter((item) => {
-    return item.title.toLowerCase().includes(filterTearm);
-  });
-
-
-  return tempFilteredArr;
-};
 </script>

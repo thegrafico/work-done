@@ -13,26 +13,33 @@ class Task {
     this.updatedAt = obj.updatedAt;
   }
 
+  async incrementUserPoints() { 
+    await secureApi.post(`/projects/task/${this.projectId}}/increment`);
+  }
+
+  async decrementUserPoints() { 
+    const updatedTask = await secureApi.post(`/projects/task/${this.projectId}/increment`);
+    return updatedTask;
+  }
+  
   /**
    *
    * @param {String} projectId - id of the projct
    * @param {Task} task - new task to create
    * @returns
    */
-  static async createTask(projectId, task) {
-    const response = await secureApi.post(
-      `/projects/${projectId}/task/create`,
-      task
-    );
+  static async create(projectId, task) {
+    
+    const response = await secureApi.post( `/projects/${projectId}/task/create`, task);
     const newTask = response.data;
 
     // check is task was created
     if (newTask && newTask._id) {
       //   tasks.value.push(newTask);
-      return newTask;
+      return new Task(newTask);
     }
 
-    alert("oops, it seems there was a problem creating the task");
+    return undefined;
   }
 
 
