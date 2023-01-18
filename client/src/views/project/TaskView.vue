@@ -25,69 +25,63 @@
       <v-divider></v-divider>
 
       <!-- list of task -->
-      <TaskList v-if="dataIsLoaded" 
-        :filter-tearm="searchTaskInput" 
-        :tasks="tasks" 
-        @on-task-updated="refreshTaskList" 
-        @on-update-points="updateTaskPoints"
-        />
+      <TaskList v-if="!loading" :filter-tearm="searchTaskInput" :tasks="tasks" @on-task-updated="refreshTaskList"
+        @on-update-points="updateTaskPoints" />
 
     </v-container>
   </v-main>
 </template>
 
 <script setup>
+
 import { onMounted, ref, defineProps } from "vue";
+import { storeToRefs } from "pinia";
+import { useTaskStore } from "@/stores/tasks.store";
+
 import ButtonWithModal from "@/components/button/ButtonWithModal.vue";
 import TaskList from "@/components/task/TaskList.vue"
-import Task from "@/controllers/Task";
-import { updateType } from "@/utils/Constants";
+import Task from "@/modals/Task";
 
-const props = defineProps({projectId: String});
+const { tasks, loading } = storeToRefs(useTaskStore());
+const { loadTasks, refreshTaskList } = useTaskStore();
+const props = defineProps({ projectId: String });
 
 // Refs
-const tasks = ref([]);
 const searchTaskInput = ref("");
-const dataIsLoaded = ref(false);
 
 
 // Mounted hook
 onMounted(async () => {
-
-  // Load tasks
-  tasks.value = await Task.getTask(props.projectId);
-
-  // wait for the task to be loaded and then reset the loading state
-  dataIsLoaded.value = true;
+  await loadTasks(props.projectId);
 });
 
 
-/**
- * Refresh the task list for the USER
- * @param {Task} updatedTask - Task to update
- * @param {updateType} udpate - look for constant file
- */
-const refreshTaskList = async (updatedTask, udpate) => {
+// /**
+//  * Refresh the task list for the USER
+//  * @param {Task} updatedTask - Task to update
+//  * @param {updateType} udpate - look for constant file
+//  */
+// const refreshTaskList = async (updatedTask, udpate) => {
 
-  const index = tasks.value.findIndex(taks => {
-    return taks._id === updatedTask._id;
-  });
+//   const index = tasks.value.findIndex(taks => {
+//     return taks._id === updatedTask._id;
+//   });
 
-  // Update task list
-  if (udpate === updateType.remove) { 
-    tasks.value.splice(index, 1);
-    return;
-  }
-  
-  // replace existing
-  tasks.value.splice(index, 1, updatedTask);
-}
+//   // Update task list
+//   if (udpate === updateType.remove) {
+//     tasks.value.splice(index, 1);
+//     return;
+//   }
+
+//   // replace existing
+//   tasks.value.splice(index, 1, updatedTask);
+// }
 
 
 // Create Task
 const createTask = async (task) => {
   const newTask = Task.create(props.projectId, task);
-  
+
   // check is task was created
   if (newTask) {
     tasks.value.push(newTask);

@@ -1,11 +1,18 @@
 <template>
   <v-container class="py-8 px-6" fluid>
     <v-row>
+
       <v-col v-if="userCanDecrement" :cols="(userCanIncrement) ? 6 : 12">
-        <button class="button-54 red" style="width:100%" @click="$emit('on-update-points', props.taskId, 'decrement')">-{{ props.taskValue }}</button>
+        <button class="button-54 red" style="width:100%" @click="decrementUserPoints(props.taskId)">-{{
+          props.taskValue
+        }}</button>
       </v-col>
+
+      <!--  -->
       <v-col v-if="userCanIncrement" :cols="(userCanDecrement) ? 6 : 12">
-        <button class="button-54 green" style="width:100%" @click="$emit('on-update-points', props.taskId, 'increment')">+{{ props.taskValue }}</button>
+        <button class="button-54 green" style="width:100%" @click="incrementUserPoints(props.taskId)">+{{
+          props.taskValue
+        }}</button>
       </v-col>
     </v-row>
 
@@ -15,6 +22,9 @@
 <script setup>
 
 import { defineProps, onMounted, ref, onUpdated } from 'vue';
+import { useTaskStore } from "@/stores/tasks.store";
+const { incrementUserPoints, decrementUserPoints } = useTaskStore();
+
 
 const props = defineProps({
   taskId: String,
@@ -26,7 +36,7 @@ const userCanDecrement = ref(false);
 const userCanIncrement = ref(false);
 
 // TODO: add constants instead of harcoded values for limits.
-onMounted(() => { 
+onMounted(() => {
   userCanDecrement.value = (props.userPoints - props.taskValue) >= 0;
   userCanIncrement.value = (props.userPoints + props.taskValue) <= 100;
 });
@@ -57,10 +67,11 @@ onUpdated(() => {
   touch-action: manipulation;
 }
 
-.red{
+.red {
   color: rgba(188, 53, 46, 0.662);
 }
-.green{
+
+.green {
   color: rgba(57, 191, 70, 0.553);
 }
 

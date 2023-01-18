@@ -63,9 +63,6 @@
 
             <!-- Action Buttons for adding or subtracting -->
             <TaskButton 
-              @on-increment="incrementUserPoints" 
-              @on-decrement="decrementUserPoints" 
-              @on-update-points="$emit('on-update-points')"
               :task-id="task._id"
               :task-value="task.value" 
               :user-points="getMyPoints(task.points)" />
@@ -125,15 +122,6 @@ onBeforeUpdate(async () => {
 });
 
 
-const incrementUserPoints = async (taskId) => {
-  const updatedTask = await secureApi.post(`/projects/task/${taskId}/increment`);
-  emit('on-task-updated', updatedTask.data, updateType.update);
-}
-const decrementUserPoints = async (taskId) => {
-  const updatedTask = await secureApi.post(`/projects/task/${taskId}/decrement`);
-  emit('on-task-updated', updatedTask.data, updateType.update);
-}
-
 const updateTask = async (updatedTask) => {
   console.log("updated: ", updatedTask, updateType.update);
 }
@@ -170,12 +158,6 @@ const taskOptions = ref([
  */
 
  const getMyPoints = (taskPoints) => {
-
-  // check if there is an user
-  if (!user.value || !user.value._id) {
-    console.error("Sorry, cannot get yours points now");
-    return 0;
-  }
 
   // check if there is points
   if (!Array.isArray(taskPoints)) {
