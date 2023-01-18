@@ -1,4 +1,5 @@
-import secureApi from "@/api/authApi";
+import { useAuthStore } from "@/stores/auth.store";
+
 class Task {
   constructor(obj) {
     this._id = obj._id;
@@ -11,49 +12,32 @@ class Task {
     this.points = obj.points;
     this.createdAt = obj.createdAt;
     this.updatedAt = obj.updatedAt;
+    this.myPoints = 0;
+
+    const {user} = useAuthStore();
+    if (user) { 
+      this.myPoints = this.getUserPoints(this.points, user);
+    }
   }
 
-  async incrementUserPoints() { 
-    await secureApi.post(`/projects/task/${this.projectId}}/increment`);
-  }
+  getUserPoints = (taskPoints, user) => {
 
-  async decrementUserPoints() { 
-    const updatedTask = await secureApi.post(`/projects/task/${this.projectId}/increment`);
-    return updatedTask;
-  }
+    // check if there is points
+    if (!Array.isArray(taskPoints)) {
+      console.error("Error: Points seems to be damaged");
+      return 0;
+    }
   
-  /**
-   *
-   * @param {String} projectId - id of the projct
-   * @param {Task} task - new task to create
-   * @returns
-   */
-  static async create(projectId, task) {
-    
-    const response = await secureApi.post( `/projects/${projectId}/task/create`, task);
-    const newTask = response.data;
-
-    // check is task was created
-    if (newTask && newTask._id) {
-      //   tasks.value.push(newTask);
-      return new Task(newTask);
+    // // check if points are empty
+    if (!taskPoints.length) { return 0 }
+  
+    const myPoints = taskPoints.find(userPoints => userPoints.userId.toString() === user._id.toString());
+  
+    if (myPoints && myPoints.value) {
+      return myPoints.value;
     }
 
-    return undefined;
-  }
-
-
-  /**
-   * 
-   * @param {String} projectId 
-   * @returns {[Task]} array of task
-   */
-  static async getTask(projectId) {
-    const projectTask = await secureApi.get(`/projects/${projectId}/tasks`);
-
-    if (!projectTask || !projectTask.data || !projectTask.data.tasks) return [];
-
-    return projectTask.data.tasks.map(task => new Task(task));
+    return 0;
   }
 }
 

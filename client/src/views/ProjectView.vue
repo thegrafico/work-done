@@ -12,8 +12,9 @@
 </template>
 
 <script setup>
-import { onMounted, ref, defineProps, defineAsyncComponent } from "vue";
+import { onMounted, ref, defineProps, defineAsyncComponent, onUnmounted } from "vue";
 import { useAuthStore } from "@/stores/auth.store";
+import { useActiveProjectStore } from "@/stores/active.project.store";
 
 // Components
 import Header from "@/components/layout/HeaderView.vue";
@@ -28,7 +29,7 @@ const props = defineProps({
 
 // Navigation tabs inside project ( Componets for project - AKA routes)
 const tabs = {
-  task: defineAsyncComponent(() => 
+  task: defineAsyncComponent(() =>
     import("../views/project/TaskView.vue")),
   analytics: defineAsyncComponent(() =>
     import("../views/project/AnalyticsView.vue")),
@@ -38,11 +39,19 @@ const tabs = {
     import("../views/project/ProjectConfigView.vue")),
 };
 // const tab = ref(props.tab);
+const { setActiveProject } = useActiveProjectStore();
+
 const user = ref({});
 
 onMounted(() => {
   user.value = getUser();
+  setActiveProject(props.id);
 });
+
+onUnmounted(() => {
+  setActiveProject(null);
+})
+
 
 const getUser = () => {
   const useAuth = useAuthStore();

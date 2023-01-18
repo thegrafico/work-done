@@ -29,7 +29,9 @@
                   </v-list>
                 </v-menu>
               </template>
+
             </v-toolbar>
+
             <!-- Points and Icon -->
             <v-card-text class="py-0">
               <v-row class="pl-3 pb-3 mb-2"> <!-- Priority or Points? -->
@@ -40,7 +42,7 @@
                 <v-col :cols="task.icon ? 6 : 12" :align="!task.icon ? 'center' : null">
                   <v-avatar :color="(task.color) ? task.color : 'info'" size="x-large">
                     <h2>
-                      {{ getMyPoints(task.points) }}
+                      {{ task.myPoints || 0 }}
                     </h2>
                   </v-avatar>
                 </v-col>
@@ -62,10 +64,7 @@
             <v-divider></v-divider>
 
             <!-- Action Buttons for adding or subtracting -->
-            <TaskButton 
-              :task-id="task._id"
-              :task-value="task.value" 
-              :user-points="getMyPoints(task.points)" />
+            <TaskButton :task-id="task._id" :task-value="task.value" :user-points="task.myPoints" />
           </v-card>
         </v-sheet>
       </v-col>
@@ -91,15 +90,13 @@
 </template>
 
 <script setup>
-import { onBeforeUpdate, defineProps, ref, onMounted, defineEmits } from "vue";
-import { useAuthStore } from "@/stores/auth.store";
-import { updateType } from "@/utils/Constants";
+import { onBeforeUpdate, defineProps, ref, onMounted } from "vue";
 import { filterArray } from "@/utils/Helpers";
+import { useTaskStore } from "@/stores/tasks.store";
 import TaskButton from "@/components/button/TaskButton.vue";
 import ButtonWithModal from "../button/ButtonWithModal.vue";
-import secureApi from "@/api/authApi";
 
-const emit = defineEmits(["on-task-updated"]);
+const { removeTask, updateTask } = useTaskStore();
 
 const props = defineProps({
   tasks: Array,
@@ -107,12 +104,9 @@ const props = defineProps({
 });
 
 const filteredList = ref([]);
-const user = ref({});
 
 
 onMounted(() => {
-  const useStore = useAuthStore();
-  user.value = useStore.user
   filteredList.value = filterArray(props.tasks, props.filterTearm);
 });
 
@@ -120,21 +114,6 @@ onMounted(() => {
 onBeforeUpdate(async () => {
   filteredList.value = filterArray(props.tasks, props.filterTearm);
 });
-
-
-const updateTask = async (updatedTask) => {
-  console.log("updated: ", updatedTask, updateType.update);
-}
-
-
-const removeTask = async (taskId) => {
-  const taskWasRemoved = await secureApi.delete(`/projects/tasks/${taskId}`);
-
-  if (taskWasRemoved.status === 200) {
-    // in order to work need to pass the _id parameter
-    emit('on-task-updated', { _id: taskId }, updateType.remove);
-  }
-}
 
 // I dont fucking like this but I need to do this fast
 const taskOptions = ref([
@@ -151,30 +130,5 @@ const taskOptions = ref([
     template: "removeTask",
   },
 ]);
-
-/**
- * get current user points
- * @param {Array} taskPoints 
- */
-
- const getMyPoints = (taskPoints) => {
-
-  // check if there is points
-  if (!Array.isArray(taskPoints)) {
-    console.error("Error: Points seems to be damaged");
-    return 0;
-  }
-
-  // check if points are empty
-  if (!taskPoints.length) { return 0 }
-
-  const myPoints = taskPoints.find(userPoints => userPoints.userId.toString() === user.value._id.toString());
-
-  if (myPoints && myPoints.value) {
-    return myPoints.value;
-  }
-
-  return 0;
-}
 
 </script>
