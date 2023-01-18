@@ -14,7 +14,7 @@ const routes = [
     path: '/dashboard',
     name: 'dashboard',
     alias: '/',
-    component: () => import('../views/LayoutView.vue') // lazy load
+    component: () => import('../views/DashboardView.vue') // lazy load
   },
   {
     path: '/project/:id/:tab',
@@ -33,7 +33,7 @@ const routes = [
 const router = createRouter({
   history: createWebHashHistory(),
   routes
-})
+});
 
 router.beforeEach(async (to) => {
   checkIfUserIsLoggedIn(to);
