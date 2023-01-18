@@ -30,6 +30,7 @@ router.get(
     }
 
     // Find a this project where 'Im' part of.
+    console.log("Getting the project...");
     const project = await ProjectCollection.findById(projectId);
 
     if (!project) {
@@ -49,6 +50,7 @@ router.get(
 
     // Get project task
     let error = null;
+    console.log("Getting the task..");
     const tasks = await TaskCollection.find({ projectId: projectId }).catch(err => {
       console.error("Error getting the tasks: ", err);
       error = err;

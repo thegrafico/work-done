@@ -18,14 +18,18 @@
           <ButtonWithModal v-bind="createTaskButton" />
         </v-col>
         <v-col cols="2 mt-3">
-          <v-btn>Last 30 days</v-btn>
+          <v-btn disabled>Last 30 days</v-btn>
         </v-col>
       </v-row>
 
       <v-divider></v-divider>
 
       <!-- list of task -->
-      <TaskList v-if="!loading" :filter-tearm="searchTaskInput" :tasks="tasks" @on-task-updated="refreshTaskList"/>
+      <TaskList v-if="!loading" 
+        :filter-tearm="searchTaskInput" 
+        :tasks="tasks" 
+        @on-task-updated="refreshTaskList"  
+        />
 
     </v-container>
   </v-main>
@@ -36,7 +40,6 @@
 import { onMounted, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useTaskStore } from "@/stores/tasks.store";
-
 import ButtonWithModal from "@/components/button/ButtonWithModal.vue";
 import TaskList from "@/components/task/TaskList.vue"
 
@@ -53,17 +56,11 @@ onMounted(async () => {
 });
 
 
-// Create Task
-const onCreateTask = async (task) => {
-  await createTask(task);
-};
-
-
 // Create Task button
 const createTaskButton = ref({
   title: "TASK",
   icon: "mdi-plus",
-  action: onCreateTask,
+  action: createTask,
   template: "createTask",
   color: "success",
   variant: "tonal",
