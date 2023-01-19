@@ -41,7 +41,7 @@ import { onMounted, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useTaskStore } from "@/stores/tasks.store";
 import ButtonWithModal from "@/components/button/ButtonWithModal.vue";
-import TaskList from "@/components/task/TaskList.vue"
+import TaskList from "@/components/projects/TaskList.vue"
 
 const { tasks, loading } = storeToRefs(useTaskStore());
 const { loadTasks, refreshTaskList, createTask } = useTaskStore();

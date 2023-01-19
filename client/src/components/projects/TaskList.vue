@@ -1,6 +1,6 @@
 <template>
 
-  <div class="overflow-y-auto px-4" style="max-height: 70vh;">
+  <div class="overflow-y-auto px-4" style="height: 70vh;">
     <v-row class="pt-4" v-if="filteredList.length > 0">
       <v-col cols="3" v-for="task in filteredList" :key="task._id">
         <v-sheet elevation="8">
