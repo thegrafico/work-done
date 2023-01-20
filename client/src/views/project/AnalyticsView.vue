@@ -25,7 +25,7 @@
       <v-divider></v-divider>
 
       <!--  Plosts and Char -->
-      <AnalyticsChar/>
+      <AnalyticsChart />
 
     </v-container>
   </v-main>
@@ -35,8 +35,7 @@
 
 import { onMounted, ref } from "vue";
 import ButtonWithModal from "@/components/button/ButtonWithModal.vue";
-import AnalyticsChar from "@/components/projects/AnalyticsChar.vue"
-
+import AnalyticsChart from "@/components/projects/AnalyticsChart.vue";
 
 // Refs
 const searchTaskInput = ref("");

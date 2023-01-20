@@ -3,7 +3,9 @@
     <v-container class="py-8 px-6" fluid>
       <v-row>
         <v-col cols="12">
-          <h1>Task</h1>
+          <h1>
+            Task
+          </h1>
         </v-col>
       </v-row>
 
@@ -25,11 +27,7 @@
       <v-divider></v-divider>
 
       <!-- list of task -->
-      <TaskList v-if="!loading" 
-        :filter-tearm="searchTaskInput" 
-        :tasks="tasks" 
-        @on-task-updated="refreshTaskList"  
-        />
+      <TaskList v-if="!loading" :filter-tearm="searchTaskInput" :tasks="tasks" @on-task-updated="refreshTaskList" />
 
     </v-container>
   </v-main>

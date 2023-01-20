@@ -10,15 +10,15 @@ export const useTaskStore = defineStore("tasks", {
     loading: false,
   }),
   actions: {
-
     async loadTasks() {
-
       const { activeProjectId } = useActiveProjectStore();
 
       // reset just in case
       this.tasks = [];
       this.loading = true;
-      const projectTask = await secureApi.get(`/projects/${activeProjectId}/tasks`);
+      const projectTask = await secureApi.get(
+        `/projects/${activeProjectId}/tasks`
+      );
       this.loading = false;
 
       if (!projectTask || !projectTask.data || !projectTask.data.tasks)
@@ -27,11 +27,29 @@ export const useTaskStore = defineStore("tasks", {
       this.tasks = projectTask.data.tasks.map((task) => new Task(task));
     },
 
+    async loadTaskWithAnalytics() {
+      const { activeProjectId } = useActiveProjectStore();
+
+      // reset just in case
+      this.tasks = [];
+      this.loading = true;
+      const response = await secureApi.get(
+        `/projects/${activeProjectId}/tasksAnalytics`
+      );
+      this.loading = false;
+
+      if (!response || !response.data || !response.data.tasks) return [];
+
+      this.tasks = response.data.tasks.map((task) => new Task(task));
+    },
 
     async createTask(taskData) {
       const { activeProjectId } = useActiveProjectStore();
 
-      const response = await secureApi.post(`/projects/${activeProjectId}/task/create`, taskData);
+      const response = await secureApi.post(
+        `/projects/${activeProjectId}/task/create`,
+        taskData
+      );
       const newTask = response.data;
       console.log("newTask", newTask);
 
@@ -42,13 +60,16 @@ export const useTaskStore = defineStore("tasks", {
         return;
       }
 
-      alert('Oops, There was a problem creating the task');
+      alert("Oops, There was a problem creating the task");
     },
 
     async updateTask(updatedTask) {
       const { activeProjectId } = useActiveProjectStore();
 
-      const response = await secureApi.post(`/projects/${activeProjectId}/task/update`, updatedTask);
+      const response = await secureApi.post(
+        `/projects/${activeProjectId}/task/update`,
+        updatedTask
+      );
       const newTask = response.data;
 
       // check is task was created
@@ -57,12 +78,13 @@ export const useTaskStore = defineStore("tasks", {
         return;
       }
 
-      alert('Oops, There was a problem updating the task');
+      alert("Oops, There was a problem updating the task");
     },
 
-
     async removeTask(taskId) {
-      const taskWasRemoved = await secureApi.delete(`/projects/tasks/${taskId}`);
+      const taskWasRemoved = await secureApi.delete(
+        `/projects/tasks/${taskId}`
+      );
 
       if (taskWasRemoved.status === 200) {
         // in order to work need to pass the _id parameter
@@ -74,7 +96,6 @@ export const useTaskStore = defineStore("tasks", {
       }
     },
 
-
     async refreshTaskList(taskToUpdate) {
       const index = this.tasks.findIndex((taks) => {
         return taks._id === taskToUpdate._id;
@@ -83,7 +104,6 @@ export const useTaskStore = defineStore("tasks", {
       // replace existing
       this.tasks.splice(index, 1, taskToUpdate);
     },
-
 
     async incrementUserPoints(taskId) {
       const updatedTask = await secureApi.post(
@@ -94,7 +114,6 @@ export const useTaskStore = defineStore("tasks", {
         await this.refreshTaskList(new Task(updatedTask.data));
       }
     },
-
 
     async decrementUserPoints(taskId) {
       const updatedTask = await secureApi.post(

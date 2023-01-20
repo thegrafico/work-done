@@ -72,7 +72,7 @@ const performAction = () => {
       value: valuePoints.value,
       taskId: data.value._id
     });
-    
+
   } else {
 
     // create task
