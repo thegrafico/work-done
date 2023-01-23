@@ -12,36 +12,34 @@
 </template>
 
 <script setup>
-  import LoginTab from "../components/auth/LoginTab.vue";
-  import SignInTab from "../components/auth/SignInTab.vue";
-  import {useAuthStore} from '@/stores/auth.store';
-  import { onMounted } from "vue";
-  
+import LoginTab from "../components/auth/LoginTab.vue";
+import SignInTab from "../components/auth/SignInTab.vue";
+import { useAuthStore } from '@/stores/auth.store';
+import { onMounted } from "vue";
 
-  onMounted( () => {
-    checkIfUserIsLoggedIn();
-  });
 
-  // Method called by emit
-  const loginUser = async (username, password) => {
-    
-    const authStore = useAuthStore();
-    
-    return authStore.login(username, password).catch( err => {
-      console.error(err);
-    });
+onMounted(() => {
+  checkIfUserIsLoggedIn();
+});
+
+// Method called by emit
+const loginUser = async (username, password) => {
+
+  const authStore = useAuthStore();
+
+  await authStore.login(username, password);
+}
+
+const checkIfUserIsLoggedIn = () => {
+
+  const useStore = useAuthStore();
+  if (useStore.getUser) {
+    return useStore.redirectToHome();
   }
 
-  const checkIfUserIsLoggedIn = () => {
-    
-    const useStore = useAuthStore();
-    if (useStore.getUser) { 
-      return useStore.redirectToHome();
-    }
-
-    // clean store just in case
-    useStore.clearUser();
-  }
+  // clean store just in case
+  useStore.clearUser();
+}
 
 </script>
 

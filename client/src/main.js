@@ -27,9 +27,9 @@ const app = createApp(App);
 app.use(router).use(vuetify).use(createPinia()).mount('#app');
 
 // Global errors
-app.config.errorHandler = function (error, vm, info) {
-  console.error("Error: ", error);
-  console.warn("info: ", info);
+app.config.errorHandler = function (error, vm) {
+  console.error("GLOBAL ERROR: ", error, error.type);
+  console.warn("info: ", vm);
 
   if (error.response.status === 401 || error.response.status === 403){
     vm.$router.push('/logout');

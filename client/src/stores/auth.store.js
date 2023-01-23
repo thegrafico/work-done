@@ -11,8 +11,11 @@ export const useAuthStore = defineStore('auth', {
         async login(username, password) {
             const user = await Api.login(username, password);
 
-            this.user = user;
+            if (!user || !user._id) { 
+                return;
+            }
 
+            this.user = user;
             localStorage.setItem('user', JSON.stringify(user));
 
             router.push(this.returnUrl || '/dashboard');

@@ -14,8 +14,8 @@ class Task {
     this.updatedAt = obj.updatedAt;
     this.myPoints = 0;
 
-    const {user} = useAuthStore();
-    if (user) { 
+    const { user } = useAuthStore();
+    if (user) {
       this.myPoints = this.getUserPoints(this.points, user);
     }
   }
@@ -27,12 +27,12 @@ class Task {
       console.error("Error: Points seems to be damaged");
       return 0;
     }
-  
+
     // // check if points are empty
     if (!taskPoints.length) { return 0 }
-  
+
     const myPoints = taskPoints.find(userPoints => userPoints.userId.toString() === user._id.toString());
-  
+
     if (myPoints && myPoints.value) {
       return myPoints.value;
     }

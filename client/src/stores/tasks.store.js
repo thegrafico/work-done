@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import Task from "@/modals/Task";
+import Task from "@/models/Task";
 import secureApi from "@/api/authApi";
 import { useActiveProjectStore } from "@/stores/active.project.store";
 // import router from '@/router/index';

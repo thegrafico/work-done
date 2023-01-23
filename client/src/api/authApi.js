@@ -1,8 +1,6 @@
 import axios from 'axios';
 import { useAuthStore } from '@/stores/auth.store';
-
-// Move to env variable
-const apiBaseUrl = 'http://localhost:3000/api/';
+import { apiBaseUrl } from '@/utils/Constants';
 
 // Axios configuration
 const config = {
