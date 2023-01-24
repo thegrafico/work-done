@@ -19,7 +19,7 @@
         </div>
 
         <div class="form-group">
-          <v-btn color="blue" size="large" type="submit" variant="elevated">
+          <v-btn color="blue" size="large" type="submit" variant="elevated" :disabled="isLoading">
 
             <p v-if="!isLoading">
               Log In

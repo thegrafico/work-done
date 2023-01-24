@@ -26,11 +26,8 @@ class Api {
 
   async post(url, data) {
     // TODO: Improve the error handly
-    console.log("======Before error====");
-    const response = await publicApi.post(url, data).catch((err) => {
-      throw new GlobalError(err);
-    });
-    console.log("====after error=====");
+    const response = await publicApi.post(url, data);
+
     return response.data;
   }
 

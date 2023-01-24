@@ -16,6 +16,7 @@ import LoginTab from "../components/auth/LoginTab.vue";
 import SignInTab from "../components/auth/SignInTab.vue";
 import { useAuthStore } from '@/stores/auth.store';
 import { onMounted } from "vue";
+import GlobalError from "@/models/GlobalError";
 
 
 onMounted(() => {
@@ -26,8 +27,11 @@ onMounted(() => {
 const loginUser = async (username, password, resetLoadingFunc) => {
 
   const { login } = useAuthStore();
-  await login(username, password);
-  resetLoadingFunc()
+  await login(username, password).catch(err => { 
+    resetLoadingFunc()
+    throw new GlobalError(err)
+  });
+
 }
 
 const checkIfUserIsLoggedIn = () => {

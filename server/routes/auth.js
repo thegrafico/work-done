@@ -8,7 +8,7 @@ router.post("/api/login", async function (req, res, next) {
   const { username, password } = req.body;
 
   if (
-    _.isString(username) ||
+    !_.isString(username) ||
     _.isEmpty(username) ||
     !_.isString(password) ||
     _.isEmpty(password)
