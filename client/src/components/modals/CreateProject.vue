@@ -2,7 +2,7 @@
   <div>
     <div class="text-center">
       <v-dialog v-model="dialog" max-width="40%" persistent>
-        <v-form ref="form" lazy-validation>
+        <v-form ref="form">
 
           <v-card v-click-outside="resetDialog">
             <v-card-title>
@@ -15,7 +15,7 @@
                     <v-text-field :rules="projectTitleRule" label="Name*" v-model.trim="title" required></v-text-field>
                   </v-col>
                   <v-col cols="12">
-                    <v-textarea v-model.trim="description" clearable label="Description"
+                    <v-textarea :rules="projectDescriptionRule" v-model.trim="description" clearable label="Description"
                       variant="outlined"></v-textarea>
                   </v-col>
                 </v-row>
@@ -37,8 +37,7 @@
 
 <script setup>
 import { toRefs, defineProps, ref, defineEmits } from "vue";
-import _ from "lodash";
-import {projectTitleRule} from "@/utils/form-rules-validation";
+import { projectTitleRule, projectDescriptionRule } from "@/utils/form-rules-validation";
 const emit = defineEmits(["onSubmit"]);
 
 const props = defineProps({
@@ -47,25 +46,28 @@ const props = defineProps({
 });
 
 const { dialog, resetDialog } = toRefs(props);
+
+// form data
 const title = ref('');
 const description = ref('');
+
+// to validate form
 const form = ref(null);
 
-const performAction = () => {
+// submit form event
+const performAction = async () => {
 
-  // validate from
-  const isValid = form.value.validate();
-  console.log(isValid)
+  // get form
+  const formResponse = await form.value.validate();
+  // check if form is valid
+  if (!formResponse.valid) { return; }
 
   if (nothingChanged()) {
     resetDialog.value();
     return;
   }
 
-  if (_.isEmpty(title.value)) {
-    // TODO: show error message
-    return;
-  }
+  console.log("Form is not valid: ", formResponse.valid);
 
   emit("onSubmit", {
     title: title.value,
