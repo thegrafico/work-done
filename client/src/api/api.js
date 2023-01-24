@@ -5,8 +5,8 @@ import { apiBaseUrl, maxRequestTimeOut } from "@/utils/Constants";
 // Axios configuration
 const config = {
   baseURL: apiBaseUrl,
-  timeout: maxRequestTimeOut
-}
+  timeout: maxRequestTimeOut,
+};
 
 /**
  * Creating the instance of Axios
@@ -15,11 +15,10 @@ const config = {
  */
 const publicApi = axios.create(config);
 
-
 // TODO: Error handle on response?
 class Api {
   async get(url) {
-    const response = await publicApi.get(url).catch(err => {
+    const response = await publicApi.get(url).catch((err) => {
       throw new GlobalError(err);
     });
     return response.data;
@@ -27,10 +26,11 @@ class Api {
 
   async post(url, data) {
     // TODO: Improve the error handly
+    console.log("======Before error====");
     const response = await publicApi.post(url, data).catch((err) => {
       throw new GlobalError(err);
     });
-
+    console.log("====after error=====");
     return response.data;
   }
 
@@ -42,7 +42,6 @@ class Api {
 
     return response;
   }
-
 }
 
 export default new Api();

@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-scroll-y-reverse-transition>
-      <v-alert class="alertPosition mt-2 ml-2" v-show="expand" :type="alertType">{{ alertMessage }}.</v-alert>
+      <v-alert class="alertPosition mt-2 ml-2" v-if="expand" :type="alertType">{{ alertMessage }}.</v-alert>
     </v-scroll-y-reverse-transition>
 
     <router-view></router-view>
@@ -11,20 +11,19 @@
 
 <script setup>
 import { ref, onErrorCaptured } from 'vue';
-import { alertTypes, alertWaitTime, alertMaxTime } from "@/utils/Constants"
+import { alertTypes, alertMaxTime } from "@/utils/Constants"
 
 const expand = ref(false);
 const alertMessage = ref("");
 const alertType = ref(alertTypes.warning);
 
-onErrorCaptured((err) => {
+onErrorCaptured((err, vm) => {
 
-  setTimeout(() => {
-    alertMessage.value = err.message;
-    alertType.value = err.type;
-    expand.value = true
-  }, alertWaitTime);
-
+  console.log("THE ERROR IS: ", err.message, err.type);
+  console.log(vm);
+  alertMessage.value = err.message;
+  alertType.value = err.type;
+  expand.value = true
 
   // reset de alert
   setTimeout(() => {
@@ -32,7 +31,11 @@ onErrorCaptured((err) => {
     alertMessage.value = "";
     alertType.value = alertTypes.warning;
   }, alertMaxTime);
-})
+
+  console.log("returning here:");
+  vm.$forceUpdate();
+  return false;
+});
 
 </script>
 

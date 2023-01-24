@@ -23,11 +23,11 @@ onMounted(() => {
 });
 
 // Method called by emit
-const loginUser = async (username, password) => {
+const loginUser = async (username, password, resetLoadingFunc) => {
 
-  const authStore = useAuthStore();
-
-  await authStore.login(username, password);
+  const { login } = useAuthStore();
+  await login(username, password);
+  resetLoadingFunc()
 }
 
 const checkIfUserIsLoggedIn = () => {
