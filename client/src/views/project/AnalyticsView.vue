@@ -9,8 +9,8 @@
 
       <v-row>
         <v-col cols="4">
-          <v-select prepend-icon="mdi-filter" label="Time" :items="['Jan', 'Feb', 'March', 'April', 'June', 'July']"
-            variant="underlined"></v-select>
+          <v-select v-model="filterTimeSelect" prepend-icon="mdi-filter" label="Time"
+            :items="['One Week ago', 'Two Weeks ago', 'One Month ago', 'A Year ago']" variant="underlined"></v-select>
         </v-col>
 
       </v-row>
@@ -26,5 +26,7 @@
 
 <script setup>
 import AnalyticsChart from "@/components/projects/AnalyticsChart.vue";
+import { ref } from "vue";
 
+const filterTimeSelect = ref('One Month ago');
 </script>

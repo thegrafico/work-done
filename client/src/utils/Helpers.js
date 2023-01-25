@@ -23,6 +23,12 @@ const filterArray = (arr, filterTearm) => {
   return tempFilteredArr;
 };
 
+const filterByTerm = (arr, term, value) => {
+  return arr.filter((item) => {
+    return item[term] === value;
+  });
+};
+
 /**
  * Sort task points
  * @param {Array} points
@@ -34,7 +40,15 @@ const sortTaskPoints = (points) => {
   );
 };
 
+const sortByTerm = (arr, term) => {
+  return arr.sort((a, b) =>
+    a[term] > b[term] ? -1 : b[term] > a[term] ? +1 : 0
+  );
+};
+
 module.exports = {
   filterArray,
+  filterByTerm,
   sortTaskPoints,
+  sortByTerm,
 };

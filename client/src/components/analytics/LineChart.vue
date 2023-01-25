@@ -1,5 +1,5 @@
 <template>
-  <canvas id="LineChartContainer"></canvas>
+  <canvas id="LineChartContainer" disabled></canvas>
 </template>
 
 <script setup>

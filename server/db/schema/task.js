@@ -51,14 +51,20 @@ const Task = new Schema(
               `Points cannot be greater than ${TASK_MAX_POINTS}`,
             ],
           },
-          addedAt: {
-            type: Date,
-            default: Date.now(),
+          history: {
+            type: [
+              {
+                value: { type: Number },
+                addedAt: { type: Date, default: Date.now() },
+              },
+            ],
+            default: [],
           },
         },
       ],
       default: [],
-    }, // [{},{},{}]
+    },
+    // [{},{},{}]
   },
   { timestamps: true }
 );

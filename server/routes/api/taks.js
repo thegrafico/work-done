@@ -171,7 +171,11 @@ router.post(
 
     // if there is not points recorded yet: add the user.
     if (_.isEmpty(task.points)) {
-      task.points.push({ userId: userId, value: task.value });
+      task.points.push({
+        userId: userId,
+        value: task.value,
+        history: [{ value: task.value }],
+      });
     } else {
       const myPoints = task.points.find(
         (userPoints) => userPoints.userId.toString() === userId.toString()
@@ -182,15 +186,20 @@ router.post(
         console.info(
           "It seems you dont have any points here. Adding user to task"
         );
-        task.points.push({ userId: userId, value: task.value });
+        task.points.push({
+          userId: userId,
+          value: task.value,
+          history: [{ value: task.value }],
+        });
       } else {
-        // reset value if the substraction is less than 0
+        // if the increment is greater than the points
         if (myPoints.value + task.value > TASK_MAX_POINTS) {
           myPoints.value = TASK_MAX_POINTS;
         } else {
-          // substrab points
+          // increment points
           myPoints.value += task.value;
         }
+        myPoints.history.push({ value: task.value });
       }
     }
 
@@ -253,7 +262,7 @@ router.post(
 
     // if there is not points recorded yet: add the user.
     if (_.isEmpty(task.points)) {
-      task.points.push({ userId: userId, value: 0 });
+      task.points.push({ userId: userId, value: 0, history: [{ value: 0 }] });
     } else {
       const myPoints = task.points.find(
         (userPoints) => userPoints.userId.toString() === userId.toString()
@@ -264,7 +273,7 @@ router.post(
         console.info(
           "It seems you dont have any points here. Adding user to task"
         );
-        task.points.push({ userId: userId, value: 0 });
+        task.points.push({ userId: userId, value: 0, history: [{ value: 0 }] });
       } else {
         // reset value if the substraction is less than 0
         if (myPoints.value - task.value < TASK_MIN_POINTS) {
@@ -273,6 +282,8 @@ router.post(
           // substrab points
           myPoints.value -= task.value;
         }
+
+        myPoints.history.push({ value: -task.value });
       }
     }
 

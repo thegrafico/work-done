@@ -21,7 +21,6 @@ class Task {
   }
 
   getUserPoints = (taskPoints, user) => {
-
     // check if there is points
     if (!Array.isArray(taskPoints)) {
       console.error("Error: Points seems to be damaged");
@@ -29,16 +28,20 @@ class Task {
     }
 
     // // check if points are empty
-    if (!taskPoints.length) { return 0 }
+    if (!taskPoints.length) {
+      return 0;
+    }
 
-    const myPoints = taskPoints.find(userPoints => userPoints.userId.toString() === user._id.toString());
+    const myPoints = taskPoints.find(
+      (userPoints) => userPoints.userId.toString() === user._id.toString()
+    );
 
     if (myPoints && myPoints.value) {
       return myPoints.value;
     }
 
     return 0;
-  }
+  };
 }
 
 export default Task;
