@@ -1,39 +1,64 @@
 <template>
-  <canvas v-if="!loading" id="BarChartContainer"></canvas>
+  <v-container style="height:100%">
+
+    <canvas style="height:100%; width: 100%" v-if="!isDataEmpty" id="BarChartContainer"></canvas>
+
+    <div v-if="isDataEmpty" class="mt-10">
+      <p class="text-h4">
+        <v-icon icon="mdi-minus-circle" color="red" size="x-large"></v-icon>
+      </p>
+      <p>
+        It looks you don't have enought data to analyse. <br>
+        Keep working and come back later.
+      </p>
+
+    </div>
+
+  </v-container>
+
 </template>
 
 <script setup>
-import { onMounted } from "vue";
-import { useTaskStore } from "@/stores/tasks.store";
-import { storeToRefs } from "pinia";
+import { onMounted, ref, defineProps } from "vue";
 import { sortTaskPoints } from "@/utils/Helpers";
 import Chart from "chart.js/auto";
 
-const { tasks, loading } = storeToRefs(useTaskStore());
-const { loadTasks } = useTaskStore();
 
-onMounted(async () => {
-  // load task in order to do the analysis
-  await loadTasks();
-
-  console.log(tasks);
-
-  const barData = calculateBarData();
-
-  const data = barData.map((data) => data.value);
-  console.log(data);
-  const labels = barData.map((data) => data.label); //['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'];
-  createChart(data, labels);
+const props = defineProps({
+  tasks: Array,
 });
 
-const calculateBarData = (limit = 6) => {
+const isDataEmpty = ref(false);
+
+onMounted(async () => {
+
+  if (props.tasks) {
+    // get bar data
+    const barData = calculateBarData(props.tasks);
+    isDataEmpty.value = !barData.length;
+
+    // if empty 
+    if (!barData.length) {
+      return;
+    }
+
+    // get data for char
+    const data = barData.map((data) => data.value);
+    const labels = barData.map((data) => data.label);
+
+    //  create char
+    createChart(data, labels);
+  }
+});
+
+const calculateBarData = (tasks, limit = 6) => {
   // exit if not task found
-  if (!tasks.value || !tasks.value.length) {
+  if (!tasks || !tasks.length) {
     return [];
   }
 
   const data = [];
-  for (const task of tasks.value) {
+  for (const task of tasks) {
     const label = task.title;
 
     // How many points each task has 

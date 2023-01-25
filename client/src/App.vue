@@ -17,10 +17,9 @@ const expand = ref(false);
 const alertMessage = ref("");
 const alertType = ref(alertTypes.warning);
 
-onErrorCaptured((err, vm) => {
+onErrorCaptured((err) => {
 
-  console.log("THE ERROR IS: ", err.message, err.type);
-  console.log(vm);
+  console.error("THE ERROR IS: ", err.message, err.type);
   alertMessage.value = err.message;
   alertType.value = err.type;
   expand.value = true
@@ -32,8 +31,6 @@ onErrorCaptured((err, vm) => {
     alertType.value = alertTypes.warning;
   }, alertMaxTime);
 
-  console.log("returning here:");
-  vm.$forceUpdate();
   return false;
 });
 

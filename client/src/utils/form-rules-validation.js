@@ -11,7 +11,7 @@ const projectDescriptionRule = [
 const taskRules = {
   name: [
     (v) => !!v || "Name is required",
-    (v) => (v && v.length <= 15) || "Name must be less than 15 characters",
+    (v) => (v && v.length <= 25) || "Name must be less than 25 characters",
   ],
   points: [
     (v) => !!v || "Points are required",
@@ -21,6 +21,8 @@ const taskRules = {
 };
 
 function isNumeric(str) {
+  if (typeof str === "number") return true;
+
   if (typeof str != "string") return false; // we only process strings!
   return (
     !isNaN(str) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...

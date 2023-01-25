@@ -16,7 +16,7 @@
                   </v-col>
                   <v-col cols="6">
                     <v-text-field label="Points Value*" :rules="taskRules.points" v-model.trim="valuePoints"
-                      :disabled="(isUpdate) ? true : false" required></v-text-field>
+                      required></v-text-field>
                   </v-col>
                   <v-col cols="12">
                     <v-textarea v-model.trim="description" clearable label="Description"
