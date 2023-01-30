@@ -1,5 +1,5 @@
 <template>
-  <v-container class="border" style="width: 100%; height:100%">
+  <v-container style="width: 100%; height:100%">
 
     <canvas v-if="!isEmpty" style="height:100%; width: 100%" id="DonutChartContainer"></canvas>
 
