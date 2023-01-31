@@ -51,7 +51,7 @@ const inviteUserBtn = ref({
   title: "Invite User",
   icon: "mdi-account-multiple-plus",
   action: null,
-  template: "inviteUser",
+  template: "UserInvitation",
   color: "success",
   variant: "tonal",
 });

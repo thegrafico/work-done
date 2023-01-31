@@ -30,6 +30,7 @@
 
     <!-- Body -->
     <v-container class="tableBody fluid px-0 mt-10">
+
       <v-sheet elevation="4">
 
         <v-row class="mb-10 px-2" align="center">
@@ -42,7 +43,6 @@
               <v-row align="center">
                 <v-col cols="4" class=" pa-0 ma-0">
                   <v-avatar color="info" size="x-large">
-                    64
                   </v-avatar>
                 </v-col>
                 <v-col cols="8" class="userinfo pa-0 ma-0">
@@ -73,185 +73,6 @@
         </v-row>
 
       </v-sheet>
-
-      <v-sheet elevation="4">
-
-        <v-row class="mb-10 px-2" align="center">
-          <v-col cols="1">
-            <v-checkbox color="info" value="info" hide-details></v-checkbox>
-          </v-col>
-
-          <v-col cols="4">
-            <v-container fluid>
-              <v-row align="center">
-                <v-col cols="4" class=" pa-0 ma-0">
-                  <v-avatar color="info" size="x-large">
-                    64
-                  </v-avatar>
-                </v-col>
-                <v-col cols="8" class="userinfo pa-0 ma-0">
-                  <p class="username pa-0">username</p>
-                  <p class="gray pa-0">
-                    added: M/D/Y
-                  </p>
-                </v-col>
-              </v-row>
-            </v-container>
-
-          </v-col>
-
-          <v-col cols="2">
-            <p class="points">150</p>
-          </v-col>
-
-          <v-col cols="3">
-            <v-switch label="Active" color="success" :model-value="true" hide-details></v-switch>
-          </v-col>
-
-
-          <v-col cols="2">
-
-            <v-btn icon="mdi-dots-vertical"></v-btn>
-          </v-col>
-
-        </v-row>
-
-      </v-sheet>
-
-      <v-sheet elevation="4">
-
-        <v-row class="mb-10 px-2" align="center">
-          <v-col cols="1">
-            <v-checkbox color="info" value="info" hide-details></v-checkbox>
-          </v-col>
-
-          <v-col cols="4">
-            <v-container fluid>
-              <v-row align="center">
-                <v-col cols="4" class=" pa-0 ma-0">
-                  <v-avatar color="info" size="x-large">
-                    64
-                  </v-avatar>
-                </v-col>
-                <v-col cols="8" class="userinfo pa-0 ma-0">
-                  <p class="username pa-0">username</p>
-                  <p class="gray pa-0">
-                    added: M/D/Y
-                  </p>
-                </v-col>
-              </v-row>
-            </v-container>
-
-          </v-col>
-
-          <v-col cols="2">
-            <p class="points">150</p>
-          </v-col>
-
-          <v-col cols="3">
-            <v-switch label="Active" color="success" :model-value="true" hide-details></v-switch>
-          </v-col>
-
-
-          <v-col cols="2">
-
-            <v-btn icon="mdi-dots-vertical"></v-btn>
-          </v-col>
-
-        </v-row>
-
-      </v-sheet>
-
-      <v-sheet elevation="4">
-
-        <v-row class="mb-10 px-2" align="center">
-          <v-col cols="1">
-            <v-checkbox color="info" value="info" hide-details></v-checkbox>
-          </v-col>
-
-          <v-col cols="4">
-            <v-container fluid>
-              <v-row align="center">
-                <v-col cols="4" class=" pa-0 ma-0">
-                  <v-avatar color="info" size="x-large">
-                    64
-                  </v-avatar>
-                </v-col>
-                <v-col cols="8" class="userinfo pa-0 ma-0">
-                  <p class="username pa-0">username</p>
-                  <p class="gray pa-0">
-                    added: M/D/Y
-                  </p>
-                </v-col>
-              </v-row>
-            </v-container>
-
-          </v-col>
-
-          <v-col cols="2">
-            <p class="points">150</p>
-          </v-col>
-
-          <v-col cols="3">
-            <v-switch label="Active" color="success" :model-value="true" hide-details></v-switch>
-          </v-col>
-
-
-          <v-col cols="2">
-
-            <v-btn icon="mdi-dots-vertical"></v-btn>
-          </v-col>
-
-        </v-row>
-
-      </v-sheet>
-
-      <v-sheet elevation="4">
-
-        <v-row class="mb-10 px-2" align="center">
-          <v-col cols="1">
-            <v-checkbox color="info" value="info" hide-details></v-checkbox>
-          </v-col>
-
-          <v-col cols="4">
-            <v-container fluid>
-              <v-row align="center">
-                <v-col cols="4" class=" pa-0 ma-0">
-                  <v-avatar color="info" size="x-large">
-                    64
-                  </v-avatar>
-                </v-col>
-                <v-col cols="8" class="userinfo pa-0 ma-0">
-                  <p class="username pa-0">username</p>
-                  <p class="gray pa-0">
-                    added: M/D/Y
-                  </p>
-                </v-col>
-              </v-row>
-            </v-container>
-
-          </v-col>
-
-          <v-col cols="2">
-            <p class="points">150</p>
-          </v-col>
-
-          <v-col cols="3">
-            <v-switch label="Active" color="success" :model-value="true" hide-details></v-switch>
-          </v-col>
-
-
-          <v-col cols="2">
-
-            <v-btn icon="mdi-dots-vertical"></v-btn>
-          </v-col>
-
-        </v-row>
-
-      </v-sheet>
-
-
-
 
     </v-container>
   </v-container>

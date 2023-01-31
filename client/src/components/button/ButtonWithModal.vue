@@ -33,6 +33,8 @@ const modals = {
     import("../modals/task/createTask.vue")),
   removeTask: defineAsyncComponent(() =>
     import("../modals/task/RemoveTask.vue")),
+  UserInvitation: defineAsyncComponent(() =>
+    import("../modals/collabs/UserInvitation.vue")),
 };
 
 
