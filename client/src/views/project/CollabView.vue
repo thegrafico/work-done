@@ -22,9 +22,8 @@
 
       </v-row>
 
-
-      <UsersTable />
-
+      <!-- List of user -->
+      <UserList />
 
     </v-container>
   </v-main>
@@ -34,7 +33,7 @@
 
 import { onMounted, ref } from "vue";
 import ButtonWithModal from "@/components/button/ButtonWithModal.vue";
-import UsersTable from "@/components/projects/UsersTable.vue";
+import UserList from "@/components/projects/UserList.vue";
 
 
 // Refs

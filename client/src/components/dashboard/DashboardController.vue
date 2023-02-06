@@ -1,16 +1,11 @@
 <template>
   <v-main>
-    <v-container width="80" class="myBG mt-10" >
+    <v-container width="80" class="myBG mt-10">
       <v-row>
         <v-col cols="3"></v-col>
         <v-col cols="4">
-          <v-text-field
-            v-model.trim="userSearchInput"
-            clearable
-            label="Search"
-            prepend-icon="mdi-magnify"
-            variant="underlined"
-          ></v-text-field>
+          <v-text-field v-model.trim="userSearchInput" clearable label="Search" prepend-icon="mdi-magnify"
+            variant="underlined"></v-text-field>
         </v-col>
 
         <v-col cols="2" class="mt-3">
@@ -21,38 +16,31 @@
       </v-row>
 
       <!-- Project List -->
-      <ProjectList
-        :filter-tearm="userSearchInput"
-        :projects="projects"
-        @update-projects="updateProjects"
-      />
+      <ProjectList v-show="!loading" :project-options="projectOptions" :filter-tearm="userSearchInput"
+        :projects="projects" @update-projects="loadProjects" />
     </v-container>
   </v-main>
 </template>
 
 <script setup>
 import { ref, onMounted } from "vue";
-import secureApi from "@/api/authApi";
+import { storeToRefs } from "pinia";
+import { useProjectsStore } from "@/stores/projects.store";
 
 // Components
 import ProjectList from "@/components/dashboard/ProjectList.vue";
 import ButtonWithModal from "@/components/button/ButtonWithModal.vue";
 
-const projects = ref([]);
+// use 'loading' cariable from useProjectStore
+const { projects, loading } = storeToRefs(useProjectsStore());
+const { loadProjects, createProject, updateProject, shareProject, removeProject } = useProjectsStore();
+
 const userSearchInput = ref("");
 
-const createProject = async (project) => {
-  const newProject = await secureApi
-    .post("/createProject", project)
-    .catch((err) => {
-      console.error("Error creating project: ", err);
-    });
-
-  if (newProject) {
-    projects.value.push(newProject.data.project);
-    updateProjects();
-  }
-};
+onMounted(async () => {
+  // getting the projects
+  await loadProjects();
+});
 
 const createProjectButtonConfig = ref({
   title: "PROJECT",
@@ -63,25 +51,28 @@ const createProjectButtonConfig = ref({
   variant: "tonal",
 });
 
-// Modal
+// I dont fucking like this but I need to do this fast
+const projectOptions = ref([
+  { title: "Edit", icon: "mdi-pencil", action: updateProject, template: "EditProject" },
+  {
+    title: "Share",
+    icon: "mdi-share",
+    action: shareProject,
+    template: "ShareProject",
+    disabled: true,
+  },
+  {
+    title: "Remove",
+    icon: "mdi-delete",
+    action: removeProject,
+    template: "RemoveProject",
+  },
+]);
 
-onMounted(async () => {
-  // getting the projects
-  projects.value = await getProjects();
-});
-
-const getProjects = async () => {
-  const response = await secureApi.get("/projects");
-  return response.data;
-};
-
-const updateProjects = async () => {
-  projects.value = await getProjects();
-};
 </script>
 
 <style scoped>
-.myBG{
+.myBG {
   background-color: #14171907;
   max-height: 80vh;
 }

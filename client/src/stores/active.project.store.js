@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 
 // import router from '@/router/index';
 
-export const useActiveProjectStore = defineStore("projects", {
+export const useActiveProjectStore = defineStore("activeProject", {
   state: () => ({
     projects: [],
     loading: false,

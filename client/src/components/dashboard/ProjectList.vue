@@ -21,7 +21,7 @@
               </template>
 
               <v-list>
-                <v-list-item v-for="(options, i) in projectOptions" :key="i">
+                <v-list-item v-for="(options, i) in props.projectOptions" :key="i">
                   <v-list-item-title>
                     <ButtonWithModalVue v-bind="options" :project="project" />
                   </v-list-item-title>
@@ -38,54 +38,17 @@
   </v-row>
 </template>
 
-// TODO: Create notify system for errors and messages
 <script setup>
-import { onBeforeUpdate, defineProps, ref, defineEmits } from "vue";
+import { onBeforeUpdate, defineProps, ref } from "vue";
 import _ from "lodash";
-import secureApi from "@/api/authApi";
 import ButtonWithModalVue from "../button/ButtonWithModal.vue";
-
-const emit = defineEmits(["updateProjects"]);
 
 const props = defineProps({
   projects: Array,
   filterTearm: String,
+  projectOptions: Object,
 });
 const filteredProjects = ref([]);
-
-const edit = async (update) => {
-  await secureApi.post("updateProject", update).catch((err) => {
-    console.log("Error updating project: ", err);
-  });
-  emit("updateProjects");
-};
-
-const remove = async (projectId) => {
-  await secureApi.delete(`/deleteProject/${projectId}`);
-  emit("updateProjects");
-};
-
-const share = (projectId) => {
-  console.log("Share Project...", projectId);
-};
-
-// I dont fucking like this but I need to do this fast
-const projectOptions = ref([
-  { title: "Edit", icon: "mdi-pencil", action: edit, template: "EditProject" },
-  {
-    title: "Share",
-    icon: "mdi-share",
-    action: share,
-    template: "ShareProject",
-    disabled: true,
-  },
-  {
-    title: "Remove",
-    icon: "mdi-delete",
-    action: remove,
-    template: "RemoveProject",
-  },
-]);
 
 onBeforeUpdate(async () => {
   filteredProjects.value = filterArray(props.projects, props.filterTearm);
