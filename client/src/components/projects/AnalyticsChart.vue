@@ -17,7 +17,7 @@
         <v-row class="pt-4">
             <v-col cols="12">
                 <v-sheet align="center" elevation="8" height="30vh" class="pa-2">
-                    <LineChart />
+                    <LineChart :tasks="tasks"/>
                 </v-sheet>
             </v-col>
 
@@ -42,6 +42,6 @@ const { loadTasks } = useTaskStore();
 
 onMounted(async () => {
     await loadTasks();
-})
+});
 
 </script>
