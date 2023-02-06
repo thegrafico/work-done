@@ -79,6 +79,7 @@ export const useProjectsStore = defineStore("projects", {
 
     },
 
+    // TODO:
     async shareProject() { console.log("TODO SHARING PROJECTS");}
 
   },

@@ -4,14 +4,13 @@ import { defineStore } from "pinia";
 
 export const useActiveProjectStore = defineStore("activeProject", {
   state: () => ({
-    projects: [],
     loading: false,
-    activeProjectId: undefined,
+    id: undefined,
   }),
   actions: {
     setActiveProject(projectId) {
       console.log("Setting active project: ", projectId);
-      this.activeProjectId = projectId;
+      this.id = projectId;
     },
   },
 });
