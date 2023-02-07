@@ -10,6 +10,7 @@ const indexRouter = require("./routes/index");
 const authRouter = require("./routes/auth");
 const apiRouter = require("./routes/api/api");
 const apiTaskRouter = require("./routes/api/taks");
+const apiCollabsRouter = require("./routes/api/collabs");
 
 var app = express();
 
@@ -35,6 +36,8 @@ app.use("/", indexRouter);
 app.use("/", authRouter);
 app.use("/api", apiRouter); // Dashboard
 app.use("/api", apiTaskRouter); // project/Task
+app.use("/api", apiCollabsRouter); // project/collabs
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

@@ -13,7 +13,6 @@ router.get(
   auth.authenticateToken,
   async function (req, res, next) {
     const projects = await ProjectCollection.find({ owner: req.user.id });
-    console.log("Projects: ", projects.length);
     res.status(200).send(projects);
   }
 );

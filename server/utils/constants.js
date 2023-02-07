@@ -4,9 +4,22 @@ const TASK_TITLE_MAX_LENGHT = 25;
 const TASK_MIN_POINTS = 0;
 const TASK_MAX_POINTS = 100;
 
+const invitationType = {
+  "email": "email",
+  "username": "username"
+}
+
+const invitationStatus = { 
+  "pending": "pending",
+  "rejected": "rejected",
+  "accepted": "accepted"
+};
+
 module.exports = {
   TASK_TITLE_MIN_LENGHT,
   TASK_TITLE_MAX_LENGHT,
   TASK_MIN_POINTS,
   TASK_MAX_POINTS,
+  invitationType,
+  invitationStatus
 };

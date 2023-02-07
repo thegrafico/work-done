@@ -23,7 +23,7 @@
       </v-row>
 
       <!-- List of user -->
-      <UserList />
+      <UserList v-if="!loading" :users="project.users"/>
 
     </v-container>
   </v-main>
@@ -32,17 +32,28 @@
 <script setup>
 
 import { onMounted, ref } from "vue";
+import { storeToRefs } from "pinia";
 import ButtonWithModal from "@/components/button/ButtonWithModal.vue";
 import UserList from "@/components/projects/UserList.vue";
 
+// stores
+import { useActiveProjectStore } from "@/stores/active.project.store";
+
+// state
+const { project, loading } = storeToRefs(useActiveProjectStore());
+
+// functions 
+// const { sendInvitation, loadProjectUsers } = useActiveProjectStore();
+const { sendInvitation } = useActiveProjectStore();
 
 // Refs
 const searchUserInput = ref("");
 
 
-// Mounted hook
 onMounted(async () => {
   // load users
+  console.log(project);
+
 });
 
 
@@ -50,7 +61,7 @@ onMounted(async () => {
 const inviteUserBtn = ref({
   title: "Invite User",
   icon: "mdi-account-multiple-plus",
-  action: null,
+  action: sendInvitation,
   template: "UserInvitation",
   color: "success",
   variant: "tonal",

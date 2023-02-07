@@ -47,6 +47,17 @@ const alertTypes = {
   "error": "error"
 }
 
+const invitationType = {
+  "email": "email",
+  "username": "username"
+}
+
+const invitationStatus = { 
+  "pending": "pending",
+  "rejected": "rejected",
+  "accepted": "accepted"
+};
+
 const apiBaseUrl = 'http://localhost:3000/api/';
 const maxRequestTimeOut = 5000; // 5 seconds
 const alertWaitTime = 300; // wait 300 milisecods to show the alert
@@ -62,5 +73,7 @@ module.exports = {
   apiBaseUrl,
   maxRequestTimeOut,
   alertWaitTime,
-  alertMaxTime
+  alertMaxTime,
+  invitationType,
+  invitationStatus
 };

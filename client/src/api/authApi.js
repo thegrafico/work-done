@@ -1,10 +1,11 @@
 import axios from 'axios';
 import { useAuthStore } from '@/stores/auth.store';
-import { apiBaseUrl } from '@/utils/Constants';
+import { apiBaseUrl, maxRequestTimeOut } from '@/utils/Constants';
 
 // Axios configuration
 const config = {
-  baseURL: apiBaseUrl
+  baseURL: apiBaseUrl,
+  timeout: maxRequestTimeOut,
 }
 
 /**

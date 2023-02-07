@@ -20,6 +20,12 @@ User.statics.findUserByCredentials = async function (username, password) {
   return user;
 };
 
+User.statics.findUserByUsername = async function (username) {
+  const user = await this.findOne({ username: username});
+  
+  return user;
+};
+
 // a setter
 // User.path("name").set(function (v) {
 //   return capitalize(v);

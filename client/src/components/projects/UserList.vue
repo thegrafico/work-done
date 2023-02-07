@@ -32,7 +32,7 @@
     <!-- Body -->
     <v-container class="tableBody fluid px-0 mt-10">
 
-      <v-sheet elevation="4">
+      <v-sheet elevation="4" v-for="user in props.users" :key="user._id">
 
         <v-row class="mb-10 px-2" align="center">
           <v-col cols="1">
@@ -47,9 +47,9 @@
                   </v-avatar>
                 </v-col>
                 <v-col cols="8" class="userinfo pa-0 ma-0">
-                  <p class="username pa-0">username</p>
+                  <p class="username pa-0">{{user.username}}</p>
                   <p class="gray pa-0">
-                    added: M/D/Y
+                    added: {{ user.creationDate }}
                   </p>
                 </v-col>
               </v-row>
@@ -58,7 +58,7 @@
           </v-col>
 
           <v-col cols="2">
-            <p class="points">150</p>
+            <p class="points">{{user.totalPoints}}</p>
           </v-col>
 
           <v-col cols="3">
@@ -81,6 +81,16 @@
 </template>
 
 <script setup>
+
+import { defineProps, onMounted } from "vue";
+
+const props = defineProps({
+    users: Array,
+});
+
+onMounted(() => {
+  console.log("Users: ", props.users);
+})
 
 </script>
 
