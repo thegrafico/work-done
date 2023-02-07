@@ -18,6 +18,19 @@ router.get(
   }
 );
 
+// GET - projects/:projectId
+router.get(
+  "/projects/:projectId",
+  auth.authenticateToken,
+  auth.ensureUserInProject,
+  async function (req, res, next) {
+    
+    const project = await ProjectCollection.findById(req.params.projectId);
+    console.log("Projects: ", project);
+    res.status(200).send({project});
+  }
+);
+
 // router.get(
 //   "/deleteAll",
 //   // auth.authenticateToken,
@@ -29,8 +42,6 @@ router.get(
 
 router.post("/createProject", auth.authenticateToken, async function (req, res, next) {
   const { title, description } = req.body;
-
-  console.log("body: ", req.body);
 
   if (!_.isString(title) || _.isEmpty(title)) {
     console.log("Title is empty: ", title);

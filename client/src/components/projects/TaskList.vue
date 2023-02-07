@@ -108,7 +108,6 @@ const filteredList = ref([]);
 
 onMounted(() => {
   filteredList.value = filterArray(props.tasks, props.filterTearm);
-  console.log(props.tasks);
 });
 
 

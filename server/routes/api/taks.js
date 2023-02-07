@@ -36,7 +36,9 @@ router.get(
       return;
     }
 
-    res.status(200).send({ tasks });
+    // setTimeout(() => {
+      res.status(200).send({ tasks });
+    // }, 2000);
   }
 );
 

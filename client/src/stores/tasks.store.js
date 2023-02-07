@@ -11,12 +11,12 @@ export const useTaskStore = defineStore("tasks", {
   }),
   actions: {
     async loadTasks() {
-      const { id } = useActiveProjectStore();
-
+      const projectId = this.getProjectId;
+      
       // reset just in case
       this.tasks = [];
       this.loading = true;
-      const projectTask = await secureApi.get(`/projects/${id}/tasks`);
+      const projectTask = await secureApi.get(`/projects/${projectId}/tasks`);
       this.loading = false;
 
       if (!projectTask || !projectTask.data || !projectTask.data.tasks)
@@ -26,12 +26,12 @@ export const useTaskStore = defineStore("tasks", {
     },
 
     async loadTaskWithAnalytics() {
-      const { id } = useActiveProjectStore();
+      const projectId = this.getProjectId;
 
       // reset just in case
       this.tasks = [];
       this.loading = true;
-      const response = await secureApi.get(`/projects/${id}/tasksAnalytics`);
+      const response = await secureApi.get(`/projects/${projectId}/tasksAnalytics`);
       this.loading = false;
 
       if (!response || !response.data || !response.data.tasks) return [];
@@ -40,14 +40,13 @@ export const useTaskStore = defineStore("tasks", {
     },
 
     async createTask(taskData) {
-      const { id } = useActiveProjectStore();
+      const projectId = this.getProjectId;
 
       const response = await secureApi.post(
-        `/projects/${id}/task/create`,
+        `/projects/${projectId}/task/create`,
         taskData
       );
       const newTask = response.data;
-      console.log("newTask", newTask);
 
       // check is task was created
       if (newTask && newTask._id) {
@@ -60,10 +59,10 @@ export const useTaskStore = defineStore("tasks", {
     },
 
     async updateTask(updatedTask) {
-      const { id } = useActiveProjectStore();
+      const projectId = this.getProjectId;
 
       const response = await secureApi.post(
-        `/projects/${id}/task/update`,
+        `/projects/${projectId}/task/update`,
         updatedTask
       );
       const newTask = response.data;
@@ -77,6 +76,7 @@ export const useTaskStore = defineStore("tasks", {
       alert("Oops, There was a problem updating the task");
     },
 
+    // TODO: change url to have project id
     async removeTask(taskId) {
       const taskWasRemoved = await secureApi.delete(
         `/projects/tasks/${taskId}`
@@ -101,6 +101,7 @@ export const useTaskStore = defineStore("tasks", {
       this.tasks.splice(index, 1, taskToUpdate);
     },
 
+    // TODO: change url to have project id
     async incrementUserPoints(taskId) {
       const updatedTask = await secureApi.post(
         `/projects/task/${taskId}/increment`
@@ -111,6 +112,7 @@ export const useTaskStore = defineStore("tasks", {
       }
     },
 
+    // TODO: change url to have project id
     async decrementUserPoints(taskId) {
       const updatedTask = await secureApi.post(
         `/projects/task/${taskId}/decrement`
@@ -121,4 +123,10 @@ export const useTaskStore = defineStore("tasks", {
       }
     },
   },
+  getters: {
+    getProjectId() { 
+      const activeProjectStore = useActiveProjectStore();
+      return activeProjectStore.getId;
+    }
+  }
 });

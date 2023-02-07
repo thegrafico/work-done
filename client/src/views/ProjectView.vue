@@ -43,13 +43,13 @@ const { setActiveProject } = useActiveProjectStore();
 
 const user = ref({});
 
-onMounted(() => {
+onMounted(async () => {
   user.value = getUser();
-  setActiveProject(props.id);
+  await setActiveProject(props.id);
 });
 
-onUnmounted(() => {
-  setActiveProject(null);
+onUnmounted(async () => {
+  await setActiveProject(null);
 })
 
 

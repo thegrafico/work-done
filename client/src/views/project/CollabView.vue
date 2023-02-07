@@ -11,7 +11,7 @@
 
       <v-row>
         <v-col cols="4">
-          <v-text-field v-model.trim="searchTaskInput" clearable label="Search User" prepend-icon="mdi-magnify"
+          <v-text-field v-model.trim="searchUserInput" clearable label="Search User" prepend-icon="mdi-magnify"
             variant="underlined"></v-text-field>
         </v-col>
 
@@ -37,11 +37,12 @@ import UserList from "@/components/projects/UserList.vue";
 
 
 // Refs
-const searchTaskInput = ref("");
+const searchUserInput = ref("");
 
 
 // Mounted hook
 onMounted(async () => {
+  // load users
 });
 
 

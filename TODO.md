@@ -1,1 +1,3 @@
 - Add Form validation: https://vuetifyjs.com/en/components/forms/#usage
+- add loading spinner when loading data.
+- Fix Analytics page the pie chart when only one value is available.

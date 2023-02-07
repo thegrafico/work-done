@@ -79,8 +79,33 @@ export const useProjectsStore = defineStore("projects", {
 
     },
 
+
+    /**
+     * Load a project by id from the server and refresh is data withing the current project store
+     * @param {string} projectId 
+     */
+    async loadProjectById(projectId) { 
+      this.loading = true;
+
+      const response = await secureApi.get(`/projects/${projectId}`);
+      this.loading = false;
+
+      console.log(response);
+    },
+
     // TODO:
-    async shareProject() { console.log("TODO SHARING PROJECTS");}
+    async shareProject() { console.log("TODO SHARING PROJECTS");},
 
   },
+  getters: { 
+
+    /**
+     * Get a project by id from the store
+     * @param {Object} state 
+     * @returns {Object} - project
+     */
+    getProjectById: (state) => {
+      return (projectId) => state.projects.find((project) => project._id === projectId)
+    }
+  }
 });
