@@ -11,14 +11,12 @@ export const useTaskStore = defineStore("tasks", {
   }),
   actions: {
     async loadTasks() {
-      const { activeProjectId } = useActiveProjectStore();
+      const { id } = useActiveProjectStore();
 
       // reset just in case
       this.tasks = [];
       this.loading = true;
-      const projectTask = await secureApi.get(
-        `/projects/${activeProjectId}/tasks`
-      );
+      const projectTask = await secureApi.get(`/projects/${id}/tasks`);
       this.loading = false;
 
       if (!projectTask || !projectTask.data || !projectTask.data.tasks)
@@ -28,14 +26,12 @@ export const useTaskStore = defineStore("tasks", {
     },
 
     async loadTaskWithAnalytics() {
-      const { activeProjectId } = useActiveProjectStore();
+      const { id } = useActiveProjectStore();
 
       // reset just in case
       this.tasks = [];
       this.loading = true;
-      const response = await secureApi.get(
-        `/projects/${activeProjectId}/tasksAnalytics`
-      );
+      const response = await secureApi.get(`/projects/${id}/tasksAnalytics`);
       this.loading = false;
 
       if (!response || !response.data || !response.data.tasks) return [];
@@ -44,10 +40,10 @@ export const useTaskStore = defineStore("tasks", {
     },
 
     async createTask(taskData) {
-      const { activeProjectId } = useActiveProjectStore();
+      const { id } = useActiveProjectStore();
 
       const response = await secureApi.post(
-        `/projects/${activeProjectId}/task/create`,
+        `/projects/${id}/task/create`,
         taskData
       );
       const newTask = response.data;
@@ -64,10 +60,10 @@ export const useTaskStore = defineStore("tasks", {
     },
 
     async updateTask(updatedTask) {
-      const { activeProjectId } = useActiveProjectStore();
+      const { id } = useActiveProjectStore();
 
       const response = await secureApi.post(
-        `/projects/${activeProjectId}/task/update`,
+        `/projects/${id}/task/update`,
         updatedTask
       );
       const newTask = response.data;
