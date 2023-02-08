@@ -7,12 +7,13 @@
     <NavSideBar options="project" :username="user.username" />
 
     <!-- Main Container -->
-    <component :is="tabs[props.tab]" :project-id="props.id"></component>
+    <component v-if="!loading" :is="tabs[props.tab]"></component>
   </v-app>
 </template>
 
 <script setup>
-import { onMounted, ref, defineProps, defineAsyncComponent, onUnmounted } from "vue";
+import { ref, defineProps, defineAsyncComponent, onBeforeMount, onUnmounted } from "vue";
+import { storeToRefs } from "pinia";
 import { useAuthStore } from "@/stores/auth.store";
 import { useActiveProjectStore } from "@/stores/active.project.store";
 
@@ -20,6 +21,7 @@ import { useActiveProjectStore } from "@/stores/active.project.store";
 import Header from "@/components/layout/HeaderView.vue";
 import NavSideBar from "@/components/layout/NavSideBar.vue";
 
+const { loading } = storeToRefs(useActiveProjectStore());
 
 // id = ProjectId, tab = ['task', 'analytics'...];
 const props = defineProps({
@@ -42,11 +44,14 @@ const tabs = {
 const { setActiveProject } = useActiveProjectStore();
 
 const user = ref({});
+// const currentProjectId = ref('');
 
-onMounted(async () => {
+onBeforeMount(async () => {
+  console.log("New project loaded!");
   user.value = getUser();
   await setActiveProject(props.id);
 });
+
 
 onUnmounted(async () => {
   await setActiveProject(null);

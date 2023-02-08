@@ -11,7 +11,11 @@ export const useTaskStore = defineStore("tasks", {
   }),
   actions: {
     async loadTasks() {
-      const projectId = this.getProjectId;
+      const activeProjectStore = useActiveProjectStore();
+      console.log("Project loading: ", activeProjectStore.project);
+
+      const projectId = activeProjectStore.getId;
+      console.log("Getting id for: ", projectId);
       
       // reset just in case
       this.tasks = [];

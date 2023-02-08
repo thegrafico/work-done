@@ -26,6 +26,13 @@ User.statics.findUserByUsername = async function (username) {
   return user;
 };
 
+// TODO: finish this
+User.statics.findUserByEmail = async function (username) {
+  const user = await this.findOne({ username: username});
+  
+  return user;
+};
+
 // a setter
 // User.path("name").set(function (v) {
 //   return capitalize(v);
