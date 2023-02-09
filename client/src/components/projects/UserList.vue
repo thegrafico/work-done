@@ -11,9 +11,6 @@
           <p>User</p>
         </v-col>
 
-        <v-col cols="2">
-          <p>Overall Points</p>
-        </v-col>
 
         <v-col cols="3">
           <p>Status</p>
@@ -55,12 +52,10 @@
 
           </v-col>
 
-          <v-col cols="2">
-            <p class="points">{{ user.totalPoints }}</p>
-          </v-col>
-
           <v-col cols="3">
-            <v-switch label="Active" color="success" :model-value="true" hide-details></v-switch>
+            <v-avatar :color="(user.status === 'pending') ? 'warning' : 'success'" size="16">
+            </v-avatar>
+            {{ user.status }}
           </v-col>
 
 
@@ -85,7 +80,7 @@
           <v-card class="pa-10" align="center">
             <h3>
               It seems you don't have any collaborator for this proyect yet. <br>
-              You can send some invitations to your friends. 
+              You can send some invitations to your friends.
             </h3>
           </v-card>
         </v-sheet>

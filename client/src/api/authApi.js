@@ -44,11 +44,21 @@ secureApi.interceptors.response.use(
       return;
     }
 
-    // TODO: Here add logic for global alert messages
+    // Show global errors from response
+    if (error.response && error.response.data && error.response.data.message) {
+      console.log("oops, something went bad: ", error.message);
 
-    if (error.response && error.response.status === 403) {
-      const authStore = useAuthStore();
-      authStore.logout();
+      if (error.response.status === 403) {
+        const authStore = useAuthStore();
+        authStore.logout();
+        return;
+      }
+
+      alertMessage.show({
+        message: error.response.data.message,
+        type: error.response.data.type || "error",
+      });
+
       return;
     }
 

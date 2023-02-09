@@ -44,7 +44,7 @@ router.post("/api/login", async function (req, res, next) {
 router.get("/signin", async function (req, res, next) {
   const nUser = await UserCollection.create({
     name: "alex",
-    username: "rauleldomi",
+    username: "rauleldomi2",
     password: "admin",
   });
 

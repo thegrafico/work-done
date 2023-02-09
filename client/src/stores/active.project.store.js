@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { useProjectsStore } from "@/stores/projects.store";
+import { useAlertMessageStore } from "./alert.message.store";
 import router from "@/router/index";
 import secureApi from "@/api/authApi";
 
@@ -8,9 +9,6 @@ import secureApi from "@/api/authApi";
  */
 export const useActiveProjectStore = defineStore("activeProject", {
   state: () => ({
-    /** @type {boolean} */
-    loading: false,
-
     /** @type {{_id: string, title: string, users: [{_id: string, username, string}], }} */
     project: {},
 
@@ -19,6 +17,9 @@ export const useActiveProjectStore = defineStore("activeProject", {
 
     /** @type {boolean} */
     loadingUsers: false,
+
+    /** @type {boolean} */
+    loadingProject: false,
   }),
   actions: {
     /**
@@ -44,9 +45,10 @@ export const useActiveProjectStore = defineStore("activeProject", {
     },
 
     loadProjectFromStore(projectId) {
-      // console.log("Loading project from Store...");
+      this.loadingProject = true;
       const projects = useProjectsStore();
       this.project = projects.getProjectById(projectId);
+      this.loadingProject = false;
 
       // if not project is found
       if (!this.project) {
@@ -56,7 +58,7 @@ export const useActiveProjectStore = defineStore("activeProject", {
     },
 
     async loadProjectFromServer(projectId) {
-      this.loading = true;
+      this.loadingProject = true;
       const response = await secureApi
         .get(`/projects/${projectId}`)
         .catch((err) => {
@@ -65,7 +67,7 @@ export const useActiveProjectStore = defineStore("activeProject", {
             err.message
           );
         });
-      this.loading = false;
+      this.loadingProject = false;
 
       if (response.status !== 200) {
         // TODO: show global popup error
@@ -77,20 +79,24 @@ export const useActiveProjectStore = defineStore("activeProject", {
     },
 
     async loadProjectUsers() {
-      this.loadingUsers = true;
-
-      let error = undefined;
-      await secureApi.get(`/projects/${this.getId}/users`).catch((err) => {
-        console.error("Error loading project users: ", err);
-        error = err;
-      });
-      this.loadingUsers = false;
-
-      if (error) {
+      if (!this.getId) {
         return;
       }
 
-      this.users = [];
+      this.loadingUsers = true;
+
+      const usersResponse = await secureApi.get(
+        `/projects/${this.getId}/users`
+      );
+      this.loadingUsers = false;
+      console.log("Response: ", usersResponse);
+      // bad response
+      if (!usersResponse || !usersResponse.data) {
+        this.users = [];
+        return;
+      }
+
+      this.users = usersResponse.data.users;
     },
 
     async sendInvitation(invitation) {
@@ -100,19 +106,22 @@ export const useActiveProjectStore = defineStore("activeProject", {
       };
       this.loading = true;
 
-      const response = await secureApi
-        .post(`/projects/${this.getId}/sendInvitation`, request)
-        .catch((err) => {
-          console.error("Error sending the invitation: ", err.message);
-        });
+      const response = await secureApi.post(
+        `/projects/${this.getId}/sendInvitation`,
+        request
+      );
+
       this.loading = false;
 
-      if (response.status !== 200) {
-        alert(
-          "Oops! Something went wrong sending the invitation. Pleasy try later."
-        );
+      if (!response || !response.data || !response.data.invitation) {
         return false;
       }
+
+      const alertMessage = useAlertMessageStore();
+      alertMessage.show({
+        message: response.data.message,
+        type: response.data.type,
+      });
 
       return true;
     },

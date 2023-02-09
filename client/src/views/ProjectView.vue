@@ -10,7 +10,7 @@
     <NavSideBar options="project" :username="user.username" />
 
     <!-- Main Container -->
-    <component v-if="!loading" :is="tabs[props.tab]"></component>
+    <component v-if="!loadingProject" :is="tabs[props.tab]"></component>
   </v-app>
 </template>
 
@@ -26,7 +26,7 @@ import Header from "@/components/layout/HeaderView.vue";
 import NavSideBar from "@/components/layout/NavSideBar.vue";
 import AlertView from "@/components/error/AlertView.vue";
 
-const { loading } = storeToRefs(useActiveProjectStore());
+const { loadingProject } = storeToRefs(useActiveProjectStore());
 const { setActiveProject } = useActiveProjectStore();
 
 // TODO: get rid of this

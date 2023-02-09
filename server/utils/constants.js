@@ -5,14 +5,22 @@ const TASK_MIN_POINTS = 0;
 const TASK_MAX_POINTS = 100;
 
 const invitationType = {
-  "email": "email",
-  "username": "username"
-}
+  email: "email",
+  username: "username",
+};
 
-const invitationStatus = { 
-  "pending": "pending",
-  "rejected": "rejected",
-  "accepted": "accepted"
+const invitationStatus = {
+  pending: "pending",
+  rejected: "rejected",
+  accepted: "accepted",
+  active: "active",
+};
+
+const alertTypes = {
+  success: "success",
+  warning: "warning",
+  info: "info",
+  error: "error",
 };
 
 module.exports = {
@@ -21,5 +29,6 @@ module.exports = {
   TASK_MIN_POINTS,
   TASK_MAX_POINTS,
   invitationType,
-  invitationStatus
+  invitationStatus,
+  alertTypes,
 };

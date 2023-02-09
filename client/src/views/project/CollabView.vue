@@ -43,7 +43,6 @@ import { useActiveProjectStore } from "@/stores/active.project.store";
 const { users, loadingUsers } = storeToRefs(useActiveProjectStore());
 
 // functions 
-// const { sendInvitation, loadProjectUsers } = useActiveProjectStore();
 const { sendInvitation, loadProjectUsers } = useActiveProjectStore();
 
 // Refs

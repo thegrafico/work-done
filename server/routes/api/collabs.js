@@ -7,7 +7,11 @@ const ProjectInvitationCollection = require("../../db/schema/projectInvitation")
 
 const _ = require("lodash");
 
-const { invitationType } = require("../../utils/constants");
+const {
+  invitationType,
+  alertTypes,
+  invitationStatus,
+} = require("../../utils/constants");
 
 // POST - PROJECTS/:projectID/USERS
 router.get(
@@ -18,30 +22,70 @@ router.get(
     console.log("Getting request to get project users...");
 
     // since we're using the auth.ensureUserInProject, req hols the current project
-    const projectUsers = req.project.users || [];
+    const projectUserIds = req.project.users || [];
 
+    // find users in invitations first so we can find the user later
     let error = null;
-    const users = await UserCollection.find({
-      _id: { $in: projectUsers },
+    const usersInInvitations = await ProjectInvitationCollection.find({
+      projectId: req.project._id,
     }).catch((err) => {
       error = err;
     });
 
     if (error) {
       res.status(500).send({
-        message: "Oops, it seems there was a problem getting the users",
-        type: "error",
+        message: error.message,
+        type: alertTypes.error,
       });
       return;
     }
 
-    console.log("users:", users);
+    // map only the user ids from the invitations
+    const userIdsFromInvitations = usersInInvitations.map((invitation) => {
+      return invitation.to.toString();
+    });
 
-    res.status(200).send({ users: [] });
+    // join both arrays projects users and invitations users
+    const usersIds = projectUserIds.concat(userIdsFromInvitations);
+
+    // find users in project
+    const users = await UserCollection.find({
+      _id: { $in: usersIds },
+    }).catch((err) => {
+      error = err;
+    });
+
+    if (error) {
+      res.status(500).send({
+        message: error.message,
+        type: alertTypes.error,
+      });
+      return;
+    }
+
+    // remove owner user information
+    let filteredUsers = users.filter(
+      (user) => user._id.toString() != req.user.id.toString()
+    );
+
+    filteredUsers = filteredUsers.map((user) => {
+      return {
+        username: user.username,
+        id: user._id,
+        creationDate: user.creationDate,
+        status: !userIdsFromInvitations.includes(user._id.toString())
+          ? invitationStatus.active
+          : invitationStatus.pending,
+      };
+    });
+
+    // console.log("Users: ", filteredUsers);
+
+    res.status(200).send({ users: filteredUsers });
   }
 );
 
-// POST - PROJECTS/TASK
+// POST - PROJECTS/INVITE_USER
 router.post(
   "/projects/:projectId/sendInvitation",
   auth.authenticateToken,
@@ -57,9 +101,10 @@ router.post(
       (!email || email.length === 0)
     ) {
       console.error("Invalid user information. ");
-      res
-        .status(400)
-        .send({ message: `Invalid user information cannot be empty` });
+      res.status(400).send({
+        message: `Invalid user information cannot be empty`,
+        type: alertTypes.error,
+      });
       return;
     }
 
@@ -72,10 +117,9 @@ router.post(
 
     // check if valid user
     if (!targetUser || !targetUser._id) {
-      console.error("Invalid user: ", targetUser);
-      res.status(500).send({
-        message:
-          "Oops, there was a problem creating the invitation for the user.",
+      res.status(400).send({
+        message: "Could not find the user",
+        type: alertTypes.error,
       });
       return;
     }
@@ -91,9 +135,12 @@ router.post(
     };
 
     //  in case a dumbass try to add himself to the project
-    if (request.from === req.user.id) {
+    const isInvitationForSameUser =
+      request.from.toString() === request.to.toString();
+    if (isInvitationForSameUser) {
       res.status(400).send({
         message: "You cannot invite yourself to the project dumbass.",
+        type: alertTypes.warning,
       });
       return;
     }
@@ -102,20 +149,32 @@ router.post(
     let error = undefined;
     const invitation = await ProjectInvitationCollection.create(request).catch(
       (err) => {
-        console.error("Error creating invitation: ", err);
         error = err;
       }
     );
 
     if (error) {
-      res.status(500).send({
-        message:
-          "Oops, there was a problem creating the invitation for the user.",
-      });
+      // Duplicate invitation
+      if (error.code === 11000) {
+        res.status(400).send({
+          message: `Invitation already exists`,
+          type: alertTypes.info,
+        });
+      } else {
+        res.status(500).send({
+          message: `Oops, ${error.message}`,
+          type: alertTypes.error,
+        });
+      }
       return;
     }
 
-    res.status(200).send({ invitation });
+    // success
+    res.status(200).send({
+      invitation,
+      message: "invitatation was sucessfully sent",
+      type: alertTypes.success,
+    });
   }
 );
 
