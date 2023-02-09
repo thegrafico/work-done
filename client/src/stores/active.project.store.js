@@ -66,10 +66,6 @@ export const useActiveProjectStore = defineStore("activeProject", {
 
       // TODO: create modal for project
       this.project = response.data.project;
-
-      // TODO: remove
-      this.setDummyUsers();
-
     },
 
     async loadProjectUsers() {

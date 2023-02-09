@@ -75,7 +75,7 @@
       <v-col cols="3"></v-col>
       <v-col cols="6">
         <v-sheet elevation="21">
-          <v-card class="pa-10">
+          <v-card class="pa-10" align="center">
             <h3>
               It seems you don't have any task for this proyect yet.
             </h3>

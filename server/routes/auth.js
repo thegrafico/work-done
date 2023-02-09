@@ -47,7 +47,6 @@ router.get("/signin", async function (req, res, next) {
     username: "rauleldomi",
     password: "admin",
   });
-  console.log("User created: ", nUser);
 
   res.status(200).send("Created dummy user");
 });

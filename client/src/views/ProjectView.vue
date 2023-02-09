@@ -1,5 +1,10 @@
 <template>
   <v-app id="inspire">
+
+    <v-scroll-y-reverse-transition>
+      <v-alert class="alertPosition mt-5 mr-2" v-if="showAlert" type="warning">dummy message.</v-alert>
+    </v-scroll-y-reverse-transition>
+
     <!-- Header -->
     <Header title="Work Done" />
 
@@ -22,12 +27,15 @@ import Header from "@/components/layout/HeaderView.vue";
 import NavSideBar from "@/components/layout/NavSideBar.vue";
 
 const { loading } = storeToRefs(useActiveProjectStore());
+const { setActiveProject } = useActiveProjectStore();
 
 // id = ProjectId, tab = ['task', 'analytics'...];
 const props = defineProps({
   id: String,
   tab: String,
 });
+
+const showAlert = ref(true);
 
 // Navigation tabs inside project ( Componets for project - AKA routes)
 const tabs = {
@@ -40,11 +48,9 @@ const tabs = {
   config: defineAsyncComponent(() =>
     import("../views/project/ProjectConfigView.vue")),
 };
-// const tab = ref(props.tab);
-const { setActiveProject } = useActiveProjectStore();
+
 
 const user = ref({});
-// const currentProjectId = ref('');
 
 onBeforeMount(async () => {
   console.log("New project loaded!");
@@ -63,3 +69,14 @@ const getUser = () => {
   return useAuth.user;
 };
 </script>
+
+
+<style>
+.alertPosition {
+  position: absolute;
+  width: 40%;
+  right: 0;
+  z-index: 999 !important;
+  /* height: 30%; */
+}
+</style>

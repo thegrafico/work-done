@@ -1,7 +1,5 @@
 <template>
-  <v-container fluid>
-
-
+  <v-container v-if="props.users.length > 0" fluid>
     <v-sheet elevation="8">
       <!-- Header -->
       <v-row class="header border">
@@ -47,7 +45,7 @@
                   </v-avatar>
                 </v-col>
                 <v-col cols="8" class="userinfo pa-0 ma-0">
-                  <p class="username pa-0">{{user.username}}</p>
+                  <p class="username pa-0">{{ user.username }}</p>
                   <p class="gray pa-0">
                     added: {{ user.creationDate }}
                   </p>
@@ -58,7 +56,7 @@
           </v-col>
 
           <v-col cols="2">
-            <p class="points">{{user.totalPoints}}</p>
+            <p class="points">{{ user.totalPoints }}</p>
           </v-col>
 
           <v-col cols="3">
@@ -78,6 +76,24 @@
     </v-container>
   </v-container>
 
+  <v-container v-else>
+    <!-- In case there is not project created yet -->
+    <v-row class="pt-4">
+      <v-col cols="3"></v-col>
+      <v-col cols="6">
+        <v-sheet elevation="21">
+          <v-card class="pa-10" align="center">
+            <h3>
+              It seems you don't have any collaborator for this proyect yet. <br>
+              You can send some invitations to your friends. 
+            </h3>
+          </v-card>
+        </v-sheet>
+      </v-col>
+      <v-col cols="3"></v-col>
+    </v-row>
+  </v-container>
+
 </template>
 
 <script setup>
@@ -85,7 +101,7 @@
 import { defineProps, onMounted } from "vue";
 
 const props = defineProps({
-    users: Array,
+  users: Array,
 });
 
 onMounted(() => {

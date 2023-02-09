@@ -23,7 +23,9 @@
       </v-row>
 
       <!-- List of user -->
-      <UserList v-if="!loading" :users="project.users"/>
+      <UserList v-if="!loading" :users="project.users" />
+      
+
 
     </v-container>
   </v-main>

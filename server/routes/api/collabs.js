@@ -52,6 +52,12 @@ router.post(
       "projectId": req.params.projectId
     };
 
+    //  in case a dumbass try to add himself to the project
+    if (request.from === req.user.id) { 
+      res.status(400).send({ message: "You cannot invite yourself to the project dumbass." });
+      return;
+    }
+
     // create invitation
     let error = undefined;
     const invitation = await ProjectInvitationCollection.create(request).catch(err => {
