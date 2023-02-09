@@ -6,38 +6,43 @@ dotenv.config();
 const jwt = require("jsonwebtoken");
 
 function generateAccessToken(userId) {
-  return jwt.sign({ id: userId }, process.env.TOKEN_SECRET, { expiresIn: 60 * 60 });
+  return jwt.sign({ id: userId }, process.env.TOKEN_SECRET, {
+    expiresIn: 60 * 60,
+  });
 }
 
 function authenticateToken(req, res, next) {
-  const authHeader = req.headers['authorization']
-  const token = authHeader && authHeader.split(' ')[1];
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
 
   // console.log("Authentication");
 
-  if (token == null) return res.sendStatus(401)
+  if (token == null) return res.sendStatus(401);
 
   jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
-
     if (err) return res.status(403).send({ message: "Error verifying user" });
     // console.log("User found token:", user);
-    req.user = user
+    req.user = user;
     // console.log("Authenticated");
-    next()
+    next();
   });
 }
 
 async function ensureUserInProject(req, res, next) {
   const projectId = req.params.projectId;
   const userId = req.user.id;
-  
+
   // Find a this project where 'Im' part of.
   const project = await ProjectCollection.findById(projectId).catch((err) => {
     console.error("error getting project: ", err);
   });
 
   if (!project) {
-    res.status(404).send({message: "Oops, it seems the page you were looking for does not exist."});
+    res
+      .status(404)
+      .send({
+        message: "Oops, it seems the page you were looking for does not exist.",
+      });
     return;
   }
 
@@ -48,12 +53,12 @@ async function ensureUserInProject(req, res, next) {
       .send({ message: "You don't have permission to this project." });
     return;
   }
-
+  req.project = project;
   next();
 }
 
 module.exports = {
   generateAccessToken,
   authenticateToken,
-  ensureUserInProject
-}
+  ensureUserInProject,
+};

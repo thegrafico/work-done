@@ -23,9 +23,7 @@
       </v-row>
 
       <!-- List of user -->
-      <UserList v-if="!loading" :users="project.users" />
-      
-
+      <UserList v-if="!loadingUsers" :users="users" />
 
     </v-container>
   </v-main>
@@ -42,20 +40,18 @@ import UserList from "@/components/projects/UserList.vue";
 import { useActiveProjectStore } from "@/stores/active.project.store";
 
 // state
-const { project, loading } = storeToRefs(useActiveProjectStore());
+const { users, loadingUsers } = storeToRefs(useActiveProjectStore());
 
 // functions 
 // const { sendInvitation, loadProjectUsers } = useActiveProjectStore();
-const { sendInvitation } = useActiveProjectStore();
+const { sendInvitation, loadProjectUsers } = useActiveProjectStore();
 
 // Refs
 const searchUserInput = ref("");
 
 
 onMounted(async () => {
-  // load users
-  console.log(project);
-
+  await loadProjectUsers();
 });
 
 

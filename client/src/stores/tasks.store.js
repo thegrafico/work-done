@@ -12,11 +12,8 @@ export const useTaskStore = defineStore("tasks", {
   actions: {
     async loadTasks() {
       const activeProjectStore = useActiveProjectStore();
-      console.log("Project loading: ", activeProjectStore.project);
-
       const projectId = activeProjectStore.getId;
-      console.log("Getting id for: ", projectId);
-      
+
       // reset just in case
       this.tasks = [];
       this.loading = true;
@@ -35,7 +32,9 @@ export const useTaskStore = defineStore("tasks", {
       // reset just in case
       this.tasks = [];
       this.loading = true;
-      const response = await secureApi.get(`/projects/${projectId}/tasksAnalytics`);
+      const response = await secureApi.get(
+        `/projects/${projectId}/tasksAnalytics`
+      );
       this.loading = false;
 
       if (!response || !response.data || !response.data.tasks) return [];
@@ -128,9 +127,9 @@ export const useTaskStore = defineStore("tasks", {
     },
   },
   getters: {
-    getProjectId() { 
+    getProjectId() {
       const activeProjectStore = useActiveProjectStore();
       return activeProjectStore.getId;
-    }
-  }
+    },
+  },
 });

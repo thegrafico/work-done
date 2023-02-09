@@ -21,10 +21,3 @@ const vuetify = createVuetify({
 const app = createApp(App);
 
 app.use(router).use(vuetify).use(createPinia()).mount("#app");
-
-// Global errors
-app.config.errorHandler = function (error, vm) {
-  if (error.status === 401 || error.status === 403) {
-    vm.$router.push("/logout");
-  }
-};

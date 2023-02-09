@@ -3,7 +3,6 @@ import { useProjectsStore } from "@/stores/projects.store";
 import router from "@/router/index";
 import secureApi from "@/api/authApi";
 
-
 /**
  * Holds information about the current active project
  */
@@ -14,14 +13,19 @@ export const useActiveProjectStore = defineStore("activeProject", {
 
     /** @type {{_id: string, title: string, users: [{_id: string, username, string}], }} */
     project: {},
+
+    /** @type {[{_id: string, username: string, creationDate: Date }]} */
+    users: [],
+
+    /** @type {boolean} */
+    loadingUsers: false,
   }),
   actions: {
     /**
      * @param {{_id: String, users: [], ...}} projectId - id of the current project
      */
     async setActiveProject(projectId) {
-      if (!projectId) { 
-        console.log("Resetting active project");
+      if (!projectId) {
         this.project = {};
         return;
       }
@@ -31,10 +35,10 @@ export const useActiveProjectStore = defineStore("activeProject", {
 
       if (useProjectFromStore) {
         this.loadProjectFromStore(projectId);
-      } else {  // Load project from the server
+      } else {
+        // Load project from the server
         await this.loadProjectFromServer(projectId);
       }
-
 
       // this.setActiveProjectUsers(project.users || []);
     },
@@ -42,8 +46,8 @@ export const useActiveProjectStore = defineStore("activeProject", {
     loadProjectFromStore(projectId) {
       // console.log("Loading project from Store...");
       const projects = useProjectsStore();
-      this.project = projects.getProjectById(projectId);     
-      
+      this.project = projects.getProjectById(projectId);
+
       // if not project is found
       if (!this.project) {
         router.push("/dashboard");
@@ -52,11 +56,15 @@ export const useActiveProjectStore = defineStore("activeProject", {
     },
 
     async loadProjectFromServer(projectId) {
-      console.log("Loading project from server...", projectId);
       this.loading = true;
-      const response = await secureApi.get(`/projects/${projectId}`).catch(err => {
-        console.error("Error getting the project from the server: ", err.message);
-      });
+      const response = await secureApi
+        .get(`/projects/${projectId}`)
+        .catch((err) => {
+          console.error(
+            "Error getting the project from the server: ",
+            err.message
+          );
+        });
       this.loading = false;
 
       if (response.status !== 200) {
@@ -69,38 +77,40 @@ export const useActiveProjectStore = defineStore("activeProject", {
     },
 
     async loadProjectUsers() {
-      this.loading = true;
+      this.loadingUsers = true;
 
-      const projectUsersResponse = await secureApi.get(`/projects/${this.getId}/users`).catch(err => {
+      let error = undefined;
+      await secureApi.get(`/projects/${this.getId}/users`).catch((err) => {
         console.error("Error loading project users: ", err);
+        error = err;
       });
+      this.loadingUsers = false;
 
-      this.loading = false;
-
-      if (projectUsersResponse.status !== 200) {
-        alert("Oops! Something went wrong loading the users for the project.");
+      if (error) {
         return;
       }
 
-      this.project.users = projectUsersResponse.data.users;
-
+      this.users = [];
     },
 
     async sendInvitation(invitation) {
-
       const request = {
         username: invitation.to,
-        email: null
-      }
+        email: null,
+      };
       this.loading = true;
 
-      const response = await secureApi.post(`/projects/${this.getId}/sendInvitation`, request).catch(err => {
-        console.error("Error sending the invitation: ", err.message);
-      });
+      const response = await secureApi
+        .post(`/projects/${this.getId}/sendInvitation`, request)
+        .catch((err) => {
+          console.error("Error sending the invitation: ", err.message);
+        });
       this.loading = false;
 
       if (response.status !== 200) {
-        alert("Oops! Something went wrong sending the invitation. Pleasy try later.");
+        alert(
+          "Oops! Something went wrong sending the invitation. Pleasy try later."
+        );
         return false;
       }
 
@@ -109,11 +119,36 @@ export const useActiveProjectStore = defineStore("activeProject", {
 
     setDummyUsers() {
       this.project.users = [
-        { "_id": "123", "username": "user@example.com", "status": "active", "creationDate": "01/04/2023", "totalPoints": 10 },
-        { "_id": "1234", "username": "user2@example.com", "status": "active", "creationDate": "01/05/2023", "totalPoints": 101 },
-        { "_id": "1235", "username": "user3@example.com", "status": "inactive", "creationDate": "12/20/2023", "totalPoints": 90 },
-        { "_id": "1263", "username": "user4@example.com", "status": "active", "creationDate": "03/02/2023", "totalPoints": 5 }]
-    }
+        {
+          _id: "123",
+          username: "user@example.com",
+          status: "active",
+          creationDate: "01/04/2023",
+          totalPoints: 10,
+        },
+        {
+          _id: "1234",
+          username: "user2@example.com",
+          status: "active",
+          creationDate: "01/05/2023",
+          totalPoints: 101,
+        },
+        {
+          _id: "1235",
+          username: "user3@example.com",
+          status: "inactive",
+          creationDate: "12/20/2023",
+          totalPoints: 90,
+        },
+        {
+          _id: "1263",
+          username: "user4@example.com",
+          status: "active",
+          creationDate: "03/02/2023",
+          totalPoints: 5,
+        },
+      ];
+    },
   },
   getters: {
     getId(state) {
@@ -121,6 +156,6 @@ export const useActiveProjectStore = defineStore("activeProject", {
     },
     getUsers(state) {
       return state.project.users;
-    }
-  }
+    },
+  },
 });
