@@ -1,9 +1,7 @@
 <template>
   <v-app id="inspire">
 
-    <v-scroll-y-reverse-transition>
-      <v-alert class="alertPosition mt-5 mr-2" v-if="showAlert" type="warning">dummy message.</v-alert>
-    </v-scroll-y-reverse-transition>
+    <AlertView v-if="showAlert" :type="type" :message="message" />
 
     <!-- Header -->
     <Header title="Work Done" />
@@ -20,22 +18,29 @@
 import { ref, defineProps, defineAsyncComponent, onBeforeMount, onUnmounted } from "vue";
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "@/stores/auth.store";
+import { useAlertMessageStore } from "@/stores/alert.message.store";
 import { useActiveProjectStore } from "@/stores/active.project.store";
 
 // Components
 import Header from "@/components/layout/HeaderView.vue";
 import NavSideBar from "@/components/layout/NavSideBar.vue";
+import AlertView from "@/components/error/AlertView.vue";
 
 const { loading } = storeToRefs(useActiveProjectStore());
 const { setActiveProject } = useActiveProjectStore();
+
+// TODO: get rid of this
+const user = ref({});
+
+// Alert message
+const { showAlert, type, message } = storeToRefs(useAlertMessageStore());
+
 
 // id = ProjectId, tab = ['task', 'analytics'...];
 const props = defineProps({
   id: String,
   tab: String,
 });
-
-const showAlert = ref(true);
 
 // Navigation tabs inside project ( Componets for project - AKA routes)
 const tabs = {
@@ -49,11 +54,7 @@ const tabs = {
     import("../views/project/ProjectConfigView.vue")),
 };
 
-
-const user = ref({});
-
 onBeforeMount(async () => {
-  console.log("New project loaded!");
   user.value = getUser();
   await setActiveProject(props.id);
 });
@@ -69,14 +70,3 @@ const getUser = () => {
   return useAuth.user;
 };
 </script>
-
-
-<style>
-.alertPosition {
-  position: absolute;
-  width: 40%;
-  right: 0;
-  z-index: 999 !important;
-  /* height: 30%; */
-}
-</style>

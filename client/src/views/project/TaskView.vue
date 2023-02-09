@@ -41,16 +41,15 @@ import { useTaskStore } from "@/stores/tasks.store";
 import ButtonWithModal from "@/components/button/ButtonWithModal.vue";
 import TaskList from "@/components/projects/TaskList.vue"
 
+// Task store
 const { tasks, loading } = storeToRefs(useTaskStore());
-const {loadTasks, refreshTaskList, createTask } = useTaskStore();
+const { loadTasks, refreshTaskList, createTask } = useTaskStore();
 
 // Refs
 const searchTaskInput = ref("");
 
-
 // Mounted hook
 onMounted(async () => {
-  console.log("Loading tasks...");
   await loadTasks();
 });
 
