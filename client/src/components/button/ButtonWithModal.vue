@@ -8,7 +8,7 @@
     <!-- TODO: lazy load with this?  -->
     <component v-if="dialog" :is="modals[template]" :dialog="dialog" :reset-dialog="resetDialog"
       :data="(data && data._id) ? data : null" :project="project && project._id ? project : null"
-      @on-submit="performAction">
+      v-bind="(config && config.title) ? config : null" @on-submit="performAction">
     </component>
   </div>
 </template>
@@ -29,12 +29,14 @@ const modals = {
     import("../modals/EditProject.vue")),
   ShareProject: defineAsyncComponent(() =>
     import("../modals/ShareProject.vue")),
-  createTask: defineAsyncComponent(() =>
+  CreateTask: defineAsyncComponent(() =>
     import("../modals/task/createTask.vue")),
-  removeTask: defineAsyncComponent(() =>
+  RemoveTask: defineAsyncComponent(() =>
     import("../modals/task/RemoveTask.vue")),
   UserInvitation: defineAsyncComponent(() =>
     import("../modals/collabs/UserInvitation.vue")),
+  CancelTemplate: defineAsyncComponent(() =>
+    import("@/components/modals/CancelTemplate.vue")),
 };
 
 
@@ -49,7 +51,8 @@ const props = defineProps({
   variant: String,
   project: Object,
   disabled: Boolean,
-  data: Object
+  data: Object,
+  config: Object,
 });
 
 const {

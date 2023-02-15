@@ -62,7 +62,7 @@ onBeforeMount(async () => {
 
 onUnmounted(async () => {
   await setActiveProject(null);
-})
+});
 
 
 const getUser = () => {

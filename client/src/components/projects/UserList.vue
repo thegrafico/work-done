@@ -60,8 +60,30 @@
 
 
           <v-col cols="2">
+            <v-menu>
+              <template v-slot:activator="{ props }">
+                <v-btn icon="mdi-dots-vertical" v-bind="props"></v-btn>
+              </template>
 
-            <v-btn icon="mdi-dots-vertical"></v-btn>
+              <v-list v-if="(user.status != 'pending')">
+
+                <v-list-item v-for="options in userOptions" :key="options.title">
+                  <v-list-item-title>
+                    <ButtonWithModal v-bind="options" :data="null" />
+                  </v-list-item-title>
+                </v-list-item>
+              </v-list>
+
+              <v-list v-else>
+
+                <v-list-item v-for="(options) in pendingUserOptions" :key="options.title">
+                  <v-list-item-title>
+                    <ButtonWithModal v-bind="options" :data="user" />
+                  </v-list-item-title>
+                </v-list-item>
+
+              </v-list>
+            </v-menu>
           </v-col>
 
         </v-row>
@@ -93,7 +115,11 @@
 
 <script setup>
 
-import { defineProps, onMounted } from "vue";
+import { defineProps, onMounted, ref } from "vue";
+import ButtonWithModal from "@/components/button/ButtonWithModal.vue";
+import { useActiveProjectStore } from "@/stores/active.project.store";
+
+const { cancelInvitation } = useActiveProjectStore();
 
 const props = defineProps({
   users: Array,
@@ -101,7 +127,37 @@ const props = defineProps({
 
 onMounted(() => {
   console.log("Users: ", props.users);
-})
+});
+
+// I dont fucking like this but I need to do this fast
+const userOptions = ref([
+  {
+    title: "Edit",
+    icon: "mdi-pencil",
+    action: null,
+    template: "CreateTask"
+  },
+  {
+    title: "Remove",
+    icon: "mdi-delete",
+    action: null,
+    template: "RemoveTask",
+  },
+]);
+
+const pendingUserOptions = ref([
+  {
+    title: "Cancel",
+    icon: "mdi-account-cancel",
+    action: async (user) => { await cancelInvitation(user._id) },
+    template: "CancelTemplate",
+    config: {
+      title: "Cancel Invitation",
+      message: "Are you sure you want to cancel this invitation?",
+      closeButtonTittle: "Close"
+    }
+  }
+]);
 
 </script>
 

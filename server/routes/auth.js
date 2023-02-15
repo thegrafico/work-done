@@ -16,7 +16,6 @@ router.post("/api/login", async function (req, res, next) {
     res.status(400).send({ message: "Invalid usernamer or password" });
     return;
   }
-  console.log(username, password);
   let error = null;
   const user = await UserCollection.findUserByCredentials(
     username,

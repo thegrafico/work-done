@@ -3,6 +3,7 @@ import { useProjectsStore } from "@/stores/projects.store";
 import { useAlertMessageStore } from "./alert.message.store";
 import router from "@/router/index";
 import secureApi from "@/api/authApi";
+import { alertTypes } from "@/utils/Constants";
 
 /**
  * Holds information about the current active project
@@ -100,6 +101,8 @@ export const useActiveProjectStore = defineStore("activeProject", {
     },
 
     async sendInvitation(invitation) {
+      const alertMessage = useAlertMessageStore();
+
       const request = {
         username: invitation.to,
         email: null,
@@ -114,16 +117,54 @@ export const useActiveProjectStore = defineStore("activeProject", {
       this.loading = false;
 
       if (!response || !response.data || !response.data.invitation) {
-        return false;
+        return;
       }
 
-      const alertMessage = useAlertMessageStore();
       alertMessage.show({
         message: response.data.message,
         type: response.data.type,
       });
 
-      return true;
+      // add user to list
+      this.users.push(response.data.user);
+    },
+
+    async cancelInvitation(userId) {
+      console.log("Id to remove: ", userId);
+      const alertMessage = useAlertMessageStore();
+
+      // check if there is an userId
+      if (!userId) {
+        alertMessage.show({
+          message: "Oops, there is something wrong with the user. Please refresh or try later.",
+          type: alertTypes.error,
+        });
+        return;
+      }
+
+      this.loadingUsers = true;
+
+      const response = await secureApi.post(`/projects/${this.getId}/cancelInvitation`, { userId: userId });
+
+      this.loadingUsers = false;
+
+      // check if a response was received
+      if (!response) {
+        alertMessage.show({
+          message: "Oops, there was something wrong canceling the invitation. Please refresh or try later.",
+          type: alertTypes.error,
+        });
+        return;
+      }
+
+      // show success message
+      alertMessage.show({
+        message: response.data.message,
+        type: response.data.type,
+      });
+
+      // update the user list
+      this.users = this.users.filter(user => { user._id.toString() != userId });
     },
 
     setDummyUsers() {

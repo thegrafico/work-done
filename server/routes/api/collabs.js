@@ -48,7 +48,7 @@ router.get(
     // join both arrays projects users and invitations users
     const usersIds = projectUserIds.concat(userIdsFromInvitations);
 
-    // find users in project
+    // find all users in project, including invitations
     const users = await UserCollection.find({
       _id: { $in: usersIds },
     }).catch((err) => {
@@ -71,7 +71,7 @@ router.get(
     filteredUsers = filteredUsers.map((user) => {
       return {
         username: user.username,
-        id: user._id,
+        _id: user._id,
         creationDate: user.creationDate,
         status: !userIdsFromInvitations.includes(user._id.toString())
           ? invitationStatus.active
@@ -169,10 +169,76 @@ router.post(
       return;
     }
 
+    // find the user information
+    const userInfo = await UserCollection.findById(request.to).catch(err => {
+      error = err;
+    });
+
+    // check if there is user information
+    if (error || !userInfo) {
+      res.status(500).send({
+        message: `Oops, ${error.message || 'there was a problem getting the user information.'}`,
+        type: alertTypes.error,
+      });
+      return;
+    }
+
     // success
     res.status(200).send({
       invitation,
+      user: { _id: userInfo._id, username: userInfo.username, creationDate: userInfo.creationDate, status: invitationStatus.pending },
       message: "invitatation was sucessfully sent",
+      type: alertTypes.success,
+    });
+  }
+);
+
+// POST - PROJECTS/CANCEL_INVITATION
+router.post(
+  "/projects/:projectId/cancelInvitation",
+  auth.authenticateToken,
+  auth.ensureUserInProject,
+  async function (req, res, next) {
+    console.log("Getting request to cancel invitation for a user...");
+
+    const { userId } = req.body;
+    const projectId = req.params.projectId;
+
+    // check if user is not empty
+    if (!userId || userId.length === 0) {
+      console.error("Invalid user information. ");
+      res.status(400).send({
+        message: "Invalid user information. Cannot be empty",
+        type: alertTypes.error,
+      });
+      return;
+    }
+
+    const userInvitationQuery = {
+      projectId,
+      to: userId
+    }
+
+    // create invitation
+    let error = undefined;
+    const invitation = await ProjectInvitationCollection.findOneAndDelete(userInvitationQuery).catch(
+      (err) => {
+        error = err;
+      }
+    );
+
+    // send the error
+    if (error) {
+      res.status(500).send({
+        message: `Oops, ${error.message}`,
+        type: alertTypes.error,
+      });
+    }
+
+    // success
+    res.status(200).send({
+      invitation,
+      message: "Invitation canceled!",
       type: alertTypes.success,
     });
   }
