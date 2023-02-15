@@ -11,6 +11,7 @@ const authRouter = require("./routes/auth");
 const apiRouter = require("./routes/api/api");
 const apiTaskRouter = require("./routes/api/taks");
 const apiCollabsRouter = require("./routes/api/collabs");
+const apiNotificationsRouter = require("./routes/api/notifications")
 
 var app = express();
 
@@ -34,6 +35,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
 app.use("/", authRouter);
+app.use("/api", apiNotificationsRouter);
 app.use("/api", apiRouter); // Dashboard
 app.use("/api", apiTaskRouter); // project/Task
 app.use("/api", apiCollabsRouter); // project/collabs

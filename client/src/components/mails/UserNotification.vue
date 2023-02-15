@@ -1,5 +1,4 @@
 <template>
-
   <div>
 
     <v-dialog v-model="dialog" scrollable>
@@ -36,16 +35,26 @@
         </v-window>
       </v-card>
     </v-dialog>
+
   </div>
-
-
-
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import { useUserNotificationStore } from '@/stores/user.notification.store';
+// import { storeToRefs } from 'pinia';
 
 const dialog = ref(false);
 const tab = ref(null);
+
+// store functions
+// const { loadingNotifications, notifications} = storeToRefs(useUserNotificationStore());
+const { loadNotifications } = useUserNotificationStore();
+
+onMounted(async () => {
+  console.log("Loading notifications...");
+  await loadNotifications();
+  // await loadNotifications();
+});
 
 </script>

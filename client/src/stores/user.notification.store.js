@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
-// import secureApi from "@/api/authApi";
+import secureApi from "@/api/authApi";
+// import Notification from "@/models/Notification";
 
 /**
  * Holds information about the user notification such as messages and project invitations.
@@ -10,15 +11,30 @@ export const useUserNotificationStore = defineStore("userNotifications", {
     notifications: [],
 
     /** @type {Boolean} */
-    loading: false,
+    loadingNotifications: false,
   }),
   actions: {
     /**
-     * @param {{_id: String, users: [], ...}} projectId - id of the current project
+     * Load user notifications
      */
     async loadNotifications() {
       this.notifications = [];
-      this.loading = true;
+      this.loadingNotifications = true;
+
+      let error = null;
+      const notificationsResponse = await secureApi.get(`/notifications`).catch(err => {
+        error = err;
+      });
+
+      if (error || !notificationsResponse || !notificationsResponse.data) { 
+        // TODO: show notification error
+        alert(error.message || "Oops. Error loading the notifications");
+        return;
+      }
+
+      console.log("NotificationResponse: ", notificationsResponse.data);
+      // this.notifications = notificationsResponse.data.notifications.map(notification => { return new Notification(notification)})
+
     },
   },
   getters: {},
