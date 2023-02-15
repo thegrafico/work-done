@@ -1,5 +1,5 @@
 <template>
-  <v-container v-if="props.users.length > 0" fluid>
+  <v-container v-if="props.users.length > 0" fluid style="max-height: 80vh;">
     <v-sheet elevation="8">
       <!-- Header -->
       <v-row class="header border">
@@ -8,7 +8,7 @@
         </v-col>
 
         <v-col cols="4">
-          <p>User</p>
+          <p class="ml-4">User</p>
         </v-col>
 
 
@@ -25,7 +25,7 @@
     </v-sheet>
 
     <!-- Body -->
-    <v-container class="tableBody fluid px-0 mt-10">
+    <v-container class="tableBody fluid px-2 mt-10 " style="max-height: 60vh; overflow-y: scroll; overflow-x: hidden;">
 
       <v-sheet elevation="4" v-for="user in props.users" :key="user._id">
 

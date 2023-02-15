@@ -164,7 +164,7 @@ export const useActiveProjectStore = defineStore("activeProject", {
       });
 
       // update the user list
-      this.users = this.users.filter(user => { user._id.toString() != userId });
+      this.users = this.users.filter(user => { return user._id.toString() !== userId });
     },
 
     setDummyUsers() {
