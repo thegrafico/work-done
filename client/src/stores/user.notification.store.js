@@ -36,7 +36,7 @@ export const useUserNotificationStore = defineStore("userNotifications", {
       }
 
       console.log("NotificationResponse: ", notificationsResponse.data);
-      this.notifications = []; //notificationsResponse.data.notifications; //.map(notification => { return new Notification(notification)})
+      this.notifications = notificationsResponse.data.notifications; //.map(notification => { return new Notification(notification)})
     },
   },
   getters: {},

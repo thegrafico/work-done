@@ -27,11 +27,28 @@
           <v-window-item v-for="n in 3" :key="n" :value="n">
             <v-container fluid>
               <v-row>
-                <v-col v-for="i in 6" :key="i" cols="12" md="4">
-                  <v-img :src="`https://picsum.photos/500/300?image=${i * n * 5 + 10}`"
-                    :lazy-src="`https://picsum.photos/10/6?image=${i * n * 5 + 10}`" aspect-ratio="1"></v-img>
+                <v-col cols="2"></v-col>
+                <v-col cols="8">
+                  <v-list lines="two">
+                    <v-list-subheader inset>Project Invitations</v-list-subheader>
+
+                    <v-list-item v-for="notification in notifications" :key="notification._id"
+                      :title="notification.message" subtitle="02/15/2023">
+                      <template v-slot:prepend>
+                        <v-avatar color="grey-lighten-1">
+                          RA
+                        </v-avatar>
+                      </template>
+
+                      <template v-slot:append>
+                        <v-btn color="success" icon="mdi-check-circle" variant="text"></v-btn>
+                        <v-btn color="error" icon="mdi-cancel" variant="text"></v-btn>
+                      </template>
+                    </v-list-item>
+                  </v-list>
                 </v-col>
               </v-row>
+
             </v-container>
           </v-window-item>
         </v-window>

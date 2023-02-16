@@ -41,11 +41,39 @@ router.post("/api/login", async function (req, res, next) {
 
 // TODO: Finish this
 router.get("/signin", async function (req, res, next) {
-  const nUser = await UserCollection.create({
-    name: "alex10",
-    username: "rauleldomi10",
-    password: "admin",
-  });
+  const dummyUsers = [
+    {
+      name: "alex10",
+      username: "rauleldomi2",
+      password: "admin",
+    },
+    {
+      name: "alexander",
+      username: "rauleldomi3",
+      password: "admin",
+    },
+    {
+      name: "alexander",
+      username: "rauleldomi4",
+      password: "admin",
+    },
+    {
+      name: "alexander",
+      username: "rauleldomi5",
+      password: "admin",
+    },
+    {
+      name: "alexander",
+      username: "rauleldomi6",
+      password: "admin",
+    },
+  ];
+
+  for (const user of dummyUsers) {
+    await UserCollection.create(user).catch((err) => {
+      console.error("Error creating user: ", err.message);
+    });
+  }
 
   res.status(200).send("Created dummy user");
 });
