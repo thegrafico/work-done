@@ -4,9 +4,11 @@
     <v-dialog v-model="dialog" scrollable>
       <template v-slot:activator="{ props }">
         <v-btn stacked v-bind="props">
-          <v-badge content="1" color="error">
+          <v-badge v-if="!loadingNotifications && notifications.length > 0"
+            :content="(notifications.length > 9) ? '9+' : notifications.length.toString()" color="error">
             <v-icon icon="mdi-newspaper-variant"></v-icon>
           </v-badge>
+          <v-icon v-else icon="mdi-newspaper-variant"></v-icon>
           <p>
             Mails
           </p>
@@ -42,13 +44,13 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useUserNotificationStore } from '@/stores/user.notification.store';
-// import { storeToRefs } from 'pinia';
+import { storeToRefs } from 'pinia';
 
 const dialog = ref(false);
 const tab = ref(null);
 
 // store functions
-// const { loadingNotifications, notifications} = storeToRefs(useUserNotificationStore());
+const { loadingNotifications, notifications } = storeToRefs(useUserNotificationStore());
 const { loadNotifications } = useUserNotificationStore();
 
 onMounted(async () => {

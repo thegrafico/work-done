@@ -22,19 +22,21 @@ export const useUserNotificationStore = defineStore("userNotifications", {
       this.loadingNotifications = true;
 
       let error = null;
-      const notificationsResponse = await secureApi.get(`/notifications`).catch(err => {
-        error = err;
-      });
+      const notificationsResponse = await secureApi
+        .get(`/notifications`)
+        .catch((err) => {
+          error = err;
+        });
+      this.loadingNotifications = false;
 
-      if (error || !notificationsResponse || !notificationsResponse.data) { 
+      if (error || !notificationsResponse || !notificationsResponse.data) {
         // TODO: show notification error
         alert(error.message || "Oops. Error loading the notifications");
         return;
       }
 
       console.log("NotificationResponse: ", notificationsResponse.data);
-      // this.notifications = notificationsResponse.data.notifications.map(notification => { return new Notification(notification)})
-
+      this.notifications = []; //notificationsResponse.data.notifications; //.map(notification => { return new Notification(notification)})
     },
   },
   getters: {},

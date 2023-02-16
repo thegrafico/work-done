@@ -23,6 +23,10 @@ const alertTypes = {
   error: "error",
 };
 
+const notificationTypes = {
+  projectInvitation: "projectInvitation",
+};
+
 module.exports = {
   TASK_TITLE_MIN_LENGHT,
   TASK_TITLE_MAX_LENGHT,
@@ -31,4 +35,5 @@ module.exports = {
   invitationType,
   invitationStatus,
   alertTypes,
+  notificationTypes,
 };
