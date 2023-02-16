@@ -58,6 +58,10 @@ const invitationStatus = {
   "accepted": "accepted"
 };
 
+const notificationTypes = {
+  projectInvitation: "projectInvitation",
+};
+
 const apiBaseUrl = 'http://localhost:3000/api/';
 const maxRequestTimeOut = 5000; // 5 seconds
 const alertWaitTime = 300; // wait 300 milisecods to show the alert
@@ -75,5 +79,6 @@ module.exports = {
   alertWaitTime,
   alertMaxTime,
   invitationType,
-  invitationStatus
+  invitationStatus,
+  notificationTypes
 };

@@ -121,13 +121,13 @@ const taskOptions = ref([
     title: "Edit",
     icon: "mdi-pencil",
     action: updateTask,
-    template: "createTask"
+    template: "CreateTask"
   },
   {
     title: "Remove",
     icon: "mdi-delete",
     action: removeTask,
-    template: "removeTask",
+    template: "RemoveTask",
   },
 ]);
 

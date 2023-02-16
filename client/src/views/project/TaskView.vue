@@ -59,7 +59,7 @@ const createTaskButton = ref({
   title: "TASK",
   icon: "mdi-plus",
   action: createTask,
-  template: "createTask",
+  template: "CreateTask",
   color: "success",
   variant: "tonal",
 });

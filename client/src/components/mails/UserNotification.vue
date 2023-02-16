@@ -18,34 +18,21 @@
         <v-btn icon @click="dialog = false">
           <v-icon>mdi-close</v-icon>
         </v-btn>
+        
         <v-tabs v-model="tab" color="deep-purple-accent-4" align-tabs="center">
           <v-tab :value="1">All</v-tab>
-          <v-tab :value="2">Messages</v-tab>
-          <v-tab :value="3">Project Invitations</v-tab>
+          <v-tab :value="2" disabled>Messages</v-tab>
+          <v-tab :value="3" disabled>Project Invitations</v-tab>
         </v-tabs>
-        <v-window v-model="tab">
-          <v-window-item v-for="n in 3" :key="n" :value="n">
+        
+        <v-window v-model="tab" style="max-height:60vh; overflow-y: scroll; overflow-x: hidden;">
+          <!-- TODO: finish window-item 2 and 3 -->
+          <v-window-item :value="1">
             <v-container fluid>
               <v-row>
                 <v-col cols="2"></v-col>
                 <v-col cols="8">
-                  <v-list lines="two">
-                    <v-list-subheader inset>Project Invitations</v-list-subheader>
-
-                    <v-list-item v-for="notification in notifications" :key="notification._id"
-                      :title="notification.message" subtitle="02/15/2023">
-                      <template v-slot:prepend>
-                        <v-avatar color="grey-lighten-1">
-                          RA
-                        </v-avatar>
-                      </template>
-
-                      <template v-slot:append>
-                        <v-btn color="success" icon="mdi-check-circle" variant="text"></v-btn>
-                        <v-btn color="error" icon="mdi-cancel" variant="text"></v-btn>
-                      </template>
-                    </v-list-item>
-                  </v-list>
+                 <NotificationList v-if="!loadingNotifications" :notifications="notifications"/>
                 </v-col>
               </v-row>
 
@@ -59,9 +46,10 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onUpdated } from 'vue';
 import { useUserNotificationStore } from '@/stores/user.notification.store';
 import { storeToRefs } from 'pinia';
+import NotificationList from './NotificationList.vue';
 
 const dialog = ref(false);
 const tab = ref(null);
@@ -74,6 +62,18 @@ onMounted(async () => {
   console.log("Loading notifications...");
   await loadNotifications();
   // await loadNotifications();
+  console.log(notifications)
 });
+
+onUpdated(async () => {
+  
+  // if modal is open
+  if (dialog.value) { 
+    console.log("Opening notification modal...");
+    await loadNotifications();
+  }
+})
+
+
 
 </script>

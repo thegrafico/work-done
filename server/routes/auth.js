@@ -43,6 +43,11 @@ router.post("/api/login", async function (req, res, next) {
 router.get("/signin", async function (req, res, next) {
   const dummyUsers = [
     {
+      name: "Raul",
+      username: "rauleldomi",
+      password: "admin",
+    },
+    {
       name: "alex10",
       username: "rauleldomi2",
       password: "admin",
@@ -65,6 +70,21 @@ router.get("/signin", async function (req, res, next) {
     {
       name: "alexander",
       username: "rauleldomi6",
+      password: "admin",
+    },
+    {
+      name: "Pam",
+      username: "rauleldomi7",
+      password: "admin",
+    },
+    {
+      name: "Man",
+      username: "rauleldomi8",
+      password: "admin",
+    },
+    {
+      name: "alexander2",
+      username: "rauleldomi9",
       password: "admin",
     },
   ];
