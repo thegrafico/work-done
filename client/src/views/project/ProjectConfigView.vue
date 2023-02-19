@@ -19,53 +19,47 @@
         <v-divider></v-divider>
 
       </v-row>
+
       <v-row>
         <v-col cols="4">
-          <v-text-field label="Name" model-value="Project Name"></v-text-field>
+          <v-text-field label="Name" v-model.trim="projectTitle" :model-value="projectTitle"></v-text-field>
         </v-col>
+      </v-row>
 
-        <v-col cols="4" class="mt-3">
-          <v-btn variant="flat" color="primary">
+      <v-row>
+        <v-col cols="4">
+          <v-select clearable label="Reset Points Time"
+            :items="['None', 'One Week', 'Two Weeks', 'One Month', 'One Year']"></v-select>
+        </v-col>
+      </v-row>
+
+      <v-row no-gutters>
+        <v-col align="end">
+          <v-btn variant="flat" color="primary" @click="submitProjectConfig">
             Save Changes
           </v-btn>
         </v-col>
       </v-row>
 
-      <v-row>
-        <v-col cols="4">
-          <v-list-subheader>Suffix for weight</v-list-subheader>
-        </v-col>
-
-        <v-col cols="8">
-          <v-text-field label="Weight" model-value="28.00" suffix="lbs"></v-text-field>
-        </v-col>
-      </v-row>
-
-      <v-row>
-        <v-col cols="4">
-          <v-list-subheader>Suffix for email domain</v-list-subheader>
-        </v-col>
-
-        <v-col cols="8">
-
-        </v-col>
-      </v-row>
-
-      <v-row>
-        <v-col cols="4">
-          <v-list-subheader>Suffix for time zone</v-list-subheader>
-        </v-col>
-
-        <v-col cols="8">
-          <v-text-field label="Label Text" model-value="12:30:00" type="time" suffix="PST"></v-text-field>
-        </v-col>
-      </v-row>
     </v-container>
   </v-main>
 </template>
 
 <script setup>
+import { ref } from "vue";
+import { useActiveProjectStore } from '@/stores/active.project.store';
 
 
+const activeProjectStore = useActiveProjectStore();
+const projectTitle = ref(activeProjectStore.getTitle);
 
+const { updateProjectConfig } = useActiveProjectStore();
+
+const submitProjectConfig = async () => {
+  const update = {
+    title: projectTitle.value
+  }
+  console.log("Updating project: ", update);
+  await updateProjectConfig(update);
+}
 </script>

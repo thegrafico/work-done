@@ -18,13 +18,13 @@
         <v-btn icon @click="dialog = false">
           <v-icon>mdi-close</v-icon>
         </v-btn>
-        
+
         <v-tabs v-model="tab" color="deep-purple-accent-4" align-tabs="center">
           <v-tab :value="1">All</v-tab>
           <v-tab :value="2" disabled>Messages</v-tab>
           <v-tab :value="3" disabled>Project Invitations</v-tab>
         </v-tabs>
-        
+
         <v-window v-model="tab" style="max-height:60vh; overflow-y: scroll; overflow-x: hidden;">
           <!-- TODO: finish window-item 2 and 3 -->
           <v-window-item :value="1">
@@ -32,7 +32,7 @@
               <v-row>
                 <v-col cols="2"></v-col>
                 <v-col cols="8">
-                 <NotificationList v-if="!loadingNotifications" :notifications="notifications"/>
+                  <NotificationList v-if="!loadingNotifications" :notifications="notifications" />
                 </v-col>
               </v-row>
 
@@ -59,17 +59,14 @@ const { loadingNotifications, notifications } = storeToRefs(useUserNotificationS
 const { loadNotifications } = useUserNotificationStore();
 
 onMounted(async () => {
-  console.log("Loading notifications...");
   await loadNotifications();
   // await loadNotifications();
-  console.log(notifications)
 });
 
 onUpdated(async () => {
-  
+
   // if modal is open
-  if (dialog.value) { 
-    console.log("Opening notification modal...");
+  if (dialog.value) {
     await loadNotifications();
   }
 })

@@ -7,10 +7,9 @@ export const useProjectsStore = defineStore("projects", {
     loading: false,
   }),
   actions: {
-
     /**
      * Load user projects list for the dashboard page.
-     * @returns 
+     * @returns
      */
     async loadProjects() {
       this.projects = [];
@@ -42,16 +41,23 @@ export const useProjectsStore = defineStore("projects", {
       }
     },
 
-    async removeProject(projectId) { 
+    async removeProject(projectId) {
       await secureApi.delete(`/deleteProject/${projectId}`);
 
       await this.loadProjects();
     },
 
+    /**
+     * Update a project
+     * @param {{ title: String, description: String, projectId: String }} update - project update
+     * @returns
+     */
     async updateProject(update) {
-      const updatedProjectResponse = await secureApi.post("updateProject", update).catch((err) => {
-        console.log("Error updating project: ", err);
-      });
+      const updatedProjectResponse = await secureApi
+        .post("updateProject", update)
+        .catch((err) => {
+          console.log("Error updating project: ", err);
+        });
 
       // Not new project found
       if (!updatedProjectResponse.data) {
@@ -63,28 +69,30 @@ export const useProjectsStore = defineStore("projects", {
       const updatedProject = updatedProjectResponse.data;
 
       // get the index of the old project
-      const outDatedProjectIndex = this.projects.findIndex(project => {
-        return project._id === updatedProject._id;
+      const outDatedProjectIndex = this.projects.findIndex((project) => {
+        return project._id.toString() === updatedProject._id.toString();
       });
 
-
+      // TODO: so, if the user loads a specific project, then the project stored will be empty
       if (outDatedProjectIndex === -1) {
-        console.error("Index not found for the updated project: ", updatedProject);
-        return;
+        console.error(
+          "Index not found for the updated project: ",
+          updatedProject
+        );
+
+        this.projects.push(updatedProject);
       }
 
       // replace previus project with new one
       this.projects.splice(outDatedProjectIndex, 1, updatedProject);
       await this.loadProjects();
-
     },
-
 
     /**
      * Load a project by id from the server and refresh is data withing the current project store
-     * @param {string} projectId 
+     * @param {string} projectId
      */
-    async loadProjectById(projectId) { 
+    async loadProjectById(projectId) {
       this.loading = true;
 
       const response = await secureApi.get(`/projects/${projectId}`);
@@ -94,18 +102,19 @@ export const useProjectsStore = defineStore("projects", {
     },
 
     // TODO:
-    async shareProject() { console.log("TODO SHARING PROJECTS");},
-
+    async shareProject() {
+      console.log("TODO SHARING PROJECTS");
+    },
   },
-  getters: { 
-
+  getters: {
     /**
      * Get a project by id from the store
-     * @param {Object} state 
+     * @param {Object} state
      * @returns {Object} - project
      */
     getProjectById: (state) => {
-      return (projectId) => state.projects.find((project) => project._id === projectId)
-    }
-  }
+      return (projectId) =>
+        state.projects.find((project) => project._id === projectId);
+    },
+  },
 });

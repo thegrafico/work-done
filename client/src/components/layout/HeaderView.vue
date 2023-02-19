@@ -4,6 +4,11 @@
       <router-link to="/" class="font-weight-black linkColor" style="text-decoration: none">
         {{ title }}
       </router-link>
+
+      <span v-if="props.username" class="text-subtitle-1 font-weight-medium font-italic">
+        - {{ props.username }}
+      </span>
+
     </v-app-bar-title>
 
     <!-- Icon for mains for user -->
@@ -37,6 +42,7 @@ import UserNotification from "../mails/UserNotification.vue";
 
 const props = defineProps({
   title: String,
+  username: String
 });
 
 const headerOptions = ref([]);

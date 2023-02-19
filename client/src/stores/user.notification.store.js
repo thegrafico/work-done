@@ -39,7 +39,6 @@ export const useUserNotificationStore = defineStore("userNotifications", {
         return;
       }
 
-      console.log("NotificationResponse: ", notificationsResponse.data);
       this.notifications = notificationsResponse.data.notifications; //.map(notification => { return new Notification(notification)})
     },
 
@@ -77,7 +76,6 @@ export const useUserNotificationStore = defineStore("userNotifications", {
           (notification) =>
             notification._id.toString() !== notificationId.toString()
         );
-        console.log("Notification was deleted: ", notificationId);
       }
     },
 

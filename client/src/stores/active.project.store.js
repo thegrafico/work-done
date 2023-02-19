@@ -24,18 +24,17 @@ export const useActiveProjectStore = defineStore("activeProject", {
   }),
   actions: {
     /**
-     * @param {{_id: String, users: [], ...}} projectId - id of the current project
+     * Set the active project
+     * @param {String} projectId - id of the current project
+     * @param {Boolean} activeProject - you can load the project from the store or the server
      */
-    async setActiveProject(projectId) {
+    async setActiveProject(projectId, loadFromStore = false) {
       if (!projectId) {
         this.project = {};
         return;
       }
 
-      // TODO: remove just for development purposes
-      const useProjectFromStore = false;
-
-      if (useProjectFromStore) {
+      if (loadFromStore) {
         this.loadProjectFromStore(projectId);
       } else {
         // Load project from the server
@@ -136,7 +135,8 @@ export const useActiveProjectStore = defineStore("activeProject", {
       // check if there is an userId
       if (!userId) {
         alertMessage.show({
-          message: "Oops, there is something wrong with the user. Please refresh or try later.",
+          message:
+            "Oops, there is something wrong with the user. Please refresh or try later.",
           type: alertTypes.error,
         });
         return;
@@ -144,14 +144,18 @@ export const useActiveProjectStore = defineStore("activeProject", {
 
       this.loadingUsers = true;
 
-      const response = await secureApi.post(`/projects/${this.getId}/cancelInvitation`, { userId: userId });
+      const response = await secureApi.post(
+        `/projects/${this.getId}/cancelInvitation`,
+        { userId: userId }
+      );
 
       this.loadingUsers = false;
 
       // check if a response was received
       if (!response) {
         alertMessage.show({
-          message: "Oops, there was something wrong canceling the invitation. Please refresh or try later.",
+          message:
+            "Oops, there was something wrong canceling the invitation. Please refresh or try later.",
           type: alertTypes.error,
         });
         return;
@@ -164,40 +168,24 @@ export const useActiveProjectStore = defineStore("activeProject", {
       });
 
       // update the user list
-      this.users = this.users.filter(user => { return user._id.toString() !== userId });
+      this.users = this.users.filter((user) => {
+        return user._id.toString() !== userId;
+      });
     },
 
-    setDummyUsers() {
-      this.project.users = [
-        {
-          _id: "123",
-          username: "user@example.com",
-          status: "active",
-          creationDate: "01/04/2023",
-          totalPoints: 10,
-        },
-        {
-          _id: "1234",
-          username: "user2@example.com",
-          status: "active",
-          creationDate: "01/05/2023",
-          totalPoints: 101,
-        },
-        {
-          _id: "1235",
-          username: "user3@example.com",
-          status: "inactive",
-          creationDate: "12/20/2023",
-          totalPoints: 90,
-        },
-        {
-          _id: "1263",
-          username: "user4@example.com",
-          status: "active",
-          creationDate: "03/02/2023",
-          totalPoints: 5,
-        },
-      ];
+    /**
+     * Update the project information
+     * @param {{title: string, description: string}} update
+     */
+    async updateProjectConfig(update) {
+      const { updateProject } = useProjectsStore();
+
+      // add project Id to the request
+      update["projectId"] = this.getId;
+
+      await updateProject(update);
+
+      this.loadProjectFromStore(update.projectId);
     },
   },
   getters: {
@@ -206,6 +194,9 @@ export const useActiveProjectStore = defineStore("activeProject", {
     },
     getUsers(state) {
       return state.project.users;
+    },
+    getTitle(state) {
+      return state.project.title;
     },
   },
 });

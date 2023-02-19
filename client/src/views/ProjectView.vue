@@ -4,10 +4,10 @@
     <AlertView v-if="showAlert" :type="type" :message="message" />
 
     <!-- Header -->
-    <Header title="Work Done" />
+    <Header title="Work Done" :username="user.username" />
 
     <!-- SIDEBAR -->
-    <NavSideBar options="project" :username="user.username" />
+    <NavSideBar v-if="!loadingProject" options="project" :project-name="project.title" />
 
     <!-- Main Container -->
     <component v-if="!loadingProject" :is="tabs[props.tab]"></component>
@@ -26,7 +26,7 @@ import Header from "@/components/layout/HeaderView.vue";
 import NavSideBar from "@/components/layout/NavSideBar.vue";
 import AlertView from "@/components/error/AlertView.vue";
 
-const { loadingProject } = storeToRefs(useActiveProjectStore());
+const { loadingProject, project } = storeToRefs(useActiveProjectStore());
 const { setActiveProject } = useActiveProjectStore();
 
 // TODO: get rid of this

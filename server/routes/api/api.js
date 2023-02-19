@@ -88,7 +88,12 @@ router.post(
 
     // create project schema
     const filter = { _id: projectId, owner: req.user.id };
-    const update = { title, description };
+
+    // create update for the project
+    let update = { title };
+    if (description != undefined) {
+      update.description = description;
+    }
 
     let error = null;
     const updatedProject = await ProjectCollection.findOneAndUpdate(
