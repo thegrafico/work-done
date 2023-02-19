@@ -11,8 +11,9 @@
       </template>
 
       <template v-slot:append>
-        <v-btn color="success" icon="mdi-check-circle" variant="text"
-          @click="acceptNotification(notification._id, notification.type)"></v-btn>
+
+        <ButtonConfirmationPopup :button-config="AcceptConfirmationButton" :id="notification._id"
+          :type="notification.type" @on-submit="confirmAccept" />
 
         <ButtonConfirmationPopup :button-config="deleteConfirmationButton" :id="notification._id"
           :type="notification.type" @on-submit="confirmDelete" />
@@ -32,7 +33,7 @@
 </template>
 
 <script setup>
-import { defineProps, ref } from 'vue';
+import { defineProps } from 'vue';
 import { useUserNotificationStore } from '@/stores/user.notification.store';
 import ButtonConfirmationPopup from '@/components/confirmation/ConfirmationPopup.vue';
 
@@ -42,21 +43,31 @@ const props = defineProps({
 });
 
 // get store functions
-const { removeNotification } = useUserNotificationStore();
+const { removeNotification, acceptNotification } = useUserNotificationStore();
 
+const AcceptConfirmationButton = {
+  color: 'success',
+  variant: 'text',
+  icon: 'mdi-check-circle',
+}
 const deleteConfirmationButton = {
   color: 'error',
   variant: 'text',
   icon: 'mdi-trash-can',
 }
 
-const activeAnimation = ref(false);
+/**
+ * 
+ * @param {Object} data 
+ * @param {Function} onClose 
+ */
+const confirmAccept = async (data, onClose) => {
 
-const acceptNotification = (notificationId, notificationType) => {
-  const notification = props.notifications.find(notification => notification._id.toString() === notificationId.toString())
-  notification.activeAnimation = false;
-  console.log(notificationId, notificationType);
-  activeAnimation.value = !activeAnimation.value;
+  // const notification = props.notifications.find(notification => notification._id.toString() === notificationId.toString())
+  await acceptNotification(data.id, data.type);
+
+  // close popup
+  onClose();
 }
 
 /**

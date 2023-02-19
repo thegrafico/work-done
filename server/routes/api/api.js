@@ -12,7 +12,11 @@ router.get(
   "/projects",
   auth.authenticateToken,
   async function (req, res, next) {
-    const projects = await ProjectCollection.find({ owner: req.user.id });
+    const userId = req.user.id;
+    // get my projects
+    const projects = await ProjectCollection.find({
+      $or: [{ owner: userId }, { users: { $in: [userId] } }],
+    });
     res.status(200).send(projects);
   }
 );
@@ -96,12 +100,10 @@ router.post(
 
     if (error) {
       console.error("Error updating project: ", error);
-      res
-        .status(500)
-        .send({
-          message:
-            "Oops, There was a problem updating the project. Please try later.",
-        });
+      res.status(500).send({
+        message:
+          "Oops, There was a problem updating the project. Please try later.",
+      });
       return;
     }
 
@@ -136,12 +138,10 @@ router.delete(
 
     if (error) {
       console.error("Error removing the project: ", error);
-      res
-        .status(500)
-        .send({
-          message:
-            "Oops, There was a problem when removing the project. Please try later.",
-        });
+      res.status(500).send({
+        message:
+          "Oops, There was a problem when removing the project. Please try later.",
+      });
       return;
     }
 

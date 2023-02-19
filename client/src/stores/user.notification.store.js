@@ -80,6 +80,43 @@ export const useUserNotificationStore = defineStore("userNotifications", {
         console.log("Notification was deleted: ", notificationId);
       }
     },
+
+    async acceptNotification(notificationId, notificationType) {
+      if (!notificationId) {
+        console.error(
+          "Cannot get the notification information: ",
+          notificationId
+        );
+        return;
+      }
+
+      let error = null;
+      const notificationResponse = await secureApi
+        .post("/notifications/accept", {
+          id: notificationId,
+          type: notificationType,
+        })
+        .catch((err) => {
+          error = err;
+        });
+
+      if (error || !notificationResponse || !notificationResponse.data) {
+        this.alertMessageStore.show({
+          type: alertTypes.error,
+          message: error.message || "Oops. Error deleting the notification",
+        });
+        return;
+      }
+
+      const wasAccepted = notificationResponse.data.accepted;
+
+      if (wasAccepted) {
+        this.notifications = this.notifications.filter(
+          (notification) =>
+            notification._id.toString() !== notificationId.toString()
+        );
+      }
+    },
   },
   getters: {},
 });
