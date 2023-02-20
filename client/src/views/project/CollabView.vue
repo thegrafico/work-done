@@ -23,7 +23,7 @@
       </v-row>
 
       <!-- List of user -->
-      <UserList v-if="!loadingUsers" :users="users" />
+      <UserList v-if="!loadingUsers" :users="users" :filter-term="searchUserInput" />
 
     </v-container>
   </v-main>

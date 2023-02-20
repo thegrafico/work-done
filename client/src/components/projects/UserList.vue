@@ -25,7 +25,7 @@
     <!-- Body -->
     <v-container class="tableBody fluid px-2 mt-10 " style="max-height: 60vh; overflow-y: scroll; overflow-x: hidden;">
 
-      <v-sheet elevation="4" v-for="user in props.users" :key="user._id">
+      <v-sheet elevation="4" v-for="user in filterUsers(props.users, props.filterTerm)" :key="user._id">
 
         <v-row justify="start" class="mb-10 px-2" align="center">
           <v-col cols="1" align="start">
@@ -125,8 +125,36 @@ const { isProjectOwner } = storeToRefs(useActiveProjectStore());
 
 const props = defineProps({
   users: Array,
+  filterTerm: String,
 });
 
+
+const filterUsers = (users, filterTerm) => {
+
+  // math filter term
+  if (!users) { return [] }
+
+  if (!filterTerm == undefined || !filterTerm) {
+    return users;
+  }
+
+  const filteredUsers = users.filter((user) => {
+
+    const termMatch = (
+      // Match username
+      user.username.toLowerCase().includes(filterTerm.toLowerCase()) ||
+
+      // Match Status
+      user.status.toLowerCase().includes(filterTerm.toLowerCase())
+
+      // Match creation date
+      // user.creationDate.toLowerCase().includes(filterTerm.toLowerCase())
+    );
+    return termMatch;
+  });
+
+  return filteredUsers;
+}
 
 // I dont fucking like this but I need to do this fast
 const userOptions = ref([
