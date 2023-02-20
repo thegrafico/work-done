@@ -12,19 +12,26 @@
           </v-col>
         </v-row>
         <v-row>
-          <v-col align="center">
-            {Username}
+          <v-col align="center" class="font-weight-bold">
+            {{ user.username }}
           </v-col>
         </v-row>
-        <v-row>
-          <v-col align="center">
-            {password}
-            {confirm password}
+        <v-row justify="center">
+          <v-col justify="center" cols="3">
+            <v-text-field label="Old Password" type="password"></v-text-field>
+          </v-col>
+
+          <v-col justify="center" cols="3">
+            <v-text-field label="New Password" type="password"></v-text-field>
+          </v-col>
+          <v-col justify="center" cols="3">
+            <v-text-field label="Confirm Password" type="password"></v-text-field>
           </v-col>
         </v-row>
-        <v-row>
-          <v-col align="center">
-            {allow project invitations}
+
+        <v-row justify="center">
+          <v-col cols="4" class="ml-9">
+            <v-switch label="Allow Project invitations" color="success" hide-details></v-switch>
           </v-col>
         </v-row>
 
@@ -43,9 +50,16 @@
 // Components
 import Header from "@/components/layout/HeaderView.vue";
 
-// Dynamic load views - Main section
+import { onMounted } from "vue";
+import { useAuthStore } from "@/stores/auth.store";
+import { storeToRefs } from "pinia";
 
-// TODO: getting username for the header. Probably is better to have this inside the component
+const { user } = storeToRefs(useAuthStore());
+
+onMounted(() => {
+  console.log(user);
+})
+
 </script>
 
 <style scoped>

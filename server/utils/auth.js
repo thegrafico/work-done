@@ -7,7 +7,7 @@ const jwt = require("jsonwebtoken");
 
 function generateAccessToken(userId) {
   return jwt.sign({ id: userId }, process.env.TOKEN_SECRET, {
-    expiresIn: 60 * 60,
+    expiresIn: "7d",
   });
 }
 
@@ -38,11 +38,9 @@ async function ensureUserInProject(req, res, next) {
   });
 
   if (!project) {
-    res
-      .status(404)
-      .send({
-        message: "Oops, it seems the page you were looking for does not exist.",
-      });
+    res.status(404).send({
+      message: "Oops, it seems the page you were looking for does not exist.",
+    });
     return;
   }
 
