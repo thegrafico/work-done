@@ -2,7 +2,7 @@
   <v-container v-if="props.users.length > 0" fluid style="max-height: 80vh;">
     <v-sheet elevation="8">
       <!-- Header -->
-      <v-row class="header border">
+      <v-row justify="start" class="header border">
         <v-col cols="1">
           <p></p>
         </v-col>
@@ -11,13 +11,11 @@
           <p class="ml-4">User</p>
         </v-col>
 
-
         <v-col cols="3">
           <p>Status</p>
         </v-col>
 
-
-        <v-col cols="2">
+        <v-col v-if="isProjectOwner" cols="2">
           <p>Options</p>
         </v-col>
 
@@ -29,8 +27,8 @@
 
       <v-sheet elevation="4" v-for="user in props.users" :key="user._id">
 
-        <v-row class="mb-10 px-2" align="center">
-          <v-col cols="1">
+        <v-row justify="start" class="mb-10 px-2" align="center">
+          <v-col cols="1" align="start">
             <v-checkbox color="info" value="info" hide-details></v-checkbox>
           </v-col>
 
@@ -59,7 +57,7 @@
           </v-col>
 
 
-          <v-col cols="2">
+          <v-col v-if="isProjectOwner" cols="2">
             <v-menu>
               <template v-slot:activator="{ props }">
                 <v-btn icon="mdi-dots-vertical" v-bind="props"></v-btn>
@@ -115,19 +113,20 @@
 
 <script setup>
 
-import { defineProps, onMounted, ref } from "vue";
+import { defineProps, ref } from "vue";
 import ButtonWithModal from "@/components/button/ButtonWithModal.vue";
 import { useActiveProjectStore } from "@/stores/active.project.store";
+import { storeToRefs } from "pinia";
+
 
 const { cancelInvitation } = useActiveProjectStore();
+const { isProjectOwner } = storeToRefs(useActiveProjectStore());
+
 
 const props = defineProps({
   users: Array,
 });
 
-onMounted(() => {
-  console.log("Users: ", props.users);
-});
 
 // I dont fucking like this but I need to do this fast
 const userOptions = ref([

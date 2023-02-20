@@ -9,9 +9,6 @@
             <v-icon icon="mdi-newspaper-variant"></v-icon>
           </v-badge>
           <v-icon v-else icon="mdi-newspaper-variant"></v-icon>
-          <p>
-            Mails
-          </p>
         </v-btn>
       </template>
       <v-card class="border pa-2 ml-auto mr-auto" width="80%" height="60%">

@@ -1,20 +1,17 @@
 <template>
   <v-row>
     <v-col cols="3" v-for="project in filteredProjects" :key="project._id">
-      <v-card variant="tonal" height="100%">
+      <v-card :color="(project.owner.toString() === userId) ? null : 'info'" variant="tonal" height="100%">
         <v-toolbar>
           <v-toolbar-title>
-            <router-link
-              class="font-weight-black linkColor"
-              style="text-decoration: none"
-              :to="`/project/${project._id}/task`"
-            >
+            <router-link class="font-weight-black linkColor" style="text-decoration: none"
+              :to="`/project/${project._id}/task`">
               {{ project.title }}
             </router-link>
           </v-toolbar-title>
 
           <!-- Three Dots options -->
-          <template v-slot:append>
+          <template v-if="(project.owner.toString() === userId)" v-slot:append>
             <v-menu>
               <template v-slot:activator="{ props }">
                 <v-btn icon="mdi-dots-vertical" v-bind="props"></v-btn>
@@ -31,7 +28,9 @@
           </template>
         </v-toolbar>
         <v-card-text>
-          {{ project.description }}
+          <span style="color: black">
+            {{ project.description }}
+          </span>
         </v-card-text>
       </v-card>
     </v-col>
@@ -42,13 +41,17 @@
 import { onBeforeUpdate, defineProps, ref } from "vue";
 import _ from "lodash";
 import ButtonWithModalVue from "../button/ButtonWithModal.vue";
+import { useAuthStore } from "@/stores/auth.store";
 
+const authStore = useAuthStore();
 const props = defineProps({
   projects: Array,
   filterTearm: String,
   projectOptions: Object,
 });
 const filteredProjects = ref([]);
+const userId = authStore.getUserId;
+
 
 onBeforeUpdate(async () => {
   filteredProjects.value = filterArray(props.projects, props.filterTearm);

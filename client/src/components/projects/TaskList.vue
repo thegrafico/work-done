@@ -14,7 +14,7 @@
               </v-toolbar-title>
 
               <!-- Three Dots options -->
-              <template v-slot:append>
+              <template v-if="isProjectOwner" v-slot:append>
                 <v-menu>
                   <template v-slot:activator="{ props }">
                     <v-btn icon="mdi-dots-vertical" v-bind="props"></v-btn>
@@ -95,8 +95,11 @@ import { filterArray } from "@/utils/Helpers";
 import { useTaskStore } from "@/stores/tasks.store";
 import TaskButton from "@/components/button/TaskButton.vue";
 import ButtonWithModal from "../button/ButtonWithModal.vue";
+import { useActiveProjectStore } from "@/stores/active.project.store";
+import { storeToRefs } from "pinia";
 
 const { removeTask, updateTask } = useTaskStore();
+const { isProjectOwner } = storeToRefs(useActiveProjectStore());
 
 const props = defineProps({
   tasks: Array,
@@ -108,6 +111,7 @@ const filteredList = ref([]);
 
 onMounted(() => {
   filteredList.value = filterArray(props.tasks, props.filterTearm);
+  console.log(filteredList.value);
 });
 
 

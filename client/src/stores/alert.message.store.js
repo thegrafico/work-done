@@ -28,7 +28,6 @@ export const useAlertMessageStore = defineStore("alertMessage", {
       this.type = alert.type;
       this.message = alert.message;
       this.showAlert = true;
-      console.log("Suppose to change");
       // hide notification after showing it up.
       this.hideAfterShowTime();
     },

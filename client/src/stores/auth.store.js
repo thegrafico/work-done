@@ -45,6 +45,10 @@ export const useAuthStore = defineStore("auth", {
       return null;
     },
 
+    getUserId(state) {
+      return state.user._id.toString();
+    },
+
     userToken(state) {
       if (!this.getUser) {
         return null;

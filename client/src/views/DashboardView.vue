@@ -4,7 +4,7 @@
     <Header title="Work Done" :username="user.username" />
 
     <!-- Main Container -->
-    <Dashboard />
+    <Dashboard v-if="user._id" :user-id="user._id" />
   </v-app>
 </template>
 
@@ -20,5 +20,4 @@ import Dashboard from "@/components/dashboard/DashboardController.vue";
 // TODO: getting username for the header. Probably is better to have this inside the component
 const authStore = useAuthStore();
 const user = ref(authStore.getUser);
-
 </script>

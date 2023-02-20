@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { useProjectsStore } from "@/stores/projects.store";
+import { useAuthStore } from "./auth.store";
 import { useAlertMessageStore } from "./alert.message.store";
 import router from "@/router/index";
 import secureApi from "@/api/authApi";
@@ -21,6 +22,9 @@ export const useActiveProjectStore = defineStore("activeProject", {
 
     /** @type {boolean} */
     loadingProject: false,
+
+    /** @type {boolean} */
+    isProjectOwner: false,
   }),
   actions: {
     /**
@@ -41,7 +45,8 @@ export const useActiveProjectStore = defineStore("activeProject", {
         await this.loadProjectFromServer(projectId);
       }
 
-      // this.setActiveProjectUsers(project.users || []);
+      const authStore = useAuthStore();
+      this.isProjectOwner = authStore.getUserId === this.project.owner;
     },
 
     loadProjectFromStore(projectId) {
@@ -89,7 +94,6 @@ export const useActiveProjectStore = defineStore("activeProject", {
         `/projects/${this.getId}/users`
       );
       this.loadingUsers = false;
-      console.log("Response: ", usersResponse);
       // bad response
       if (!usersResponse || !usersResponse.data) {
         this.users = [];
@@ -129,7 +133,6 @@ export const useActiveProjectStore = defineStore("activeProject", {
     },
 
     async cancelInvitation(userId) {
-      console.log("Id to remove: ", userId);
       const alertMessage = useAlertMessageStore();
 
       // check if there is an userId
