@@ -1,8 +1,6 @@
 <template>
   <v-app id="inspire">
 
-    <AlertView v-if="showAlert" :type="type" :message="message" />
-
     <!-- Header -->
     <Header title="Work Done" :username="user.username" />
 
@@ -18,13 +16,11 @@
 import { ref, defineProps, defineAsyncComponent, onBeforeMount, onUnmounted } from "vue";
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "@/stores/auth.store";
-import { useAlertMessageStore } from "@/stores/alert.message.store";
 import { useActiveProjectStore } from "@/stores/active.project.store";
 
 // Components
 import Header from "@/components/layout/HeaderView.vue";
 import NavSideBar from "@/components/layout/NavSideBar.vue";
-import AlertView from "@/components/error/AlertView.vue";
 
 const { loadingProject, project } = storeToRefs(useActiveProjectStore());
 const { setActiveProject } = useActiveProjectStore();
@@ -33,7 +29,6 @@ const { setActiveProject } = useActiveProjectStore();
 const user = ref({});
 
 // Alert message
-const { showAlert, type, message } = storeToRefs(useAlertMessageStore());
 
 
 // id = ProjectId, tab = ['task', 'analytics'...];

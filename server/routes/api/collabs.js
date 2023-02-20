@@ -127,6 +127,20 @@ router.post(
     // find target user id
     const toUserId = targetUser._id;
 
+    // before creating the invitation, check if the user is already on the project
+    const project = req.project;
+    const userIsOnProject = project.users.find(
+      (userId) => userId.toString() === toUserId.toString()
+    );
+
+    if (userIsOnProject) {
+      res.status(400).send({
+        message: "User is already on the project",
+        type: alertTypes.info,
+      });
+      return;
+    }
+
     // Object invitation
     const request = {
       from: req.user.id, // current logged user
@@ -170,14 +184,16 @@ router.post(
     }
 
     // find the user information
-    const userInfo = await UserCollection.findById(request.to).catch(err => {
+    const userInfo = await UserCollection.findById(request.to).catch((err) => {
       error = err;
     });
 
     // check if there is user information
     if (error || !userInfo) {
       res.status(500).send({
-        message: `Oops, ${error.message || 'there was a problem getting the user information.'}`,
+        message: `Oops, ${
+          error.message || "there was a problem getting the user information."
+        }`,
         type: alertTypes.error,
       });
       return;
@@ -186,7 +202,12 @@ router.post(
     // success
     res.status(200).send({
       invitation,
-      user: { _id: userInfo._id, username: userInfo.username, creationDate: userInfo.creationDate, status: invitationStatus.pending },
+      user: {
+        _id: userInfo._id,
+        username: userInfo.username,
+        creationDate: userInfo.creationDate,
+        status: invitationStatus.pending,
+      },
       message: "invitatation was sucessfully sent",
       type: alertTypes.success,
     });
@@ -216,16 +237,16 @@ router.post(
 
     const userInvitationQuery = {
       projectId,
-      to: userId
-    }
+      to: userId,
+    };
 
     // create invitation
     let error = undefined;
-    const invitation = await ProjectInvitationCollection.findOneAndDelete(userInvitationQuery).catch(
-      (err) => {
-        error = err;
-      }
-    );
+    const invitation = await ProjectInvitationCollection.findOneAndDelete(
+      userInvitationQuery
+    ).catch((err) => {
+      error = err;
+    });
 
     // send the error
     if (error) {

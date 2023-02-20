@@ -1,3 +1,15 @@
+const usernameRule = [
+  (v) => !!v || "username is required",
+  (v) => (v && v.length > 3) || "username must be greater than 3 characters",
+  (v) => (v && v.length <= 20) || "Name must be less than 20 characters",
+];
+
+const passwordRule = [
+  (v) => !!v || "Password is required",
+  (v) => (v && v.length > 3) || "password must be greater than 3 characters",
+  (v) => (v && v.length <= 20) || "password must be less than 20 characters",
+];
+
 const projectTitleRule = [
   (v) => !!v || "Name is required",
   (v) => (v && v.length <= 20) || "Name must be less than 20 characters",
@@ -31,6 +43,8 @@ function isNumeric(str) {
 }
 
 module.exports = {
+  usernameRule,
+  passwordRule,
   projectTitleRule,
   projectDescriptionRule,
   taskRules,

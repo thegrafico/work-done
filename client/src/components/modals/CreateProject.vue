@@ -67,8 +67,6 @@ const performAction = async () => {
     return;
   }
 
-  console.log("Form is not valid: ", formResponse.valid);
-
   emit("onSubmit", {
     title: title.value,
     description: description.value,

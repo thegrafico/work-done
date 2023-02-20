@@ -4,38 +4,52 @@ const auth = require("../utils/auth");
 const UserCollection = require("../db/schema/user");
 const _ = require("lodash");
 
-router.post("/api/login", async function (req, res, next) {
-  const { username, password } = req.body;
-
+const getUserByUsernameAndPassword = async (username, password) => {
   if (
     !_.isString(username) ||
     _.isEmpty(username) ||
     !_.isString(password) ||
     _.isEmpty(password)
   ) {
-    res.status(400).send({ message: "Invalid usernamer or password" });
-    return;
+    throw new Error("Invalid username or password");
   }
-  let error = null;
+
   const user = await UserCollection.findUserByCredentials(
     username,
     password
   ).catch((err) => {
-    console.error("Error getting user: ", err);
-    error = err;
+    throw new Error(err.message);
   });
+
+  return user;
+};
+
+router.post("/api/login", async function (req, res, next) {
+  const { username, password } = req.body;
+  let error = null;
+
+  const user = await getUserByUsernameAndPassword(username, password).catch(
+    (err) => {
+      error = err;
+    }
+  );
 
   if (error) {
     res.status(500).send({
-      message: "Oops, there was an error getting the user. Please try again",
+      message: error.message,
+      type: "error",
     });
     return;
   }
 
   if (!user) {
-    res.status(403).send({ message: "invalid credentials. User not found." });
+    res.status(403).send({
+      message: "Cannot find the user information.",
+      type: "error",
+    });
     return;
   }
+
   res.status(200).send(user);
 });
 
@@ -96,12 +110,6 @@ router.get("/signin", async function (req, res, next) {
   }
 
   res.status(200).send("Created dummy user");
-});
-
-router.get("/users", async function (req, res, next) {
-  const users = await UserCollection.find({});
-
-  res.status(200).send(users);
 });
 
 module.exports = router;

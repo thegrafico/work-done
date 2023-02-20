@@ -51,7 +51,6 @@ secureApi.interceptors.response.use(
       if (error.response.status === 403) {
         const authStore = useAuthStore();
         authStore.logout();
-        return;
       }
 
       alertMessage.show({

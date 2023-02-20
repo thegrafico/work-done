@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import router from "@/router/index";
 import Api from "../api/api";
+import { useAlertMessageStore } from "./alert.message.store";
 
 export const useAuthStore = defineStore("auth", {
   state: () => ({
@@ -11,7 +12,31 @@ export const useAuthStore = defineStore("auth", {
   }),
   actions: {
     async login(username, password) {
-      const user = await Api.login(username, password);
+      let error = null;
+      const user = await Api.login(username, password).catch((err) => {
+        error = err;
+      });
+      console.log("Error is: ", error);
+
+      if (error) {
+        const alertMessage = useAlertMessageStore();
+
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.message
+        ) {
+          alertMessage.show({
+            message: error.response.data.message,
+            type: error.response.data.type,
+          });
+        } else {
+          // default
+          alertMessage.show({ message: error.message, type: "error" });
+        }
+        return;
+      }
+
       if (!user || !user._id) {
         return false;
       }
