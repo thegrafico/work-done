@@ -6,30 +6,31 @@ const Schema = mongoose.Schema;
 // const ObjectId = Schema.ObjectId;
 
 const User = new Schema({
-  name: { type: String, require: true },
+  name: { type: String, default: null },
   username: { type: String, require: true, unique: true },
   password: { type: String, require: true },
+  email: { type: String, require: true, unique: true },
   creationDate: { type: Date, default: Date.now },
 });
 
 User.statics.findUserByCredentials = async function (username, password) {
   const user = await this.findOne({ username: username, password: password }).lean();
-  if (user) { 
+  if (user) {
     user['accessToken'] = auth.generateAccessToken(user._id);
   }
   return user;
 };
 
 User.statics.findUserByUsername = async function (username) {
-  const user = await this.findOne({ username: username});
-  
+  const user = await this.findOne({ username: username });
+
   return user;
 };
 
 // TODO: finish this
 User.statics.findUserByEmail = async function (username) {
-  const user = await this.findOne({ username: username});
-  
+  const user = await this.findOne({ username: username });
+
   return user;
 };
 

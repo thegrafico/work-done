@@ -15,12 +15,21 @@ async function connect() {
 
   const db = mongoose.connection;
 
-  db.on('error',console.error.bind(console, 'connection error:'));
+  db.on('error', console.error.bind(console, 'connection error:'));
 
+  //TODO: [DELETE THIS] delete all databse information for now
+  // const collections = await db.db.listCollections().toArray();
+  // // Loop through all collection names and delete them
+  // collections.forEach(collection => {
+  //   db.dropCollection(collection.name, (err) => {
+  //     if (err) console.log(err);
+  //     else console.log(`Deleted collection: ${collection.name}`);
+  //   });
+  // });
   return db;
 }
 
 
-module.exports = { 
-    connect
+module.exports = {
+  connect
 }

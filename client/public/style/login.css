@@ -178,69 +178,11 @@ body {
     box-sizing: border-box;
 }
 
-.form-panel.one:before {
-    content: "";
-    display: block;
-    opacity: 0;
-    visibility: hidden;
-    transition: 0.3s ease;
-}
-
-.form-panel.one.hidden:before {
-    display: block;
-    opacity: 1;
-    visibility: visible;
-}
 
 .form-panel.two {
-    z-index: 5;
-    position: absolute;
-    top: 0;
-    left: 95%;
     background: #4285F4;
     width: 100%;
     min-height: 100%;
-    padding: 60px calc(10% + 60px) 60px 60px;
-    transition: 0.3s ease;
-    cursor: pointer;
-}
-
-.form-panel.two:before,
-.form-panel.two:after {
-    content: "";
-    display: block;
-    position: absolute;
-    top: 60px;
-    left: 1.5%;
-    background: rgba(255, 255, 255, 0.2);
-    height: 30px;
-    width: 2px;
-    transition: 0.3s ease;
-}
-
-.form-panel.two:after {
-    left: 3%;
-}
-
-.form-panel.two:hover {
-    left: 93%;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-}
-
-.form-panel.two:hover:before,
-.form-panel.two:hover:after {
-    opacity: 0;
-}
-
-.form-panel.two.active {
-    left: 10%;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    cursor: default;
-}
-
-.form-panel.two.active:before,
-.form-panel.two.active:after {
-    opacity: 0;
 }
 
 .form-header {
@@ -259,6 +201,7 @@ body {
     position: relative;
     z-index: 40;
     color: #FFFFFF;
+    padding-bottom: 1em;
 }
 
 .pen-footer {

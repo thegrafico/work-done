@@ -25,8 +25,10 @@ class Api {
   }
 
   async post(url, data) {
-    // TODO: Improve the error handly
-    const response = await publicApi.post(url, data);
+    
+    const response = await publicApi.post(url, data).catch(err => {
+      throw err;
+    });
 
     return response.data;
   }

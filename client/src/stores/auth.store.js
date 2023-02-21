@@ -9,6 +9,7 @@ export const useAuthStore = defineStore("auth", {
       ? JSON.parse(localStorage.getItem("user"))
       : null,
     returnUrl: null,
+    loading: false
   }),
   actions: {
     async login(username, password) {
@@ -16,7 +17,7 @@ export const useAuthStore = defineStore("auth", {
       const user = await Api.login(username, password).catch((err) => {
         error = err;
       });
-      console.log("Error is: ", error);
+
 
       if (error) {
         const alertMessage = useAlertMessageStore();
@@ -38,13 +39,43 @@ export const useAuthStore = defineStore("auth", {
       }
 
       if (!user || !user._id) {
+        console.log("Not User found: ", user);
         return false;
       }
 
-      this.user = user;
-      localStorage.setItem("user", JSON.stringify(user));
+      this.setUser(user);
 
       router.push(this.returnUrl || "/dashboard");
+    },
+
+    /**
+     * Create a new user with the information
+     * @param {{username: String, password: String, email: String}} newUser 
+     */
+    async signIn(newUser) {
+      this.loading = true;
+
+      const userResponse = await Api.post("/signin", newUser).catch(err => {
+        const alertMessage = useAlertMessageStore();
+
+        let errMessage = err.message;
+        let errType = "error";
+
+        if (err.response && err.response.data && err.response.data.message) {
+          errMessage = err.response.data.message;
+          errType = err.response.data.type;
+        }
+
+        alertMessage.show({ message: errMessage, type: errType });
+      });
+      this.loading = false;
+
+     this.login(userResponse.user.username, userResponse.user.password);
+    },
+
+    setUser(user) {
+      this.user = user;
+      localStorage.setItem("user", JSON.stringify(user));
     },
 
     logout() {

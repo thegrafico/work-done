@@ -4,6 +4,12 @@ const usernameRule = [
   (v) => (v && v.length <= 20) || "Name must be less than 20 characters",
 ];
 
+const emailRules = [
+  (v) => !!v || "Email is required",
+  (v) => (v && v.includes('@') && v.includes('.')) || "Invalid email address",
+  (v) => (v && v.length <= 30) || "Email is too long",
+];
+
 const passwordRule = [
   (v) => !!v || "Password is required",
   (v) => (v && v.length > 3) || "password must be greater than 3 characters",
@@ -48,4 +54,5 @@ module.exports = {
   projectTitleRule,
   projectDescriptionRule,
   taskRules,
+  emailRules,
 };

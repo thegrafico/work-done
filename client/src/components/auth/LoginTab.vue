@@ -19,14 +19,19 @@
           <a class="form-recovery" href="#">Forgot Password?</a>
         </div>
 
+        <!-- Open Sign in Modal -->
+        <div align="center" class="pb-2">
+          <ButtonWithModal v-bind="signInButtonConfig" />
+          <a class="form-recovery" href="#"></a>
+        </div>
+
         <div class="form-group">
           <v-btn color="blue" size="large" type="submit" variant="elevated" :disabled="isLoading">
-
             <p v-if="!isLoading">
               Log In
             </p>
 
-            <v-progress-circular v-if="isLoading" indeterminate :size="25" color="primary"></v-progress-circular>
+            <v-progress-circular v-else indeterminate :size="25" color="primary"></v-progress-circular>
           </v-btn>
           <!-- <v-btn rounded="lg" color="primary"> Log In </v-btn> -->
         </div>
@@ -39,6 +44,7 @@
 import { ref, defineEmits } from "vue";
 import { isEmpty } from "lodash";
 import { usernameRule, passwordRule } from "@/utils/form-rules-validation";
+import ButtonWithModal from "../button/ButtonWithModal.vue";
 
 const emit = defineEmits(["login"]);
 
@@ -75,6 +81,16 @@ async function login() {
 const resetLoading = () => {
   isLoading.value = false;
 }
+
+const signInButtonConfig = ref({
+  title: "Don't have an account?",
+  // icon: "mdi-plus",
+  action: null,
+  template: "SignInUser",
+  color: "#4285F4",
+  variant: "plain",
+});
+
 </script>
 
 <style scoped>

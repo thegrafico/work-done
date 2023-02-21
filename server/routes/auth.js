@@ -53,63 +53,25 @@ router.post("/api/login", async function (req, res, next) {
   res.status(200).send(user);
 });
 
-// TODO: Finish this
-router.get("/signin", async function (req, res, next) {
-  const dummyUsers = [
-    {
-      name: "Raul",
-      username: "rauleldomi",
-      password: "admin",
-    },
-    {
-      name: "alex10",
-      username: "rauleldomi2",
-      password: "admin",
-    },
-    {
-      name: "alexander",
-      username: "rauleldomi3",
-      password: "admin",
-    },
-    {
-      name: "alexander",
-      username: "rauleldomi4",
-      password: "admin",
-    },
-    {
-      name: "alexander",
-      username: "rauleldomi5",
-      password: "admin",
-    },
-    {
-      name: "alexander",
-      username: "rauleldomi6",
-      password: "admin",
-    },
-    {
-      name: "Pam",
-      username: "rauleldomi7",
-      password: "admin",
-    },
-    {
-      name: "Man",
-      username: "rauleldomi8",
-      password: "admin",
-    },
-    {
-      name: "alexander2",
-      username: "rauleldomi9",
-      password: "admin",
-    },
-  ];
+// POST - /Signup user
+router.post("/api/signin", async function (req, res, next) {
 
-  for (const user of dummyUsers) {
-    await UserCollection.create(user).catch((err) => {
-      console.error("Error creating user: ", err.message);
-    });
+  const { username, password, email } = req.body;
+
+  const newUser = req.body;
+
+  let error = null;
+  const user = await UserCollection.create(newUser).catch((err) => {
+    console.error("Error creating user: ", err.message);
+    error = err;
+  });
+
+  if (error) { 
+    res.status(500).send({message: error.message, type: "error"});
+    return;  
   }
-
-  res.status(200).send("Created dummy user");
+  console.log("User created: ", user);
+  res.status(200).send({user: user});
 });
 
 module.exports = router;

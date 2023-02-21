@@ -18,8 +18,7 @@ import { defineProps, toRefs, ref, defineAsyncComponent } from "vue";
 
 /**
  * These components are loaded using the :is paramenter.
- */
-
+*/
 const modals = {
   RemoveProject: defineAsyncComponent(() =>
     import("../modals/RemoveProject.vue")),
@@ -37,10 +36,12 @@ const modals = {
     import("../modals/collabs/UserInvitation.vue")),
   CancelTemplate: defineAsyncComponent(() =>
     import("@/components/modals/CancelTemplate.vue")),
+  SignInUser: defineAsyncComponent(() =>
+    import("@/components/auth/SignInTab.vue")),
 };
 
 
-const defaultVariant = "text";
+const defaultVariant = "plain";
 
 const props = defineProps({
   icon: String,
@@ -77,3 +78,7 @@ const resetDialog = () => {
   dialog.value = false;
 };
 </script>
+
+<style scoped>
+
+</style>
