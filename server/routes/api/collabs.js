@@ -100,7 +100,6 @@ router.post(
       (!username || username.length === 0) &&
       (!email || email.length === 0)
     ) {
-      console.error("Invalid user information. ");
       res.status(400).send({
         message: `Invalid user information cannot be empty`,
         type: alertTypes.error,
