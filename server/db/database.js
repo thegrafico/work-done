@@ -9,8 +9,10 @@ async function connect() {
   };
 
   mongoose.set("strictQuery", false);
+  console.log("Connecting to mongodb...");
 
   await mongoose.connect(process.env.DB_CONNECTION_STRING);
+  // await mongoose.connect("mongodb://mongo:27017/workd-done");
 
   const db = mongoose.connection;
 
