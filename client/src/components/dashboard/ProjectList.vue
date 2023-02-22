@@ -1,5 +1,5 @@
 <template>
-  <v-row>
+  <v-row v-if="props.projects.length">
     <v-col cols="3" v-for="project in filteredProjects" :key="project._id">
       <v-card :color="(project.owner.toString() === userId) ? null : 'info'" variant="tonal" height="100%">
         <v-toolbar>
@@ -33,6 +33,14 @@
           </span>
         </v-card-text>
       </v-card>
+    </v-col>
+  </v-row>
+
+  <v-row justify="center" v-else>
+    <v-col align="center" cols="8">
+      <p class="font-weight-bold text-h6">
+        It seems you don't have any projects yet. <br> You can create one by clicking the button above! :D.
+      </p>
     </v-col>
   </v-row>
 </template>

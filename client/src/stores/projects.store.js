@@ -14,10 +14,11 @@ export const useProjectsStore = defineStore("projects", {
     async loadProjects() {
       this.projects = [];
       this.loading = true;
-
+      console.log("Lading: ", this.loading);
       const response = await secureApi.get("/projects");
-
       this.loading = false;
+      console.log("Lading: ", this.loading);
+
       if (!response.data) {
         console.error("Oops! Something went wrong");
         return;

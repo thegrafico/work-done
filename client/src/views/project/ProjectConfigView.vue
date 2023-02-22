@@ -30,7 +30,7 @@
       <!-- Show Reset Points -->
       <v-row>
         <v-col cols="4">
-          <v-select clearable label="Reset Points Time" v-model="projectConfigTaskDuration"
+          <v-select clearable label="Reset Points Time" v-model="projectConfigTaskDuration" disabled
             :items="['None', 'One Week', 'Two Weeks', 'One Month', 'One Year']"></v-select>
         </v-col>
       </v-row>
@@ -45,7 +45,7 @@
       <!-- Allow Users to remove tasks -->
       <v-row>
         <v-col cols="4">
-          <v-switch label="Allow users to remove tasks" color="success" hide-details></v-switch>
+          <v-switch label="Allow users to remove tasks" color="success" hide-details disabled></v-switch>
         </v-col>
       </v-row>
 

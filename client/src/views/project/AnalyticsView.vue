@@ -9,7 +9,7 @@
 
       <v-row>
         <v-col cols="4">
-          <v-select v-model="filterTimeSelect" prepend-icon="mdi-filter" label="Time"
+          <v-select v-model="filterTimeSelect" prepend-icon="mdi-filter" label="Time" disabled
             :items="['One Week ago', 'Two Weeks ago', 'One Month ago', 'A Year ago']" variant="underlined"></v-select>
         </v-col>
 

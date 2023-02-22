@@ -9,7 +9,8 @@ export const useAuthStore = defineStore("auth", {
       ? JSON.parse(localStorage.getItem("user"))
       : null,
     returnUrl: null,
-    loading: false
+    loading: false,
+    alertMessage: useAlertMessageStore(),
   }),
   actions: {
     async login(username, password) {
@@ -18,22 +19,19 @@ export const useAuthStore = defineStore("auth", {
         error = err;
       });
 
-
       if (error) {
-        const alertMessage = useAlertMessageStore();
-
         if (
           error.response &&
           error.response.data &&
           error.response.data.message
         ) {
-          alertMessage.show({
+          this.alertMessage.show({
             message: error.response.data.message,
             type: error.response.data.type,
           });
         } else {
           // default
-          alertMessage.show({ message: error.message, type: "error" });
+          this.alertMessage.show({ message: error.message, type: "error" });
         }
         return;
       }
@@ -46,18 +44,18 @@ export const useAuthStore = defineStore("auth", {
       this.setUser(user);
 
       router.push(this.returnUrl || "/dashboard");
+
+      this.alertMessage.show({ message: "Welcome Back", type: "success" });
     },
 
     /**
      * Create a new user with the information
-     * @param {{username: String, password: String, email: String}} newUser 
+     * @param {{username: String, password: String, email: String}} newUser
      */
     async signIn(newUser) {
       this.loading = true;
 
-      const userResponse = await Api.post("/signin", newUser).catch(err => {
-        const alertMessage = useAlertMessageStore();
-
+      const userResponse = await Api.post("/signin", newUser).catch((err) => {
         let errMessage = err.message;
         let errType = "error";
 
@@ -66,14 +64,27 @@ export const useAuthStore = defineStore("auth", {
           errType = err.response.data.type;
         }
 
-        alertMessage.show({ message: errMessage, type: errType });
+        this.alertMessage.show({ message: errMessage, type: errType });
       });
       this.loading = false;
 
-     this.login(userResponse.user.username, userResponse.user.password);
+      this.login(userResponse.user.username, userResponse.user.password);
     },
 
-    setUser(user) {
+    setUser(user, showAlert = false) {
+      // Avoind possible errors for the future
+      // check if we received a user, but there is not access token since the user was updated
+      if (user && !user.accessToken && this.user.accessToken) {
+        user["accessToken"] = this.user.accessToken;
+      }
+
+      if (showAlert) {
+        this.alertMessage.show({
+          message: "User information updated!",
+          type: "success",
+        });
+      }
+
       this.user = user;
       localStorage.setItem("user", JSON.stringify(user));
     },

@@ -3,7 +3,6 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 async function connect() {
-
   const options = {
     // serverSelectionTimeoutMS: 5000, // Keep trying to send operations for 5 seconds
     // socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
@@ -15,12 +14,12 @@ async function connect() {
 
   const db = mongoose.connection;
 
-  db.on('error', console.error.bind(console, 'connection error:'));
+  db.on("error", console.error.bind(console, "connection error:"));
 
   //TODO: [DELETE THIS] delete all databse information for now
   // const collections = await db.db.listCollections().toArray();
   // // Loop through all collection names and delete them
-  // collections.forEach(collection => {
+  // collections.forEach((collection) => {
   //   db.dropCollection(collection.name, (err) => {
   //     if (err) console.log(err);
   //     else console.log(`Deleted collection: ${collection.name}`);
@@ -29,7 +28,6 @@ async function connect() {
   return db;
 }
 
-
 module.exports = {
-  connect
-}
+  connect,
+};

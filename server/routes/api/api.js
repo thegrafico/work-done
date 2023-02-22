@@ -3,8 +3,7 @@ const router = express.Router();
 const auth = require("../../utils/auth");
 const UserCollection = require("../../db/schema/user");
 const ProjectCollection = require("../../db/schema/projects");
-const ObjectId = require("mongoose").Types.ObjectId;
-
+const { alertTypes } = require("../../utils/constants");
 const _ = require("lodash");
 
 // GET - projects
@@ -65,8 +64,7 @@ router.post(
     });
 
     if (error) {
-      console.log("Error: ", error);
-      res.status(400).send({ message: error });
+      res.status(400).send({ message: error, type: alertTypes.error });
       return;
     }
 
@@ -108,6 +106,7 @@ router.post(
       res.status(500).send({
         message:
           "Oops, There was a problem updating the project. Please try later.",
+        type: alertTypes.error,
       });
       return;
     }
@@ -151,6 +150,89 @@ router.delete(
     }
 
     res.status(200).send(projectWasDeleted);
+  }
+);
+
+/**
+ * Update user info
+ * @param {{oldPassword: String, newPassword: String, allowProjectInvitations: Boolean}} update - expected values
+ */
+async function updateUserInfo(userId, update) {
+  console.log("Update user info: ", update);
+  // get user
+  const user = await UserCollection.findById(userId).catch((err) => {
+    throw err;
+  });
+
+  if (!user || !user._id) {
+    throw new Error("User not found");
+  }
+  // check if the old password is correct
+
+  // if the old password and new password are different than undefined and also are not the same
+  if (update.oldPassword != undefined && update.newPassword != undefined) {
+    // if password are the same
+    if (update.newPassword == update.oldPassword) {
+      throw new Error("Old password cannot be same as new password");
+    }
+
+    // check if the old password match the user
+    const isOldPasswordCorrect = await user.authenticate(update.oldPassword);
+    if (!isOldPasswordCorrect) {
+      throw new Error("Old password is incorrect");
+    }
+
+    // update password for new password
+    user.password = update.newPassword;
+  }
+
+  // check if user changed project invitations status
+  if (update.allowProjectInvitations != undefined) {
+    user.allowProjectInvitations = update.allowProjectInvitations;
+  }
+
+  // save the user
+  await user.save().catch((err) => {
+    throw err;
+  });
+
+  // problem is the local store from js is not updating the user
+
+  // return user
+  return user;
+}
+
+/**
+ * POST - USER/UPDATE
+ */
+router.post(
+  "/user/update",
+  auth.authenticateToken,
+  async function (req, res, next) {
+    console.log("Getting request to updte user info ");
+
+    // variables to update
+    // const { oldPassword, newPassword, allowProjectInvitations } = req.body;
+
+    let error = null;
+    const user = await updateUserInfo(req.user.id, req.body).catch((err) => {
+      console.error("Error updating user info: ", err);
+      error = err;
+    });
+
+    // check on error
+    if (error) {
+      res.status(400).send({ message: error.message, type: alertTypes.error });
+      return;
+    }
+
+    res
+      .status(200)
+      .send({
+        user: user,
+        message: "Information Updated!",
+        type: alertTypes.success,
+      });
   }
 );
 

@@ -39,7 +39,10 @@ const userSearchInput = ref("");
 
 onMounted(async () => {
   // getting the projects
+  console.log(loading.value)
   await loadProjects();
+  console.log(loading.value);
+
 });
 
 const createProjectButtonConfig = ref({
